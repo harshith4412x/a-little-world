@@ -1,0 +1,665 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>A Little World of Personalities</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap" rel="stylesheet">
+
+<style>
+:root {
+  --pink: #f8dce8;
+  --deep: #ad668d;
+  --ink: #594653;
+  --muted: #927e8a;
+}
+
+* { box-sizing: border-box; }
+
+
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  font-family: 'Quicksand', sans-serif;
+  color: var(--ink);
+  background:
+    radial-gradient(circle at 10% 10%, #ffe4ef, transparent 35%),
+    radial-gradient(circle at 90% 90%, #e9e1ff, transparent 35%),
+    linear-gradient(135deg, #fffaf6, #fff1f6);
+}
+
+main {
+  width: min(650px, 92%);
+  margin: auto;
+  padding: 45px 0 35px;
+}
+
+header {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.logo { font-size: 35px; }
+
+h1, h2, h3 {
+  font-family: 'Playfair Display', serif;
+  color: var(--deep);
+}
+
+h1 { font-size: clamp(30px, 7vw, 44px); }
+
+.subtitle, .entry-description {
+  color: var(--muted);
+  font-size: 14px;
+  line-height: 1.8;
+}
+
+.panel {
+  padding: 28px;
+  border-radius: 25px;
+  background: rgba(255,255,255,.85);
+  border: 1px solid white;
+  box-shadow: 0 12px 40px rgba(170,112,145,.12);
+}
+
+.hidden { display: none !important; }
+
+.entry-title {
+  text-align: center;
+  font-size: 25px;
+}
+
+.entry-description { text-align: center; }
+
+label {
+  display: block;
+  font-weight: 700;
+  margin-bottom: 9px;
+}
+
+input {
+  width: 100%;
+  padding: 15px;
+  border: 1.5px solid #efd7e4;
+  border-radius: 14px;
+  background: #fffafd;
+  font: inherit;
+  outline: none;
+}
+
+input:focus { border-color: var(--deep); }
+
+button {
+  border: none;
+  border-radius: 14px;
+  padding: 13px 19px;
+  background: linear-gradient(120deg, #df8caf, #b993d5);
+  color: white;
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.submit {
+  width: 100%;
+  margin-top: 15px;
+}
+
+button:disabled {
+  opacity: .4;
+  cursor: default;
+}
+
+.small-note {
+  text-align: center;
+  color: #aa96a3;
+  font-size: 11px;
+  margin-top: 20px;
+}
+
+.back {
+  background: #f5e8f0;
+  color: var(--deep);
+  margin-bottom: 15px;
+}
+
+.profile-heading {
+  text-align: center;
+  padding: 10px 0 22px;
+}
+
+.profile-heading .flower { font-size: 35px; }
+
+.profile-heading p {
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.8;
+}
+
+.trait-track {
+  display: flex;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scroll-behavior: smooth;
+  scrollbar-width: none;
+  gap: 12px;
+  touch-action: pan-x;
+  border-radius: 20px;
+}
+
+.trait-track::-webkit-scrollbar { display: none; }
+
+.trait {
+  flex: 0 0 100%;
+  min-width: 100%;
+  min-height: 300px;
+  padding: 25px 21px;
+  border-radius: 20px;
+  background: linear-gradient(140deg, #fff5f8, #f5f0ff);
+  border: 1px solid #f1e1ec;
+  scroll-snap-align: start;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.card-count {
+  color: #a88b9c;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.trait h3 { font-size: 23px; }
+
+.trait p {
+  font-size: 14px;
+  line-height: 1.9;
+  color: #725f6d;
+}
+
+.trait .thought {
+  color: #b16e94;
+  font-style: italic;
+  font-weight: 600;
+}
+
+.card-controls {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  margin-top: 18px;
+}
+
+.card-controls button {
+  background: #f5e7f0;
+  color: var(--deep);
+}
+
+.end-card {
+  text-align: center;
+  padding: 27px 20px;
+  margin-top: 27px;
+  border-radius: 22px;
+  background: linear-gradient(145deg, #fff2f6, #f0ebff);
+  border: 1px solid #f0e1ed;
+}
+
+.end-flower { font-size: 32px; }
+
+.end-card p {
+  font-size: 14px;
+  line-height: 1.9;
+  color: #725f6d;
+}
+
+.signature {
+  color: var(--deep);
+  font-family: 'Playfair Display', serif;
+  font-size: 20px;
+  margin-top: 22px;
+}
+
+.not-ready {
+  text-align: center;
+  padding: 25px 5px;
+}
+
+.not-ready .emoji { font-size: 45px; }
+
+.not-ready p {
+  color: var(--muted);
+  font-size: 14px;
+  line-height: 1.9;
+}
+
+footer {
+  text-align: center;
+  padding-top: 28px;
+  color: #aa96a3;
+  font-size: 12px;
+}
+
+@media(max-width:450px) {
+  .panel { padding: 20px; }
+  .trait { padding: 21px 17px; }
+}
+
+/* Minimal Instagram-style story viewer */
+.story-viewer {
+  width: 100%;
+  height: min(72vh, 680px);
+  min-height: 460px;
+  box-sizing: border-box;
+  padding: 15px;
+  display: flex;
+  flex-direction: column;
+  background: #f5f4ef;
+  border: 1px solid #e5e3da;
+  border-radius: 20px;
+  overflow: hidden;
+  color: #353b35;
+}
+
+.story-progress {
+  display: flex;
+  gap: 4px;
+  width: 100%;
+}
+
+.story-progress span {
+  flex: 1;
+  height: 3px;
+  border-radius: 10px;
+  background: #dedfd7;
+  overflow: hidden;
+}
+
+.story-progress i {
+  display: block;
+  height: 100%;
+  background: #879486;
+}
+
+.story-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 14px 2px;
+  color: #777e73;
+  font-size: 11px;
+  letter-spacing: 1px;
+}
+
+.story-stage {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 18px;
+  touch-action: pan-y;
+  text-align: left;
+}
+
+.story-copy {
+  width: 100%;
+  max-width: 450px;
+}
+
+.story-copy .story-number {
+  color: #879486;
+  font-size: 12px;
+  letter-spacing: 1px;
+}
+
+.story-copy h2 {
+  font-size: clamp(25px, 7vw, 34px);
+  line-height: 1.25;
+  color: #354137;
+  margin: 17px 0;
+}
+
+.story-copy p {
+  font-size: 15px;
+  line-height: 1.85;
+  color: #626a60;
+}
+
+.story-copy .story-thought {
+  border-top: 1px solid #dedfd7;
+  padding-top: 15px;
+  margin-top: 25px;
+  color: #7c8979;
+}
+
+.story-hint {
+  text-align: center;
+  color: #92968c;
+  font-size: 11px;
+  padding: 10px 0 2px;
+}
+
+.story-ending {
+  text-align: left;
+}
+
+.story-ending h2 {
+  font-size: 25px;
+}
+
+.story-ending p {
+  font-size: 13px;
+  line-height: 1.7;
+}
+
+@media(max-width:450px) {
+  .story-viewer {
+    min-height: 460px;
+    padding: 12px;
+  }
+  .story-stage {
+    padding: 12px;
+  }
+}
+
+</style>
+</head>
+
+<body>
+<main>
+<header>
+  <div class="logo">🌷</div>
+  <h1>A Little World of Personalities</h1>
+  <p class="subtitle">
+    Every person has a story beyond what we see.<br>
+    Let's discover a little about it.
+  </p>
+</header>
+
+<section class="panel" id="entry">
+  <h2 class="entry-title">A little curiosity begins here</h2>
+  <p class="entry-description">
+    Everyone has their own way of thinking, feeling
+    and experiencing life.<br>
+    Whose personality would you like to explore?
+  </p>
+
+  <form id="nameForm">
+    <label for="personName">Enter your name</label>
+    <input id="personName" type="text"
+      placeholder="Your name..."
+      maxlength="40" autocomplete="off" required>
+    <button class="submit" type="submit">
+      Discover Personality ♡
+    </button>
+  </form>
+
+  <p class="small-note">
+    Made with a little curiosity and kindness.
+  </p>
+</section>
+
+<section class="panel hidden" id="result">
+  <button class="back" id="backButton">← Back</button>
+  <div id="resultContent"></div>
+</section>
+
+<footer>
+  Every person is more than a personality.
+</footer>
+</main>
+<script>
+const profiles = {
+  "srikruthi": {
+    displayName: "Srikruthi",
+ending: "I don't know every side of you, and I won't pretend that I do. These are simply a few things I've noticed and appreciated. Maybe some descriptions fit you, maybe some don't. You understand yourself better than I ever could. I appreciate the times you've helped me and the patience you've shown. Even the little things haven't gone unnoticed. I'm still learning to listen better, think before reacting and respect other people's feelings. I don't want to define you through these words. I just wanted you to know that some little things about you are noticed and appreciated.",    
+traits: [
+      {
+        title: "Quietly Disciplined",
+        description: "You seem like someone who doesn't need to announce every little thing you're doing. You have your own priorities, your own responsibilities and your own way of working towards what matters to you. Sometimes, the people who make the most consistent efforts are the ones who speak the least about them.",
+        thought: "Progress doesn't always need an audience."
+      },
+      {
+        title: "Realistic, Yet Thoughtful",
+        description: "You seem to value things that make sense in real life. Rather than getting carried away by words or unrealistic expectations, you appear to appreciate practical thinking, meaningful efforts and a stable future. Having dreams is beautiful, but knowing how to work towards them is something special.",
+        thought: "Dreams become meaningful when we take steps towards them."
+      },
+      {
+        title: "Kind in Your Own Way",
+        description: "I've noticed that you have helped me at times, even in simple situations. Maybe you don't consider those things particularly important, but I do notice them. Kindness doesn't always have to be expressed through big gestures. Sometimes, a small helpful action says enough.",
+        thought: "Small acts of kindness can mean more than we realise."
+      },
+      {
+        title: "Careful About Who You Let Close",
+        description: "You don't seem like someone who shares everything with everyone immediately. Perhaps you prefer to understand a person and feel comfortable before letting them see more of you. And that's okay. Trust doesn't have to be rushed, and personal space deserves respect.",
+        thought: "Trust doesn't have to be rushed."
+      },
+      {
+        title: "Thoughtful Before Reacting",
+        description: "You seem to have your own way of processing things. Sometimes, taking time before responding or making a decision can be more meaningful than reacting immediately. But being thoughtful doesn't mean you must always remain calm or have the perfect response. You're human, too.",
+        thought: "It's okay to take a moment before responding."
+      },
+      {
+        title: "Quietly Resilient",
+        description: "Maybe you have difficult days that other people don't always notice. You might prefer dealing with certain things in your own way rather than explaining everything to everyone. But I hope you know that you don't always have to be strong. It's okay to have difficult moments, too.",
+        thought: "You don't have to be strong every single day."
+      },
+      {
+        title: "Comfortable in Your Own Rhythm",
+        description: "You seem to appreciate having your own space, making your own choices and doing things at your own pace. You don't need to be constantly expressive or available to make your presence meaningful. You deserve to be comfortable being yourself.",
+        thought: "You don't have to follow someone else's rhythm."
+      }
+    ]
+  },
+  "bhavana": {
+    displayName: "Bhavana",
+    ending: "One thing I want to say ❤️\n\nYou've always been a humble and patient person, working hard for your goals and standing by the people you care about.\n\nThank you for being there for our family and for always supporting us. I hope you achieve everything you're working towards.\n\nKeep working hard, keep growing and never give up on your dreams.\n\nAnd no matter how much we tease or argue with each other, you're always my sister. 😊",
+    traits: [
+      {
+        title: "Humble by Nature",
+        description: "You have a humble way of treating people. You don't need to make a big show of what you do. Staying grounded and being kind are qualities that make a person special.",
+        thought: "True goodness doesn't need recognition."
+      },
+      {
+        title: "Patient Through Challenges",
+        description: "You try to handle situations with patience. Not everything happens quickly or exactly as planned, but patience helps us keep going without giving up.",
+        thought: "Some things are worth waiting and working for."
+      },
+      {
+        title: "Hardworking and Consistent",
+        description: "You put effort into the things that matter to you. Reaching goals takes commitment, and your willingness to keep working towards them is something I appreciate.",
+        thought: "Small efforts, repeated every day, create progress."
+      },
+      {
+        title: "Focused on Your Goals",
+        description: "You have things you want to achieve, and you keep moving towards them. I hope you continue believing in your abilities and give yourself the chance to reach everything you're aiming for.",
+        thought: "Keep your goals close and keep moving forward."
+      },
+      {
+        title: "Supportive by Heart",
+        description: "You stand beside the people you care about. Your support means a lot to our family, and even ordinary moments of being there for someone can make a real difference.",
+        thought: "Being there for someone is a gift."
+      },
+      {
+        title: "Strength in Your Values",
+        description: "You care about doing what is good for the people close to you. Holding on to good values and supporting what you believe is right are qualities worth keeping.",
+        thought: "Let your values guide the choices you make."
+      },
+      {
+        title: "A Caring Sister",
+        description: "You're not just someone in the family; you're my sister. Your support, patience and presence matter, even if I don't always say it.",
+        thought: "Family bonds are built through little things."
+      }
+    ]
+  }
+};
+const unfinishedNames = [];
+</script>
+<script>
+const entry = document.getElementById("entry");
+const result = document.getElementById("result");
+const content = document.getElementById("resultContent");
+const input = document.getElementById("personName");
+
+function escapeHTML(value) {
+  return String(value).replace(/[&<>"']/g, c => ({
+    "&": "&amp;",
+    "<": "&lt;",
+    ">": "&gt;",
+    '"': "&quot;",
+    "'": "&#39;"
+  })[c]);
+}
+
+function showProfile(profile) {
+  content.innerHTML = `
+    <section class="story-viewer">
+      <div class="story-progress" id="storyProgress">
+        ${profile.traits.map(() => "<span><i></i></span>").join("")}
+      </div>
+      <div class="story-top">
+        <span>A FEW THINGS I'VE NOTICED</span>
+        <span id="storyCounter">01 / 07</span>
+      </div>
+      <div class="story-stage" id="storyStage"></div>
+      <div class="story-hint">Tap right or left · Swipe to navigate</div>
+    </section>
+  `;
+
+  const stage = document.getElementById("storyStage");
+  const progress = document.getElementById("storyProgress");
+  const counter = document.getElementById("storyCounter");
+
+  let current = 0;
+  let pointerStart = null;
+  let suppressClick = false;
+
+  function update(index) {
+    current = Math.max(0, Math.min(index, 7));
+
+    if (current < 7) {
+      const trait = profile.traits[current];
+
+      stage.innerHTML = `
+        <div class="story-copy">
+          <span class="story-number">
+            ${String(current + 1).padStart(2, "0")} / 07
+          </span>
+          <h2>${escapeHTML(trait.title)}</h2>
+          <p>${escapeHTML(trait.description)}</p>
+          <p class="story-thought">${escapeHTML(trait.thought)}</p>
+        </div>
+      `;
+      counter.textContent =
+        String(current + 1).padStart(2, "0") + " / 07";
+    } else {
+      stage.innerHTML = `
+        <div class="story-copy story-ending">
+          <h2>A little something I want you to know</h2>
+          ${String(profile.ending || "").split("\\n\\n").map(paragraph => `<p>${escapeHTML(paragraph)}</p>`).join("")}
+        </div>
+      `;
+      counter.textContent = "A NOTE";
+    }
+
+    [...progress.children].forEach((bar, i) => {
+      bar.firstElementChild.style.width =
+        i < current ? "100%" : i === current ? "35%" : "0%";
+    });
+  }
+
+  stage.addEventListener("pointerdown", event => {
+    pointerStart = event.clientX;
+  });
+
+  stage.addEventListener("pointerup", event => {
+    if (pointerStart === null) return;
+
+    const distance = event.clientX - pointerStart;
+    pointerStart = null;
+
+    if (Math.abs(distance) > 45) {
+      suppressClick = true;
+      update(distance < 0 ? current + 1 : current - 1);
+    }
+  });
+
+  stage.addEventListener("pointercancel", () => {
+    pointerStart = null;
+  });
+
+  stage.addEventListener("click", event => {
+    if (suppressClick) {
+      suppressClick = false;
+      return;
+    }
+
+    const rect = stage.getBoundingClientRect();
+    update(event.clientX > rect.left + rect.width / 2
+      ? current + 1
+      : current - 1);
+  });
+
+  update(0);
+}
+
+function showUnavailable(name) {
+  content.innerHTML = `
+    <div class="not-ready">
+      <div class="emoji">🌷</div>
+      <h2>Something is still growing...</h2>
+      <p>The personality profile for
+      <strong>${escapeHTML(name)}</strong> isn't completed yet.</p>
+      <p>Every person has a unique story, and understanding
+      someone takes time.</p>
+      <p>Maybe this little profile will be ready another day. ♡</p>
+    </div>
+  `;
+}
+
+function showUnknown(name) {
+  content.innerHTML = `
+    <div class="not-ready">
+      <div class="emoji">🦋</div>
+      <h2>Not found just yet</h2>
+      <p>We couldn't find a prepared personality profile for
+      <strong>${escapeHTML(name)}</strong>.</p>
+      <p>Every person is unique. Not every story has been
+      added to this little world.</p>
+    </div>
+  `;
+}
+
+document.getElementById("nameForm").addEventListener("submit", event => {
+  event.preventDefault();
+
+  const name = input.value.trim();
+  if (!name) return;
+
+  const key = name.toLowerCase().replace(/\s+/g, " ");
+
+  entry.classList.add("hidden");
+  result.classList.remove("hidden");
+
+  if (profiles[key]) {
+    showProfile(profiles[key]);
+  } else if (unfinishedNames.includes(key)) {
+    showUnavailable(name);
+  } else {
+    showUnknown(name);
+  }
+
+  window.scrollTo({ top: 0, behavior: "smooth" });
+});
+
+document.getElementById("backButton").addEventListener("click", () => {
+  result.classList.add("hidden");
+  entry.classList.remove("hidden");
+  input.value = "";
+});
+</script>
+</body>
+</html>
