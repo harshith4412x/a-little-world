@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#f7f4ef">
+<title>A Little World of Personalities</title>
+<script src="profiles.js"></script>
+<style>
+:root{--ink:#242321;--muted:#77736d;--paper:#f7f4ef;--card:#fffefa;--line:#e9e3da;--accent:#a86d56;--accent2:#d9a78e;--sage:#879889;--shadow:0 22px 60px rgba(53,43,34,.10)}
+*{box-sizing:border-box}body{margin:0;background:var(--paper);color:var(--ink);font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+button,input,textarea{font:inherit}button{cursor:pointer}.app{min-height:100vh;overflow:hidden;background:radial-gradient(circle at 90% 5%,#efe2d7 0,transparent 28%),radial-gradient(circle at 0 90%,#e8eee7 0,transparent 25%),var(--paper)}
+.topbar{max-width:1120px;margin:auto;padding:24px 26px;display:flex;align-items:center;justify-content:space-between}.brand{font-size:13px;letter-spacing:.18em;text-transform:uppercase;font-weight:750}.brand span{color:var(--accent)}.top-note{font-size:12px;color:var(--muted)}
+main{max-width:1120px;margin:auto;padding:34px 26px 70px}.eyebrow{font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--accent);font-weight:750}.hero{max-width:720px;margin:34px auto 42px;text-align:center}.hero h1{font-family:Georgia,serif;font-weight:500;font-size:clamp(42px,7vw,76px);line-height:1.02;letter-spacing:-.045em;margin:15px 0}.hero p{max-width:510px;margin:0 auto;color:var(--muted);line-height:1.8;font-size:15px}
+.home-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;max-width:950px;margin:44px auto 0}.home-card{min-height:230px;text-align:left;padding:25px;border:1px solid var(--line);border-radius:25px;background:rgba(255,254,250,.86);box-shadow:0 8px 30px rgba(53,43,34,.035);transition:.25s;display:flex;flex-direction:column;align-items:flex-start}.home-card:hover{transform:translateY(-5px);box-shadow:var(--shadow);border-color:#d8c6b8}.home-icon{width:46px;height:46px;border-radius:16px;background:#f1e6de;display:grid;place-items:center;font-size:21px;margin-bottom:27px}.home-card:nth-child(2) .home-icon{background:#e9eee7}.home-card:nth-child(3) .home-icon{background:#f3e9ed}.home-card h2{font-family:Georgia,serif;font-weight:500;font-size:23px;margin:0 0 9px}.home-card p{font-size:13px;line-height:1.65;color:var(--muted);margin:0}.arrow{margin-top:auto;padding-top:20px;color:var(--accent);font-size:13px;font-weight:700}
+.footer{text-align:center;color:#999187;font-size:11px;letter-spacing:.08em;margin-top:54px}
+.panel{max-width:760px;margin:22px auto 0}.panel-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:22px}.back{border:0;background:transparent;color:var(--muted);padding:8px 0;font-size:13px}.step{font-size:12px;color:var(--muted)}.surface{background:rgba(255,254,250,.94);border:1px solid var(--line);border-radius:28px;padding:clamp(22px,5vw,42px);box-shadow:var(--shadow)}
+h2.screen-title{font:500 clamp(30px,5vw,43px)/1.1 Georgia,serif;margin:10px 0 12px;letter-spacing:-.025em}.sub{color:var(--muted);line-height:1.7;font-size:14px}
+.field{width:100%;border:1px solid var(--line);border-radius:14px;padding:15px 16px;background:#fffefa;outline:none;margin-top:22px}.field:focus,textarea:focus{border-color:var(--accent2);box-shadow:0 0 0 3px #a86d5618}
+.primary{border:0;background:var(--ink);color:white;border-radius:999px;padding:14px 22px;font-size:13px;font-weight:700}.secondary{border:1px solid var(--line);background:transparent;color:var(--ink);border-radius:999px;padding:13px 20px;font-size:13px}.actions{display:flex;gap:10px;justify-content:space-between;align-items:center;margin-top:24px}.progress{height:4px;background:#ece6de;border-radius:9px;overflow:hidden;margin:20px 0 27px}.progress span{height:100%;display:block;background:var(--accent);transition:width .25s}
+.options{display:grid;gap:10px;margin-top:22px}.option{padding:15px 17px;border:1px solid var(--line);border-radius:15px;background:#fffefa;text-align:left;color:var(--ink);font-size:14px;transition:.2s}.option.selected{border-color:var(--accent);background:#f7eee8;box-shadow:inset 0 0 0 1px var(--accent)}
+textarea{width:100%;min-height:82px;resize:vertical;border:1px solid var(--line);border-radius:14px;padding:13px 15px;background:#fffefa;margin-top:14px;outline:none;font:inherit;font-size:13px}
+.person-list{display:grid;grid-template-columns:1fr 1fr;gap:13px;margin-top:25px}.person{padding:22px;border:1px solid var(--line);border-radius:20px;background:#fffefa;text-align:left}.person h3{font:500 25px Georgia,serif;margin:0 0 7px}.person p{font-size:13px;color:var(--muted);margin:0;line-height:1.6}.person span{display:block;color:var(--accent);font-size:12px;font-weight:700;margin-top:18px}
+.story-wrap{max-width:760px;margin:20px auto}.story-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px}.story-count{font-size:12px;color:var(--muted)}.deck{position:relative;min-height:390px;perspective:1000px;touch-action:pan-y}.deck:before,.deck:after{content:"";position:absolute;inset:12px 14px -8px;border-radius:28px;background:#eee5dc;transform:rotate(2.2deg);z-index:0}.deck:after{inset:6px 7px -4px;background:#f5eee7;transform:rotate(-1.1deg)}.story-card{position:relative;z-index:1;min-height:390px;border-radius:28px;background:var(--card);border:1px solid var(--line);padding:clamp(25px,6vw,48px);box-shadow:var(--shadow);display:flex;flex-direction:column;justify-content:space-between;user-select:none;transition:transform .22s,opacity .22s}.story-card.dragging{transition:none}.card-kicker{font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--accent);font-weight:800}.card-title{font:500 clamp(31px,5vw,48px)/1.08 Georgia,serif;letter-spacing:-.03em;margin:18px 0}.card-body{font:400 clamp(16px,2.4vw,19px)/1.8 Georgia,serif;color:#55504a;white-space:pre-line}.card-bottom{display:flex;justify-content:space-between;align-items:center;margin-top:35px;color:#9a9288;font-size:11px}.dots{display:flex;gap:6px;justify-content:center;margin:22px 0}.dots i{height:5px;width:17px;border-radius:9px;background:#e1d9d0}.dots i.active{background:var(--accent);width:30px}.swipe-hint{text-align:center;font-size:11px;color:#9a9288}.story-controls{display:flex;justify-content:center;gap:12px;margin-top:17px}.round{width:48px;height:48px;border:1px solid var(--line);border-radius:50%;background:#fffefa;font-size:18px}.round.next{background:var(--ink);color:white;border-color:var(--ink)}
+.notice{padding:14px 16px;border-radius:14px;background:#f5eee7;color:#6b5145;font-size:13px;line-height:1.6;margin-top:16px}
+@media(max-width:720px){.home-grid{grid-template-columns:1fr;max-width:470px}.home-card{min-height:175px}.home-icon{margin-bottom:18px}.hero{margin-top:20px}.topbar{padding:19px 20px}main{padding:22px 18px 50px}.person-list{grid-template-columns:1fr}.deck,.story-card{min-height:370px}}
+</style>
+</head>
+<body>
+<div class="app">
+<header class="topbar"><div class="brand">A LITTLE <span>WORLD</span> OF PERSONALITIES</div><div class="top-note">A space to understand people gently</div></header>
+<main id="appMain">
+<section class="hero">
+<div class="eyebrow">A small journey inward</div>
+<h1>Every mind has<br>its own little world.</h1>
+<p>Explore the ways people think, feel, understand and see the world. No labels. No perfect answers. Just thoughtful stories.</p>
+<div class="home-grid">
+<button class="home-card" id="discover"><div class="home-icon">✳</div><h2>Discover your personality</h2><p>Answer thoughtful questions and receive a personality story shaped by your responses.</p><div class="arrow">Begin your journey ↗</div></button>
+<button class="home-card" id="predefined"><div class="home-icon">❀</div><h2>Explore personalities</h2><p>Meet the personalities already written and explore their stories, one card at a time.</p><div class="arrow">Explore stories ↗</div></button>
+<button class="home-card" id="private"><div class="home-icon">♡</div><h2>Know me better</h2><p>A personal space with a little more to discover. Password protected.</p><div class="arrow">Enter privately ↗</div></button>
+</div>
+<div class="footer">MADE WITH CURIOSITY & CARE</div>
+</section>
+</main>
+</div>
+<script>
+const WORKER_URL="https://gentle-wood-0b71.harshith4412x.workers.dev/";
+const main=document.getElementById("appMain");
+const homeMarkup=main.innerHTML;
+const questions=[
+{category:"Perception",question:"When something unexpected happens, what do you usually do first?",options:["I consider different possible explanations","I focus on the details I notice first","I trust my immediate impression","I pause and gather more information"]},
+{category:"Belief systems",question:"When forming an opinion, what tends to influence you most?",options:["My past experiences","Values and principles that matter to me","Evidence and information I can verify","A mix of different perspectives"]},
+{category:"Belief updating",question:"If you encounter strong evidence against something you believe, what do you tend to do?",options:["Reconsider my view and look closer","Take time before changing my mind","Ask questions and compare both sides","It depends on how important the belief is"]},
+{category:"Memory and prediction",question:"How much do past experiences shape what you expect next?",options:["A lot; I often use past patterns","Somewhat, but I try to stay open","I focus more on what is happening now","It depends on the situation"]},
+{category:"Intuition and reasoning",question:"When making an important decision, what do you rely on first?",options:["My intuition or gut feeling","Careful reasoning and comparison","I use intuition, then check it logically","I ask someone I trust for perspective"]},
+{category:"Metacognition",question:"How often do you step back and examine your own thinking?",options:["Often; I reflect on why I think this way","Sometimes, especially after a big decision","Mostly when something goes wrong","Not very often; I prefer to act"]},
+{category:"Perspective-taking",question:"When someone disagrees with you, what do you usually try to understand?",options:["What experiences shaped their view","The reasons and evidence behind their view","How they might be feeling","I first explain how I see it"]},
+{category:"Motives and priorities",question:"In a difficult situation, what matters most to you?",options:["Feeling safe and prepared","Maintaining important relationships","Solving the problem effectively","Being treated fairly and respectfully"]},
+{category:"Emotion and cognition",question:"How does stress or a strong emotion affect your thinking?",options:["I become more cautious and think deeply","I act quickly and process it later","My thoughts become less organised","I try to pause until I feel calmer"]},
+{category:"Social and cultural influences",question:"How do your upbringing and surroundings influence your choices?",options:["They strongly shape my values","They influence me, but I question things too","I consciously choose what to keep or change","I am still figuring out their influence"]}
+];
+let visitorName="",answers=[],qIndex=0,selected=-1,storyCards=[],cardIndex=0,dragStart=null;
+function home(){main.innerHTML=homeMarkup;wireHome()}
+function wireHome(){document.getElementById("discover").onclick=nameScreen;document.getElementById("predefined").onclick=predefinedScreen;document.getElementById("private").onclick=privateScreen}
+function shell(content){main.innerHTML=`<div class="panel"><div class="panel-head"><button class="back" onclick="home()">← Back to home</button><span class="step">A LITTLE WORLD</span></div>${content}</div>`}
+function nameScreen(){shell(`<section class="surface"><div class="eyebrow">Start with your name</div><h2 class="screen-title">Let's begin with you.</h2><p class="sub">There are no right or wrong answers. Just choose what feels closest to how you usually think.</p><input class="field" id="visitorName" maxlength="60" placeholder="Your name"><div class="actions"><span></span><button class="primary" onclick="startQuestions()">Continue →</button></div></section>`)}
+function startQuestions(){visitorName=document.getElementById("visitorName").value.trim();if(!visitorName){alert("Please enter your name.");return}answers=[];qIndex=0;renderQuestion()}
+function renderQuestion(){const q=questions[qIndex];selected=answers[qIndex]?.selected??-1;const explanation=answers[qIndex]?.explanation||"";shell(`<section class="surface"><div class="eyebrow">${q.category}</div><div class="progress"><span style="width:${(qIndex+1)/questions.length*100}%"></span></div><div class="step">QUESTION ${qIndex+1} OF ${questions.length}</div><h2 class="screen-title">${q.question}</h2><div class="options">${q.options.map((o,i)=>`<button class="option ${i===selected?"selected":""}" onclick="choose(${i})">${o}</button>`).join("")}</div><textarea id="explanation" placeholder="Want to explain your choice? (optional)">${escapeHtml(explanation)}</textarea><div class="actions"><button class="secondary" onclick="previousQuestion()" ${qIndex===0?"disabled":""}>← Previous</button><button class="primary" onclick="nextQuestion()">${qIndex===9?"Finish":"Next →"}</button></div></section>`)}
+function choose(i){selected=i;document.querySelectorAll(".option").forEach((el,n)=>el.classList.toggle("selected",n===i))}
+function saveAnswer(){const explanation=document.getElementById("explanation")?.value||"";if(selected<0){alert("Choose the option that feels closest to you.");return false}answers[qIndex]={category:questions[qIndex].category,question:questions[qIndex].question,choice:questions[qIndex].options[selected],explanation,selected};return true}
+function nextQuestion(){if(!saveAnswer())return;if(qIndex<9){qIndex++;renderQuestion()}else generatePublicStory()}
+function previousQuestion(){if(qIndex>0){const exp=document.getElementById("explanation")?.value||"";if(selected>=0)answers[qIndex]={...answers[qIndex],selected,explanation:exp};qIndex--;renderQuestion()}}
+async function generatePublicStory(){shell(`<section class="surface"><div class="eyebrow">Your story is taking shape</div><h2 class="screen-title">A moment of understanding…</h2><p class="sub">We're turning your answers into a thoughtful story. This may take a few seconds.</p></section>`);try{const r=await fetch(WORKER_URL,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({name:visitorName,answers:answers.map(a=>({category:a.category,question:a.question,choice:a.choice,explanation:a.explanation||""}))})});const d=await r.json();if(!r.ok)throw Error(d.error||"The story could not be created.");showStory(d.story,visitorName)}catch(e){shell(`<section class="surface"><h2 class="screen-title">We couldn't create the story.</h2><p class="sub">${escapeHtml(e.message)}</p><button class="primary" onclick="renderQuestion()">Try again</button></section>`)}}
+function predefinedScreen(){
+shell(`<section class="surface">
+<div class="eyebrow">Explore Personalities</div>
+<h2 class="screen-title">Find a personality.</h2>
+<p class="sub">Search for a name to discover their story.</p>
+<input class="field" id="personSearch" placeholder="Search personalities..." autocomplete="off">
+<div id="personResults" aria-live="polite"></div>
+</section>`);
+
+const search = document.getElementById("personSearch");
+const results = document.getElementById("personResults");
+
+search.addEventListener("input", () => {
+const query = search.value.trim().toLowerCase();
+results.innerHTML = "";
+if (!query) return;
+
+const profiles = window.originalProfiles || {};
+const matches = Object.entries(profiles).filter(([key, profile]) =>
+(profile.displayName || key).toLowerCase().includes(query)
+);
+
+if (!matches.length) {
+results.innerHTML = '<p class="sub">No matching personalities found.</p>';
+return;
+}
+
+matches.forEach(([key, profile]) => {
+const button = document.createElement("button");
+button.className = "person";
+button.type = "button";
+button.textContent = profile.displayName || key;
+button.addEventListener("click", () => openPredefined(key));
+results.appendChild(button);
+});
+});
+}
+function openPredefined(key){const p=window.originalProfiles?.[key];if(!p){alert("The original profiles.js file could not be loaded.");return}showStory(p,p.displayName||key)}
+function privateScreen(){shell(`<section class="surface"><div class="eyebrow">A private little world</div><h2 class="screen-title">Know me better.</h2><p class="sub">This story is protected. Enter the private password to continue.</p><input class="field" id="privatePassword" type="password" placeholder="Enter password" autocomplete="current-password"><div class="actions"><span></span><button class="primary" onclick="loadPrivate()">Unlock story →</button></div><div id="privateError"></div></section>`)}
+async function loadPrivate(){const password=document.getElementById("privatePassword").value;if(!password){document.getElementById("privateError").innerHTML='<div class="notice">Please enter the password.</div>';return}shell(`<section class="surface"><h2 class="screen-title">Opening the private story…</h2><p class="sub">Just a moment.</p></section>`);try{const r=await fetch(WORKER_URL,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({action:"private-profile",password})});const d=await r.json();if(!r.ok)throw Error(d.error||"Unable to unlock profile.");showStory(d.story,"Harsha")}catch(e){shell(`<section class="surface"><h2 class="screen-title">Couldn't unlock the story.</h2><p class="sub">${escapeHtml(e.message)}</p><button class="primary" onclick="privateScreen()">Try again</button></section>`)}}
+function showStory(profile,name){const traits=Array.isArray(profile.traits)?profile.traits:[];storyCards=[];traits.forEach((t,i)=>storyCards.push({kicker:`PERSONALITY · ${String(i+1).padStart(2,"0")}`,title:t.title||"A little detail",body:t.description||"",label:`${i+1} / ${traits.length}`}));const sections=[["strengths","MY STRENGTHS"],["cons","THINGS I'M WORKING ON"],["observations","OTHER OBSERVATIONS"],["personalMessage","A PERSONAL MESSAGE"]];sections.forEach(([key,label])=>{const value=profile[key];if(Array.isArray(value))value.forEach((v,i)=>storyCards.push({kicker:label,title:typeof v==="string"?label:(v.title||label),body:typeof v==="string"?v:(v.description||v.text||""),label:"EXTRA"}));else if(typeof value==="string"&&value.trim())storyCards.push({kicker:label,title:label,body:value,label:"EXTRA"})});if(profile.ending)storyCards.push({kicker:"A FINAL THOUGHT",title:"A little something to remember",body:profile.ending,label:"ENDING"});cardIndex=0;main.innerHTML=`<div class="story-wrap"><div class="story-top"><button class="back" onclick="home()">← Home</button><span class="story-count">${escapeHtml(name)}'s story</span></div><div class="deck" id="deck"><article class="story-card" id="storyCard"><div><div class="card-kicker" id="cardKicker"></div><h2 class="card-title" id="cardTitle"></h2><div class="card-body" id="cardBody"></div></div><div class="card-bottom"><span id="cardLabel"></span><span>SWIPE TO EXPLORE</span></div></article></div><div class="dots" id="dots"></div><div class="swipe-hint">Swipe left or use the arrows to move between cards</div><div class="story-controls"><button class="round" onclick="moveCard(-1)" aria-label="Previous card">←</button><button class="round next" onclick="moveCard(1)" aria-label="Next card">→</button></div></div>`;renderCard();const deck=document.getElementById("deck");deck.addEventListener("pointerdown",e=>{dragStart={x:e.clientX,y:e.clientY};document.getElementById("storyCard").classList.add("dragging")});deck.addEventListener("pointerup",e=>{if(!dragStart)return;const dx=e.clientX-dragStart.x;const dy=e.clientY-dragStart.y;dragStart=null;document.getElementById("storyCard").classList.remove("dragging");if(Math.abs(dx)>45&&Math.abs(dx)>Math.abs(dy))moveCard(dx<0?1:-1)});deck.addEventListener("pointercancel",()=>dragStart=null)}
+function renderCard(){const c=storyCards[cardIndex];if(!c)return;document.getElementById("cardKicker").textContent=c.kicker;document.getElementById("cardTitle").textContent=c.title;document.getElementById("cardBody").textContent=c.body;document.getElementById("cardLabel").textContent=c.label;document.querySelector(".story-count").textContent=`${cardIndex+1} of ${storyCards.length}`;document.getElementById("dots").innerHTML=storyCards.map((_,i)=>`<i class="${i===cardIndex?"active":""}"></i>`).join("");const card=document.getElementById("storyCard");card.style.transform="translateX(0) rotate(0)";card.style.opacity="1"}
+function moveCard(dir){cardIndex=Math.max(0,Math.min(storyCards.length-1,cardIndex+dir));renderCard()}
+function escapeHtml(s){return String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
+wireHome();
+</script>
+</body>
+</html>
