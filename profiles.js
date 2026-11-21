@@ -1,6 +1,6 @@
 window.originalProfiles = {
-  "srikruthi": {
-    displayName: "Srikruthi",
+  "user19": {
+    displayName: "user19",
 ending: "I don't know every side of you, and I won't pretend that I do. These are simply a few things I've noticed and appreciated. Maybe some descriptions fit you, maybe some don't. You understand yourself better than I ever could. I appreciate the times you've helped me and the patience you've shown. Even the little things haven't gone unnoticed. I'm still learning to listen better, think before reacting and respect other people's feelings. I don't want to define you through these words. I just wanted you to know that some little things about you are noticed and appreciated.",    
 traits: [
       {
@@ -40,8 +40,8 @@ traits: [
       }
     ]
   },
-  "bhavana": {
-    displayName: "Bhavana",
+  "user20": {
+    displayName: "user20",
     ending: "One thing I want to say ❤️\n\nYou've always been a humble and patient person, working hard for your goals and standing by the people you care about.\n\nThank you for being there for our family and for always supporting us. I hope you achieve everything you're working towards.\n\nKeep working hard, keep growing and never give up on your dreams.\n\nAnd no matter how much we tease or argue with each other, you're always my sister. 😊",
     traits: [
       {
