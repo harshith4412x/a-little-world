@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="theme-color" content="#f7f4ef">
+<meta name="theme-color" content="#f7f4ef" id="themeMeta">
 <title>A Little World of Personalities</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -16,18 +16,46 @@
   --muted: #7a746c;
   --paper: #f7f4ef;
   --card: #fffefa;
+  --card-glass: rgba(255, 254, 250, 0.88);
+  --deck-1: #ede4da;
+  --deck-2: #f5eee6;
   --line: #e6dfd5;
   --line-strong: #d4c7b8;
   --accent: #a66850;
   --accent-bg: #f5ebe4;
-  --accent2: #d9a78e;
-  --sage: #7e9181;
   --sage-bg: #e9efe8;
+  --sage-ink: #5c7060;
   --rose-bg: #f3e8ec;
+  --rose-ink: #9c5f73;
+  --glow-1: rgba(235, 217, 203, 0.65);
+  --glow-2: rgba(226, 236, 225, 0.65);
   --shadow-sm: 0 6px 24px rgba(46, 36, 27, 0.04);
   --shadow: 0 24px 64px rgba(46, 36, 27, 0.09);
   --serif: "Newsreader", Georgia, serif;
   --sans: "Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+[data-theme="dark"] {
+  --ink: #f2ece4;
+  --ink-soft: #cfc6ba;
+  --muted: #968d82;
+  --paper: #161412;
+  --card: #1f1c19;
+  --card-glass: rgba(31, 28, 25, 0.88);
+  --deck-1: #26221e;
+  --deck-2: #2c2722;
+  --line: #302b26;
+  --line-strong: #473f37;
+  --accent: #d8967c;
+  --accent-bg: #2e221d;
+  --sage-bg: #202922;
+  --sage-ink: #9cb3a0;
+  --rose-bg: #2b1f24;
+  --rose-ink: #d494a8;
+  --glow-1: rgba(166, 104, 80, 0.14);
+  --glow-2: rgba(126, 145, 129, 0.12);
+  --shadow-sm: 0 8px 26px rgba(0, 0, 0, 0.25);
+  --shadow: 0 24px 64px rgba(0, 0, 0, 0.45);
 }
 
 * { box-sizing: border-box; }
@@ -38,6 +66,7 @@ body {
   color: var(--ink);
   font-family: var(--sans);
   -webkit-font-smoothing: antialiased;
+  transition: background 0.3s ease, color 0.3s ease;
 }
 
 button, input, textarea { font: inherit; }
@@ -48,18 +77,17 @@ button { cursor: pointer; }
   overflow-x: hidden;
   position: relative;
   background:
-    radial-gradient(circle at 88% 4%, rgba(235, 217, 203, 0.65) 0%, transparent 32%),
-    radial-gradient(circle at 6% 88%, rgba(226, 236, 225, 0.65) 0%, transparent 30%),
+    radial-gradient(circle at 88% 4%, var(--glow-1) 0%, transparent 32%),
+    radial-gradient(circle at 6% 88%, var(--glow-2) 0%, transparent 30%),
     var(--paper);
 }
 
-/* Subtle organic paper grain */
 .app::before {
   content: "";
   position: fixed;
   inset: 0;
   pointer-events: none;
-  opacity: 0.28;
+  opacity: 0.22;
   background-image: radial-gradient(#8c7f70 0.5px, transparent 0.5px);
   background-size: 18px 18px;
   z-index: 0;
@@ -70,10 +98,11 @@ button { cursor: pointer; }
 .topbar {
   max-width: 1120px;
   margin: auto;
-  padding: 26px 28px;
+  padding: 24px 28px;
   display: flex;
   align-items: center;
   justify-content: space-between;
+  gap: 12px;
 }
 
 .brand {
@@ -85,17 +114,40 @@ button { cursor: pointer; }
 }
 .brand span { color: var(--accent); }
 
+.top-right {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
 .top-note {
-  font-size: 12.5px;
+  font-size: 13px;
   color: var(--muted);
   font-style: italic;
   font-family: var(--serif);
 }
 
+.theme-btn {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 1px solid var(--line);
+  background: var(--card-glass);
+  color: var(--ink);
+  display: grid;
+  place-items: center;
+  font-size: 14px;
+  transition: transform 0.2s ease, border-color 0.2s ease;
+}
+.theme-btn:hover {
+  transform: scale(1.06);
+  border-color: var(--line-strong);
+}
+
 main {
   max-width: 1120px;
   margin: auto;
-  padding: 28px 26px 76px;
+  padding: 24px 26px 76px;
 }
 
 .fade-in {
@@ -117,7 +169,7 @@ main {
 
 .hero {
   max-width: 760px;
-  margin: 30px auto 42px;
+  margin: 26px auto 42px;
   text-align: center;
 }
 
@@ -148,7 +200,7 @@ main {
   grid-template-columns: repeat(3, 1fr);
   gap: 18px;
   max-width: 960px;
-  margin: 48px auto 0;
+  margin: 46px auto 0;
 }
 
 .home-card {
@@ -157,13 +209,14 @@ main {
   padding: 28px;
   border: 1px solid var(--line);
   border-radius: 26px;
-  background: rgba(255, 254, 250, 0.85);
+  background: var(--card-glass);
   backdrop-filter: blur(8px);
   box-shadow: var(--shadow-sm);
   transition: transform 0.28s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.28s ease, border-color 0.28s ease;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
+  color: var(--ink);
 }
 
 .home-card:hover {
@@ -187,8 +240,8 @@ main {
 }
 
 .home-card:hover .home-icon { transform: scale(1.06) rotate(-3deg); }
-.home-card:nth-child(2) .home-icon { background: var(--sage-bg); color: #5c7060; }
-.home-card:nth-child(3) .home-icon { background: var(--rose-bg); color: #9c5f73; }
+.home-card:nth-child(2) .home-icon { background: var(--sage-bg); color: var(--sage-ink); }
+.home-card:nth-child(3) .home-icon { background: var(--rose-bg); color: var(--rose-ink); }
 
 .home-card h2 {
   font-family: var(--serif);
@@ -221,7 +274,7 @@ main {
 
 .footer {
   text-align: center;
-  color: #9b9287;
+  color: var(--muted);
   font-size: 11px;
   letter-spacing: 0.14em;
   margin-top: 58px;
@@ -230,7 +283,7 @@ main {
 /* Panels & Forms */
 .panel {
   max-width: 720px;
-  margin: 16px auto 0;
+  margin: 14px auto 0;
 }
 
 .panel-head {
@@ -260,7 +313,7 @@ main {
 }
 
 .surface {
-  background: rgba(255, 254, 250, 0.95);
+  background: var(--card-glass);
   border: 1px solid var(--line);
   border-radius: 30px;
   padding: clamp(26px, 5vw, 46px);
@@ -298,23 +351,23 @@ h2.screen-title {
 
 .field:focus, textarea:focus {
   border-color: var(--accent);
-  box-shadow: 0 0 0 4px rgba(166, 104, 80, 0.11);
+  box-shadow: 0 0 0 4px rgba(166, 104, 80, 0.12);
 }
 
 .primary {
   border: 0;
   background: var(--ink);
-  color: #fff;
+  color: var(--paper);
   border-radius: 999px;
   padding: 14px 24px;
   font-size: 13.5px;
   font-weight: 600;
-  transition: transform 0.18s ease, background 0.2s ease, box-shadow 0.2s ease;
+  transition: transform 0.18s ease, opacity 0.2s ease, box-shadow 0.2s ease;
 }
 .primary:hover {
-  background: #363330;
+  opacity: 0.9;
   transform: translateY(-1px);
-  box-shadow: 0 8px 20px rgba(34, 32, 30, 0.15);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.14);
 }
 
 .secondary {
@@ -328,7 +381,7 @@ h2.screen-title {
   transition: background 0.2s, border-color 0.2s;
 }
 .secondary:hover:not(:disabled) {
-  background: #f3ede4;
+  background: var(--accent-bg);
   border-color: var(--line-strong);
 }
 .secondary:disabled { opacity: 0.4; cursor: not-allowed; }
@@ -343,7 +396,7 @@ h2.screen-title {
 
 .progress {
   height: 4px;
-  background: #ebe4da;
+  background: var(--line);
   border-radius: 99px;
   overflow: hidden;
   margin: 18px 0 24px;
@@ -390,7 +443,6 @@ h2.screen-title {
 
 .option:hover {
   border-color: var(--line-strong);
-  background: #fcf9f4;
 }
 
 .option.selected {
@@ -407,17 +459,41 @@ h2.screen-title {
 
 textarea {
   width: 100%;
-  min-height: 84px;
+  min-height: 82px;
   resize: vertical;
   border: 1px solid var(--line);
   border-radius: 16px;
   padding: 14px 16px;
   background: var(--card);
+  color: var(--ink);
   margin-top: 16px;
   outline: none;
   font-size: 13.5px;
   line-height: 1.6;
   transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.spark-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+  margin-top: 10px;
+}
+
+.spark-chip {
+  border: 1px solid var(--line);
+  background: var(--card);
+  color: var(--muted);
+  border-radius: 999px;
+  padding: 6px 12px;
+  font-size: 12px;
+  transition: all 0.18s ease;
+}
+
+.spark-chip:hover {
+  border-color: var(--accent);
+  color: var(--ink);
+  background: var(--accent-bg);
 }
 
 /* Search Profiles */
@@ -492,7 +568,7 @@ textarea {
 
 .deck {
   position: relative;
-  min-height: 410px;
+  min-height: 415px;
   perspective: 1200px;
   touch-action: pan-y;
 }
@@ -507,14 +583,14 @@ textarea {
 
 .deck::before {
   inset: 14px 16px -10px;
-  background: #ede4da;
+  background: var(--deck-1);
   transform: rotate(2deg);
   z-index: 0;
 }
 
 .deck::after {
   inset: 7px 8px -5px;
-  background: #f5eee6;
+  background: var(--deck-2);
   transform: rotate(-1deg);
   z-index: 0;
 }
@@ -522,11 +598,11 @@ textarea {
 .story-card {
   position: relative;
   z-index: 1;
-  min-height: 410px;
+  min-height: 415px;
   border-radius: 30px;
   background: var(--card);
   border: 1px solid var(--line);
-  padding: clamp(28px, 6vw, 50px);
+  padding: clamp(28px, 6vw, 48px);
   box-shadow: var(--shadow);
   display: flex;
   flex-direction: column;
@@ -569,12 +645,44 @@ textarea {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-top: 36px;
+  margin-top: 34px;
   padding-top: 16px;
-  border-top: 1px solid #f0eae1;
-  color: #9a9186;
+  border-top: 1px solid var(--line);
+  color: var(--muted);
   font-size: 11px;
-  letter-spacing: 0.1em;
+  letter-spacing: 0.08em;
+  gap: 10px;
+}
+
+.card-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.pill-btn {
+  border: 1px solid var(--line);
+  background: transparent;
+  color: var(--muted);
+  border-radius: 999px;
+  padding: 6px 12px;
+  font-size: 11.5px;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  transition: all 0.2s ease;
+}
+
+.pill-btn:hover {
+  border-color: var(--line-strong);
+  color: var(--ink);
+}
+
+.pill-btn.active {
+  border-color: var(--accent);
+  background: var(--accent-bg);
+  color: var(--accent);
 }
 
 .dots {
@@ -589,7 +697,7 @@ textarea {
   height: 5px;
   width: 16px;
   border-radius: 99px;
-  background: #dfd6cb;
+  background: var(--line-strong);
   cursor: pointer;
   transition: all 0.25s ease;
 }
@@ -602,12 +710,13 @@ textarea {
 .swipe-hint {
   text-align: center;
   font-size: 11.5px;
-  color: #9a9186;
+  color: var(--muted);
 }
 
 .story-controls {
   display: flex;
   justify-content: center;
+  align-items: center;
   gap: 14px;
   margin-top: 18px;
 }
@@ -632,12 +741,8 @@ textarea {
 
 .round.next {
   background: var(--ink);
-  color: #fff;
+  color: var(--paper);
   border-color: var(--ink);
-}
-
-.round.next:hover:not(:disabled) {
-  background: #363330;
 }
 
 .round:disabled {
@@ -649,13 +754,12 @@ textarea {
   padding: 14px 16px;
   border-radius: 14px;
   background: var(--accent-bg);
-  color: #6b4c3e;
+  color: var(--accent);
   font-size: 13px;
   line-height: 1.55;
   margin-top: 16px;
 }
 
-/* Pulse loader */
 .loader-bars {
   display: flex;
   gap: 6px;
@@ -680,9 +784,10 @@ textarea {
   .home-grid { grid-template-columns: 1fr; max-width: 470px; }
   .home-card { min-height: 185px; }
   .home-icon { margin-bottom: 18px; }
-  .hero { margin-top: 16px; }
-  .topbar { padding: 20px; }
-  main { padding: 20px 18px 54px; }
+  .hero { margin-top: 14px; }
+  .topbar { padding: 18px 20px; }
+  .top-note { display: none; }
+  main { padding: 18px 18px 54px; }
   .person-list { grid-template-columns: 1fr; }
   .deck, .story-card { min-height: 380px; }
 }
@@ -692,7 +797,10 @@ textarea {
 <div class="app">
   <header class="topbar">
     <div class="brand" onclick="home()">A LITTLE <span>WORLD</span> OF PERSONALITIES</div>
-    <div class="top-note">A space to understand people gently</div>
+    <div class="top-right">
+      <div class="top-note">A space to understand people gently</div>
+      <button class="theme-btn" id="themeToggle" onclick="toggleTheme()" aria-label="Switch reading theme" title="Switch reading theme">☾</button>
+    </div>
   </header>
 
   <main id="appMain">
@@ -743,7 +851,32 @@ const questions = [
   { category: "Social and cultural influences", question: "How do your upbringing and surroundings influence your choices?", options: ["They strongly shape my values", "They influence me, but I question things too", "I consciously choose what to keep or change", "I am still figuring out their influence"] }
 ];
 
-let visitorName = "", answers = [], qIndex = 0, selected = -1, storyCards = [], cardIndex = 0, dragStart = null, inStoryView = false;
+const reflectionSparks = [
+  "Depends on who I'm with",
+  "Learned this the hard way",
+  "I tend to overthink this",
+  "Usually automatic for me"
+];
+
+let visitorName = "", answers = [], qIndex = 0, selected = -1, storyCards = [], cardIndex = 0, dragStart = null, inStoryView = false, currentStoryOwner = "";
+
+function toggleTheme() {
+  const isDark = document.documentElement.getAttribute("data-theme") === "dark";
+  const next = isDark ? "light" : "dark";
+  document.documentElement.setAttribute("data-theme", next);
+  document.getElementById("themeToggle").textContent = next === "dark" ? "☀" : "☾";
+  document.getElementById("themeMeta").setAttribute("content", next === "dark" ? "#161412" : "#f7f4ef");
+  localStorage.setItem("alw-theme", next);
+}
+
+(function initTheme() {
+  const saved = localStorage.getItem("alw-theme");
+  if (saved === "dark") {
+    document.documentElement.setAttribute("data-theme", "dark");
+    document.getElementById("themeToggle").textContent = "☀";
+    document.getElementById("themeMeta").setAttribute("content", "#161412");
+  }
+})();
 
 function home() {
   inStoryView = false;
@@ -806,6 +939,9 @@ function renderQuestion() {
         ${q.options.map((o, i) => `<button class="option ${i === selected ? "selected" : ""}" onclick="choose(${i})">${o}</button>`).join("")}
       </div>
       <textarea id="explanation" placeholder="Want to add a quick thought on why? (optional)">${escapeHtml(explanation)}</textarea>
+      <div class="spark-chips">
+        ${reflectionSparks.map(s => `<button type="button" class="spark-chip" onclick="appendSpark('${escapeHtml(s)}')">+ ${escapeHtml(s)}</button>`).join("")}
+      </div>
       <div id="qNotice"></div>
       <div class="actions">
         <button class="secondary" onclick="previousQuestion()" ${qIndex === 0 ? "disabled" : ""}>← Previous</button>
@@ -813,6 +949,14 @@ function renderQuestion() {
       </div>
     </section>
   `);
+}
+
+function appendSpark(text) {
+  const box = document.getElementById("explanation");
+  if (!box) return;
+  const current = box.value.trim();
+  box.value = current ? `${current} — ${text}` : text;
+  box.focus();
 }
 
 function choose(i) {
@@ -895,29 +1039,36 @@ async function generatePublicStory() {
 }
 
 function predefinedScreen() {
+  const profiles = window.originalProfiles || {};
+  const entries = Object.entries(profiles);
+
   shell(`
     <section class="surface">
       <div class="eyebrow">Explore Personalities</div>
-      <h2 class="screen-title">Find a personality.</h2>
-      <p class="sub">Search for a name to discover their story.</p>
-      <input class="field" id="personSearch" placeholder="Type a name to search..." autocomplete="off">
+      <h2 class="screen-title">Written worlds.</h2>
+      <p class="sub">Browse the personalities already captured, or filter by name.</p>
+      <input class="field" id="personSearch" placeholder="Filter by name..." autocomplete="off">
+      <div id="exploreNotice"></div>
       <div id="personResults" class="person-list" aria-live="polite"></div>
     </section>
   `);
 
   const search = document.getElementById("personSearch");
   const results = document.getElementById("personResults");
-  search.focus();
+  const notice = document.getElementById("exploreNotice");
 
-  search.addEventListener("input", () => {
-    const query = search.value.trim().toLowerCase();
+  function renderMatches(query) {
     results.innerHTML = "";
-    if (!query) return;
+    notice.innerHTML = "";
 
-    const profiles = window.originalProfiles || {};
-    const matches = Object.entries(profiles).filter(([key, profile]) =>
-      (profile.displayName || key).toLowerCase().includes(query)
-    );
+    if (!entries.length) {
+      notice.innerHTML = '<div class="notice">No written personalities are available right now. Check back soon or create your own story from the home screen.</div>';
+      return;
+    }
+
+    const matches = query
+      ? entries.filter(([key, profile]) => (profile.displayName || key).toLowerCase().includes(query))
+      : entries;
 
     if (!matches.length) {
       results.innerHTML = '<p class="sub" style="grid-column:1/-1;">No matching personalities found.</p>';
@@ -929,23 +1080,33 @@ function predefinedScreen() {
       button.className = "person";
       button.type = "button";
       const traitCount = Array.isArray(profile.traits) ? profile.traits.length : 0;
+      const preview = Array.isArray(profile.traits) && profile.traits[0]?.title
+        ? profile.traits[0].title
+        : (traitCount ? `${traitCount} chapters inside` : "Written personality story");
+
       button.innerHTML = `
         <div>
           <h3>${escapeHtml(profile.displayName || key)}</h3>
-          <p>${traitCount ? `${traitCount} chapters inside this story` : "Written personality story"}</p>
+          <p>${escapeHtml(preview)}</p>
         </div>
         <span>Read story ↗</span>
       `;
       button.addEventListener("click", () => openPredefined(key));
       results.appendChild(button);
     });
-  });
+  }
+
+  renderMatches("");
+  search.addEventListener("input", () => renderMatches(search.value.trim().toLowerCase()));
 }
 
 function openPredefined(key) {
   const p = window.originalProfiles?.[key];
+  const notice = document.getElementById("exploreNotice");
   if (!p) {
-    alert("The original profiles.js file could not be loaded.");
+    if (notice) {
+      notice.innerHTML = '<div class="notice">This story could not be opened right now. Please try another profile.</div>';
+    }
     return;
   }
   showStory(p, p.displayName || key);
@@ -1006,13 +1167,15 @@ async function loadPrivate() {
 }
 
 function showStory(profile, name) {
+  currentStoryOwner = name;
   const traits = Array.isArray(profile.traits) ? profile.traits : [];
   storyCards = [];
   traits.forEach((t, i) => storyCards.push({
     kicker: `PERSONALITY · ${String(i + 1).padStart(2, "0")}`,
     title: t.title || "A little detail",
     body: t.description || "",
-    label: `${escapeHtml(name)} · ${i + 1} / ${traits.length}`
+    label: `${name} · ${i + 1} / ${traits.length}`,
+    liked: false
   }));
 
   const sections = [
@@ -1029,14 +1192,16 @@ function showStory(profile, name) {
         kicker: label,
         title: typeof v === "string" ? label : (v.title || label),
         body: typeof v === "string" ? v : (v.description || v.text || ""),
-        label: escapeHtml(name)
+        label: name,
+        liked: false
       }));
     } else if (typeof value === "string" && value.trim()) {
       storyCards.push({
         kicker: label,
         title: label,
         body: value,
-        label: escapeHtml(name)
+        label: name,
+        liked: false
       });
     }
   });
@@ -1046,7 +1211,8 @@ function showStory(profile, name) {
       kicker: "A FINAL THOUGHT",
       title: "A little something to remember",
       body: profile.ending,
-      label: "THE END"
+      label: "THE END",
+      liked: false
     });
   }
 
@@ -1060,7 +1226,7 @@ function showStory(profile, name) {
         <span class="story-count" id="storyCount"></span>
       </div>
       <div class="deck" id="deck">
-        <article class="story-card" id="storyCard">
+        <article class="story-card" id="storyCard" ondblclick="toggleResonate()">
           <div>
             <div class="card-kicker" id="cardKicker"></div>
             <h2 class="card-title" id="cardTitle"></h2>
@@ -1068,12 +1234,15 @@ function showStory(profile, name) {
           </div>
           <div class="card-bottom">
             <span id="cardLabel"></span>
-            <span>SWIPE OR USE ARROWS</span>
+            <div class="card-actions">
+              <button type="button" class="pill-btn" id="resonateBtn" onclick="toggleResonate()">♡ Resonates</button>
+              <button type="button" class="pill-btn" onclick="downloadCardImage()" title="Save this card as an image">↓ Save card</button>
+            </div>
           </div>
         </article>
       </div>
       <div class="dots" id="dots"></div>
-      <div class="swipe-hint">Drag the card, click the dots, or use arrow keys</div>
+      <div class="swipe-hint">Swipe, double-tap to mark what resonates, or save a card to share</div>
       <div class="story-controls">
         <button class="round" id="prevCardBtn" onclick="moveCard(-1)" aria-label="Previous card">←</button>
         <button class="round next" id="nextCardBtn" onclick="moveCard(1)" aria-label="Next card">→</button>
@@ -1087,6 +1256,7 @@ function showStory(profile, name) {
   const card = document.getElementById("storyCard");
 
   deck.addEventListener("pointerdown", e => {
+    if (e.target.closest("button")) return;
     dragStart = { x: e.clientX, y: e.clientY };
     card.classList.add("dragging");
   });
@@ -1122,6 +1292,98 @@ function showStory(profile, name) {
   });
 }
 
+function toggleResonate() {
+  const c = storyCards[cardIndex];
+  if (!c) return;
+  c.liked = !c.liked;
+  const btn = document.getElementById("resonateBtn");
+  if (btn) {
+    btn.classList.toggle("active", c.liked);
+    btn.textContent = c.liked ? "♥ Resonates" : "♡ Resonates";
+  }
+}
+
+function downloadCardImage() {
+  const c = storyCards[cardIndex];
+  if (!c) return;
+  const isDark = document.documentElement.getAttribute("data-theme") === "dark";
+  const canvas = document.createElement("canvas");
+  canvas.width = 1080;
+  canvas.height = 1350;
+  const ctx = canvas.getContext("2d");
+
+  ctx.fillStyle = isDark ? "#191614" : "#f7f4ef";
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+  ctx.fillStyle = isDark ? "#221e1b" : "#fffefa";
+  ctx.strokeStyle = isDark ? "#38312b" : "#e6dfd5";
+  ctx.lineWidth = 3;
+  roundRect(ctx, 72, 72, 936, 1206, 44);
+  ctx.fill();
+  ctx.stroke();
+
+  ctx.fillStyle = isDark ? "#d8967c" : "#a66850";
+  ctx.font = "700 22px sans-serif";
+  ctx.fillText(c.kicker.toUpperCase(), 140, 175);
+
+  ctx.fillStyle = isDark ? "#f2ece4" : "#22201e";
+  ctx.font = "400 62px Georgia, serif";
+  let y = wrapText(ctx, c.title, 140, 275, 800, 74);
+
+  ctx.fillStyle = isDark ? "#cfc6ba" : "#4d4843";
+  ctx.font = "400 34px Georgia, serif";
+  wrapText(ctx, c.body, 140, y + 48, 800, 54);
+
+  ctx.strokeStyle = isDark ? "#38312b" : "#ece5dc";
+  ctx.lineWidth = 2;
+  ctx.beginPath();
+  ctx.moveTo(140, 1140);
+  ctx.lineTo(940, 1140);
+  ctx.stroke();
+
+  ctx.fillStyle = isDark ? "#968d82" : "#7a746c";
+  ctx.font = "600 22px sans-serif";
+  ctx.fillText(c.label.toUpperCase(), 140, 1195);
+  ctx.textAlign = "right";
+  ctx.fillText("A LITTLE WORLD", 940, 1195);
+
+  const link = document.createElement("a");
+  link.download = `${(currentStoryOwner || "story").toLowerCase().replace(/\s+/g, "-")}-card-${cardIndex + 1}.png`;
+  link.href = canvas.toDataURL("image/png");
+  link.click();
+}
+
+function roundRect(ctx, x, y, w, h, r) {
+  ctx.beginPath();
+  ctx.moveTo(x + r, y);
+  ctx.arcTo(x + w, y, x + w, y + h, r);
+  ctx.arcTo(x + w, y + h, x, y + h, r);
+  ctx.arcTo(x, y + h, x, y, r);
+  ctx.arcTo(x, y, x + w, y, r);
+  ctx.closePath();
+}
+
+function wrapText(ctx, text, x, y, maxWidth, lineHeight) {
+  const paragraphs = String(text).split("\n");
+  paragraphs.forEach(p => {
+    const words = p.split(" ");
+    let line = "";
+    for (let n = 0; n < words.length; n++) {
+      const testLine = line + words[n] + " ";
+      if (ctx.measureText(testLine).width > maxWidth && n > 0) {
+        ctx.fillText(line.trim(), x, y);
+        line = words[n] + " ";
+        y += lineHeight;
+      } else {
+        line = testLine;
+      }
+    }
+    ctx.fillText(line.trim(), x, y);
+    y += lineHeight;
+  });
+  return y;
+}
+
 function jumpCard(i) {
   cardIndex = i;
   renderCard();
@@ -1133,8 +1395,15 @@ function renderCard() {
   document.getElementById("cardKicker").textContent = c.kicker;
   document.getElementById("cardTitle").textContent = c.title;
   document.getElementById("cardBody").textContent = c.body;
-  document.getElementById("cardLabel").innerHTML = c.label;
+  document.getElementById("cardLabel").textContent = c.label;
   document.getElementById("storyCount").textContent = `CARD ${cardIndex + 1} OF ${storyCards.length}`;
+
+  const btn = document.getElementById("resonateBtn");
+  if (btn) {
+    btn.classList.toggle("active", !!c.liked);
+    btn.textContent = c.liked ? "♥ Resonates" : "♡ Resonates";
+  }
+
   document.getElementById("dots").innerHTML = storyCards
     .map((_, i) => `<i class="${i === cardIndex ? "active" : ""}" onclick="jumpCard(${i})"></i>`)
     .join("");
