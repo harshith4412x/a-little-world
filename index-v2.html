@@ -466,6 +466,55 @@
     }
     .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
 
+    /* ===== LEGAL HUB & PERSISTENT FOOTER ===== */
+    .legal-doc h3 {
+      margin-top: 18px;
+      font-size: 0.98rem;
+      color: var(--accent);
+    }
+    .legal-doc p, .legal-doc li {
+      font-size: 0.88rem;
+      color: var(--ink-soft);
+    }
+    .legal-doc ul {
+      margin: 8px 0 12px;
+      padding-left: 20px;
+    }
+    .legal-doc a {
+      color: var(--accent);
+      text-decoration: underline;
+    }
+    .legal-footer {
+      margin-top: 24px;
+      padding: 14px 18px;
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+      background: var(--card);
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      font-size: 0.8rem;
+      color: var(--muted);
+    }
+    .legal-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+    }
+    .legal-link {
+      color: var(--accent);
+      text-decoration: none;
+      font-weight: 600;
+      background: transparent;
+      border: 0;
+      padding: 2px 4px;
+      font-size: 0.8rem;
+    }
+    .legal-link:hover { text-decoration: underline; }
+
     /* ===== ZERO-CLS POLICY-COMPLIANT ADSENSE SHELL (PUBLIC GUIDE ONLY) ===== */
     .ad-slot-shell {
       margin-top: 160px; /* >=150px clear separation from interactive controls */
@@ -712,6 +761,10 @@
               <input type="file" id="importFileInput" accept="application/json" style="display:none;">
               <button type="button" class="btn-sm" id="btnWipeAll">Erase Local Data</button>
             </div>
+            <div class="row spacer">
+              <button type="button" class="btn-sm js-open-legal" data-legal="privacy">Read Privacy Policy</button>
+              <button type="button" class="btn-sm js-open-legal" data-legal="terms">Read Terms &amp; Conditions</button>
+            </div>
             <p class="muted spacer" id="vaultStats">Calculating local archive...</p>
           </article>
         </div>
@@ -746,6 +799,72 @@
           </aside>
         </article>
       </section>
+
+      <!-- ===== VIEW 7: PRIVACY POLICY & TERMS AND CONDITIONS (BOT-READABLE LEGAL HUB) ===== -->
+      <section id="view-legal" class="view" aria-label="Privacy Policy and Terms and Conditions">
+        <article class="card legal-doc">
+          <div class="row" style="justify-content:space-between; margin-bottom:12px;">
+            <div>
+              <h2>Privacy Policy &amp; Terms and Conditions</h2>
+              <p class="muted" style="margin:0;">Last updated: November 22, 2026 · Applies to A Little World (meonix.in)</p>
+            </div>
+            <div class="row">
+              <button type="button" class="btn-chip active js-open-legal" data-legal="privacy">Privacy Policy</button>
+              <button type="button" class="btn-chip js-open-legal" data-legal="terms">Terms &amp; Conditions</button>
+            </div>
+          </div>
+
+          <section id="privacy-policy" tabindex="-1">
+            <h3>Privacy Policy</h3>
+            <p>A Little World is built on a local-first privacy architecture. We respect your mental privacy and minimize data leaving your device.</p>
+
+            <p><strong>1. Data Stored Locally on Your Device:</strong> Your name (optional), mood check-ins, daily streak and Streak Freeze counts, custom audio mixes, 10-question Cognitive Profile responses, ACT values, micro-commitments, and private CBT journal entries are stored strictly inside your browser's <code>localStorage</code>. We do not maintain user accounts or a central database of your private journal reflections. You may export or permanently erase this local data anytime from the <strong>Values &amp; Vault</strong> tab.</p>
+
+            <p><strong>2. Stateless Friend Compatibility Links:</strong> When you choose to copy a Friend Compatibility link, your first name, archetype label, and 5-axis summary are encoded directly into the URL fragment (<code>#compat=...</code>). URL fragments are processed locally in your browser and are not transmitted to our servers unless you share the link yourself.</p>
+
+            <p><strong>3. Optional AI Mirror Reflection Processing:</strong> If you explicitly click <em>AI Mirror Reflection</em> in the Journal tab, only the single thought text and cognitive pattern tag you submit for that request are sent over HTTPS to our stateless <code>/api/reflect</code> edge function and forwarded to the Gemini API solely to generate an immediate reflective response. Do not include sensitive personal identifiers, passwords, or third-party private information in AI reflection prompts.</p>
+
+            <p><strong>4. Google AdSense, Third-Party Vendors, and Advertising Cookies:</strong> When advertising is enabled on public editorial pages (such as the Guide view), third-party vendors, including Google, use cookies to serve ads based on a visitor's prior visits to this website or other websites on the Internet. Google's use of advertising cookies enables it and its partners to serve ads to users based on their visit to this site and/or other sites on the Internet.</p>
+            <ul>
+              <li>You may opt out of personalized advertising by visiting <a href="https://adssettings.google.com" target="_blank" rel="noopener noreferrer">Google Ads Settings</a>.</li>
+              <li>Alternatively, you may opt out of some third-party vendors' uses of cookies for personalized advertising by visiting <a href="https://www.aboutads.info/choices/" target="_blank" rel="noopener noreferrer">www.aboutads.info</a>.</li>
+              <li>Visitors in the European Economic Area (EEA), the United Kingdom, and Switzerland will only be served personalized ads where valid consent has been obtained through a Google-certified Consent Management Platform (CMP).</li>
+            </ul>
+
+            <p><strong>5. Data Protection Rights &amp; Grievance Redressal (India DPDP Act, 2023 &amp; Global Standards):</strong> Where applicable under India's Digital Personal Data Protection Act, 2023 and DPDP Rules, 2025, you have the right to access a summary of any personal data processed by us, request correction or erasure, withdraw consent at any time, nominate another individual to exercise rights on your behalf in the event of death or incapacity, and seek grievance redressal before escalating to the Data Protection Board of India.</p>
+            <ul>
+              <li><strong>Age Requirement:</strong> This service is intended for individuals aged 18 and older (or those using it with verifiable parental/guardian consent where required by law). We do not knowingly track or target advertising at minors.</li>
+              <li><strong>Grievance Officer &amp; Privacy Contact:</strong> Replace with Operator Name, Email (e.g., <code>privacy@meonix.in</code>), and Postal City/Country before public launch.</li>
+              <li><strong>Grievance Response Timeline:</strong> Privacy requests and grievances are acknowledged promptly and resolved within 30 working days, and in all events within the statutory maximum of 90 days.</li>
+            </ul>
+          </section>
+
+          <hr style="border:0; border-top:1px solid var(--border); margin:24px 0;">
+
+          <section id="terms-of-use" tabindex="-1">
+            <h3>Terms and Conditions</h3>
+            <p>By accessing or using A Little World, you agree to these Terms and Conditions. If you do not agree, please discontinue use of the application.</p>
+            <ul>
+              <li><strong>Informational &amp; Self-Reflection Purpose Only (Not Medical Advice):</strong> All cognitive profiles, mood tools, breathing pacers, soundscapes, CBT reframing prompts, and AI Mirror outputs are provided strictly for personal reflection, relaxation, and general educational self-discovery. They do not constitute medical, psychiatric, or psychological diagnosis, treatment, therapy, or crisis intervention. Always consult a qualified healthcare or mental health professional for medical concerns or urgent distress.</li>
+              <li><strong>Local Data Responsibility:</strong> Because reflections and streaks are saved locally in your browser storage, clearing browser data, switching devices, or using private/incognito browsing may erase stored progress unless you export a JSON backup beforehand.</li>
+              <li><strong>Acceptable Use:</strong> You agree not to automate, scrape, abuse rate limits, reverse-engineer, or submit unlawful, harmful, or abusive content through the <code>/api/reflect</code> AI endpoint. We may throttle or restrict access to protect service stability.</li>
+              <li><strong>AI Output Limitations:</strong> Automated AI reflections are probabilistic language outputs and may occasionally be incomplete or inaccurate. Use independent personal judgment when interpreting any generated perspective.</li>
+              <li><strong>Intellectual Property &amp; Third-Party Links:</strong> The application design, original text, audio synthesis code, and editorial guides remain the property of the site operator. Third-party links and advertisements displayed on public guide pages are governed by their respective providers' terms and policies.</li>
+              <li><strong>Disclaimer of Warranties &amp; Limitation of Liability:</strong> The service is provided on an "as is" and "as available" basis without warranties of uninterrupted availability. To the fullest extent permitted by applicable law, the operator shall not be liable for indirect, incidental, or consequential damages arising from use of the service or loss of locally stored browser data.</li>
+              <li><strong>Updates &amp; Governing Law:</strong> We may update this Privacy Policy and these Terms from time to time by posting the revised version with an updated date on this page. These Terms are governed by the laws applicable in the operator's jurisdiction (India, unless overridden by mandatory local consumer protection laws).</li>
+            </ul>
+          </section>
+        </article>
+      </section>
+
+      <footer class="legal-footer" aria-label="Site Legal Navigation">
+        <span>A Little World · Local-First Mind Sanctuary</span>
+        <nav class="legal-links" aria-label="Legal Links">
+          <a class="legal-link js-open-legal" href="#privacy" data-legal="privacy">Privacy Policy</a>
+          <span aria-hidden="true">·</span>
+          <a class="legal-link js-open-legal" href="#terms" data-legal="terms">Terms &amp; Conditions</a>
+        </nav>
+      </footer>
     </main>
   </div>
 
@@ -864,7 +983,9 @@
        2. STATE MANAGEMENT, SCHEMA SANITIZATION & COMPASSIONATE STREAK
        ===================================================================== */
     function localDateKey(d) {
-      const dt = d || new Date();
+      const dt = d |
+
+| new Date();
       return dt.getFullYear() + '-' + String(dt.getMonth() + 1).padStart(2, '0') + '-' + String(dt.getDate()).padStart(2, '0');
     }
 
@@ -901,20 +1022,42 @@
 
     function sanitizeState(raw) {
       const base = defaultState();
-      if (!raw || typeof raw !== 'object' || Array.isArray(raw)) return base;
+      if (!raw |
+
+| typeof raw !== 'object' |
+| Array.isArray(raw)) return base;
       const merged = Object.assign(base, raw);
       if (!THEME_META[merged.theme]) merged.theme = 'midnight';
-      merged.userName = String(merged.userName || '').slice(0, 24);
-      merged.streak = Math.max(0, Math.floor(Number(merged.streak) || 0));
-      merged.bestStreak = Math.max(merged.streak, Math.floor(Number(merged.bestStreak) || 0));
-      merged.freezes = Math.max(0, Math.min(2, Math.floor(Number(merged.freezes) || 0)));
-      merged.totalFocusMin = Math.max(0, Math.floor(Number(merged.totalFocusMin) || 0));
-      if (!merged.activeDays || typeof merged.activeDays !== 'object' || Array.isArray(merged.activeDays)) merged.activeDays = {};
-      if (!Array.isArray(merged.quizAnswers) || merged.quizAnswers.length !== 10) {
+      merged.userName = String(merged.userName |
+
+| '').slice(0, 24);
+      merged.streak = Math.max(0, Math.floor(Number(merged.streak) |
+
+| 0));
+      merged.bestStreak = Math.max(merged.streak, Math.floor(Number(merged.bestStreak) |
+
+| 0));
+      merged.freezes = Math.max(0, Math.min(2, Math.floor(Number(merged.freezes) |
+
+| 0)));
+      merged.totalFocusMin = Math.max(0, Math.floor(Number(merged.totalFocusMin) |
+
+| 0));
+      if (!merged.activeDays |
+
+| typeof merged.activeDays !== 'object' |
+| Array.isArray(merged.activeDays)) merged.activeDays = {};
+      if (!Array.isArray(merged.quizAnswers) |
+
+| merged.quizAnswers.length !== 10) {
         merged.quizAnswers = new Array(10).fill(null);
       } else {
         merged.quizAnswers = merged.quizAnswers.map(function (v) {
-          return (v === 0 || v === 1 || v === 2 || v === 3) ? v : null;
+          return (v === 0 |
+
+| v === 1 |
+| v === 2 |
+| v === 3) ? v : null;
         });
       }
       if (!Array.isArray(merged.entries)) merged.entries = [];
@@ -957,10 +1100,14 @@
       const box = document.getElementById('freezeNotice');
       box.style.display = 'none';
       const today = localDateKey();
-      if (!state.todayRitual || state.todayRitual.date !== today) {
+      if (!state.todayRitual |
+
+| state.todayRitual.date !== today) {
         state.todayRitual = { date: today, mood: false, breath: false, note: false };
       }
-      if (!state.lastActiveDate || state.streak === 0) return;
+      if (!state.lastActiveDate |
+
+| state.streak === 0) return;
       const gap = daysBetween(state.lastActiveDate, today);
       if (gap <= 1) return;
 
@@ -988,8 +1135,12 @@
       if (kind && Object.prototype.hasOwnProperty.call(state.todayRitual, kind)) {
         state.todayRitual[kind] = true;
       }
-      const prev = state.activeDays[today] || { actions: 0, frozen: false };
-      prev.actions = (prev.actions || 0) + 1;
+      const prev = state.activeDays[today] |
+
+| { actions: 0, frozen: false };
+      prev.actions = (prev.actions |
+
+| 0) + 1;
       prev.frozen = false;
       state.activeDays[today] = prev;
 
@@ -1027,7 +1178,9 @@
       document.getElementById('hdrStreak').textContent = String(state.streak);
       document.getElementById('hdrFreezes').textContent = String(state.freezes);
       document.getElementById('totalFocusMin').textContent = String(state.totalFocusMin);
-      document.getElementById('reminderTime').value = state.reminderTime || '21:00';
+      document.getElementById('reminderTime').value = state.reminderTime |
+
+| '21:00';
 
       const r = state.todayRitual;
       const setItem = function (id, stateId, done) {
@@ -1063,12 +1216,18 @@
     }
 
     function exportReminderIcs() {
-      const val = document.getElementById('reminderTime').value || '21:00';
+      const val = document.getElementById('reminderTime').value |
+
+| '21:00';
       state.reminderTime = val;
       saveState();
       const parts = val.split(':');
-      const hh = (parts[0] || '21').padStart(2, '0');
-      const mm = (parts[1] || '00').padStart(2, '0');
+      const hh = (parts[0] |
+
+| '21').padStart(2, '0');
+      const mm = (parts[1] |
+
+| '00').padStart(2, '0');
       const todayCompact = localDateKey().replace(/-/g, '');
       const ics = [
         'BEGIN:VCALENDAR',
@@ -1102,19 +1261,27 @@
     let sleepEndTs = 0;
 
     function restoreMasterGain() {
-      if (!masterGain || !audioCtx) return;
-      const target = (Number(document.getElementById('masterVol').value) || 70) / 100;
+      if (!masterGain |
+
+| !audioCtx) return;
+      const target = (Number(document.getElementById('masterVol').value) |
+
+| 70) / 100;
       masterGain.gain.cancelScheduledValues(audioCtx.currentTime);
       masterGain.gain.setTargetAtTime(target, audioCtx.currentTime, 0.06);
     }
 
     function ensureAudio() {
-      const AC = window.AudioContext || window.webkitAudioContext;
+      const AC = window.AudioContext |
+
+| window.webkitAudioContext;
       if (!AC) { showToast('Web Audio API unavailable in this browser.'); return null; }
       if (!audioCtx) {
         audioCtx = new AC();
         masterGain = audioCtx.createGain();
-        masterGain.gain.value = (Number(document.getElementById('masterVol').value) || 70) / 100;
+        masterGain.gain.value = (Number(document.getElementById('masterVol').value) |
+
+| 70) / 100;
         duckGain = audioCtx.createGain();
         duckGain.gain.value = 1.0;
         compressor = audioCtx.createDynamicsCompressor();
@@ -1167,7 +1334,9 @@
 
     function startChannel(id) {
       const ctx = ensureAudio();
-      if (!ctx || activeChannels.has(id)) return;
+      if (!ctx |
+
+| activeChannels.has(id)) return;
       const outGain = ctx.createGain();
       outGain.gain.value = 0.0001;
       outGain.connect(masterGain);
@@ -1184,7 +1353,10 @@
         return s;
       }
 
-      if (id === 'white' || id === 'pink' || id === 'brown') {
+      if (id === 'white' |
+
+| id === 'pink' |
+| id === 'brown') {
         loopBuf(noiseBuffers[id]).connect(outGain);
       } else if (id === 'rain') {
         const hi = ctx.createBiquadFilter(); hi.type = 'bandpass'; hi.frequency.value = 4200; hi.Q.value = 0.7;
@@ -1199,7 +1371,9 @@
         loopBuf(noiseBuffers.brown).connect(lo); lo.connect(outGain);
         nodes.push(hi, mid, lo, lfo, lfoG);
         timers.push(setInterval(function () {
-          if (!audioCtx || Math.random() > 0.45) return;
+          if (!audioCtx |
+
+| Math.random() > 0.45) return;
           const now = audioCtx.currentTime;
           const o = audioCtx.createOscillator();
           const g = audioCtx.createGain();
@@ -1242,11 +1416,13 @@
         loopBuf(noiseBuffers.brown).connect(lp); lp.connect(outGain);
         nodes.push(lp);
         timers.push(setInterval(function () {
-          if (!audioCtx || Math.random() > 0.55) return;
+          if (!audioCtx |
+
+| Math.random() > 0.55) return;
           const now = audioCtx.currentTime;
           const s = audioCtx.createBufferSource();
           s.buffer = noiseBuffers.white;
-          const bp = audioCtx.createBiquadFilter(); bp.type = 'bandpass'; bp.frequency.value = 1400 + Math.random() * 2400;
+          const bp = ctx.createBiquadFilter(); bp.type = 'bandpass'; bp.frequency.value = 1400 + Math.random() * 2400;
           const g = audioCtx.createGain();
           g.gain.setValueAtTime(0.0001, now);
           g.gain.exponentialRampToValueAtTime(0.28, now + 0.003);
@@ -1292,7 +1468,9 @@
     }
 
     function setChannelVolume(id, pct) {
-      const clamped = Math.max(0, Math.min(100, Number(pct) || 0));
+      const clamped = Math.max(0, Math.min(100, Number(pct) |
+
+| 0));
       channelLevels[id] = clamped;
       const valEl = document.getElementById('val-' + id);
       const rngEl = document.getElementById('rng-' + id);
@@ -1319,10 +1497,15 @@
     }
 
     function applyPreset(name) {
-      const map = name === 'saved' ? (state.savedMix || {}) : (AUDIO_PRESETS[name] || {});
+      const map = name === 'saved' ? (state.savedMix |
+
+| {}) : (AUDIO_PRESETS[name] |
+| {});
       restoreMasterGain();
       AUDIO_CHANNELS.forEach(function (c) {
-        setChannelVolume(c.id, map[c.id] || 0);
+        setChannelVolume(c.id, map[c.id] |
+
+| 0);
       });
       showToast('Soundscape loaded: ' + name);
     }
@@ -1352,7 +1535,9 @@
       const grid = document.getElementById('mixerGrid');
       grid.innerHTML = '';
       AUDIO_CHANNELS.forEach(function (c) {
-        const cur = channelLevels[c.id] || 0;
+        const cur = channelLevels[c.id] |
+
+| 0;
         const div = document.createElement('div');
         div.className = 'channel';
         div.innerHTML =
@@ -1477,7 +1662,9 @@
     function getArchetype(dims) {
       const ranked = dims.map(function (v, i) { return { i: i, v: v }; }).sort(function (a, b) { return b.v - a.v; });
       const pair = [ranked[0].i, ranked[1].i].sort(function (a, b) { return a - b; }).join('-');
-      return ARCHETYPES[pair] || ARCHETYPES['0-1'];
+      return ARCHETYPES[pair] |
+
+| ARCHETYPES['0-1'];
     }
 
     function computeCompatibility(d1, d2) {
@@ -1510,16 +1697,47 @@
       return JSON.parse(new TextDecoder().decode(bytes));
     }
 
-    function checkIncomingCompatHash() {
-      const hash = window.location.hash || '';
+    function openLegalSection(which) {
+      switchTab('legal');
+      const targetId = which === 'terms' ? 'terms-of-use' : 'privacy-policy';
+      document.querySelectorAll('#view-legal .js-open-legal').forEach(function (btn) {
+        btn.classList.toggle('active', btn.getAttribute('data-legal') === which);
+      });
+      const el = document.getElementById(targetId);
+      if (el) {
+        el.scrollIntoView({ behavior: 'auto', block: 'start' });
+      }
+    }
+
+    function checkHashRoute() {
+      const hash = window.location.hash |
+
+| '';
+      if (hash === '#privacy') {
+        openLegalSection('privacy');
+        return;
+      }
+      if (hash === '#terms') {
+        openLegalSection('terms');
+        return;
+      }
       if (hash.indexOf('#compat=') !== 0) return;
       try {
         const data = b64UrlDecode(hash.slice(8));
-        if (!data || !Array.isArray(data.d) || data.d.length !== 5) return;
+        if (!data |
+
+| !Array.isArray(data.d) |
+| data.d.length !== 5) return;
         incomingFriend = {
-          name: String(data.n || 'A Friend').slice(0, 24),
-          archetype: String(data.a || 'Mind Explorer').slice(0, 32),
-          dims: data.d.map(function (v) { return Math.max(38, Math.min(96, Math.round(Number(v) || 60))); })
+          name: String(data.n |
+
+| 'A Friend').slice(0, 24),
+          archetype: String(data.a |
+
+| 'Mind Explorer').slice(0, 32),
+          dims: data.d.map(function (v) { return Math.max(38, Math.min(96, Math.round(Number(v) |
+
+| 60))); })
         };
         const banner = document.getElementById('friendCompatBanner');
         banner.style.display = 'block';
@@ -1533,7 +1751,9 @@
     }
 
     function renderQuizAndProfile() {
-      document.getElementById('userNameInput').value = state.userName || '';
+      document.getElementById('userNameInput').value = state.userName |
+
+| '';
       const qObj = QUIZ_QUESTIONS[quizStep];
       const box = document.getElementById('quizContainer');
       box.innerHTML = '<p style="font-weight:600; margin:4px 0 8px;">' + esc(qObj.q) + '</p>';
@@ -1602,7 +1822,9 @@
       const dims = scoreAnswers(state.quizAnswers);
       const arch = getArchetype(dims);
       const payload = {
-        n: (state.userName || 'Friend').slice(0, 24),
+        n: (state.userName |
+
+| 'Friend').slice(0, 24),
         a: arch.name,
         v: state.quizAnswers,
         d: dims
@@ -1626,7 +1848,9 @@
       if (!isQuizComplete()) return;
       const dims = scoreAnswers(state.quizAnswers);
       const arch = getArchetype(dims);
-      const pal = THEME_META[state.theme] || THEME_META.midnight;
+      const pal = THEME_META[state.theme] |
+
+| THEME_META.midnight;
 
       const canvas = document.createElement('canvas');
       canvas.width = 1080;
@@ -1651,7 +1875,9 @@
 
       c.fillStyle = pal.soft;
       c.font = '500 34px -apple-system, BlinkMacSystemFont, sans-serif';
-      c.fillText((state.userName || 'Quiet Mind') + '  ·  ' + state.streak + '-Day Rhythm', 120, 330);
+      c.fillText((state.userName |
+
+| 'Quiet Mind') + '  ·  ' + state.streak + '-Day Rhythm', 120, 330);
 
       AXES.forEach(function (label, i) {
         const y = 460 + i * 132;
@@ -1710,7 +1936,9 @@
         b.textContent = mood;
         b.addEventListener('click', function () {
           const today = localDateKey();
-          state.activeDays[today] = Object.assign(state.activeDays[today] || {}, { mood: mood });
+          state.activeDays[today] = Object.assign(state.activeDays[today] |
+
+| {}, { mood: mood });
           recordRitualAction('mood');
           document.getElementById('moodSummary').textContent = 'Logged right now: ' + mood + ' (' + new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) + ')';
           showToast('Mood noted: ' + mood);
@@ -1751,7 +1979,9 @@
       };
       return {
         validation: 'It makes complete sense that this felt heavy in the moment.',
-        reframe: templates[pattern] || templates['General Reflection'],
+        reframe: templates[pattern] |
+
+| templates['General Reflection'],
         microAction: 'Take two unhurried breaths and pick one tiny 2-minute step that honors your energy right now.'
       };
     }
@@ -1781,9 +2011,15 @@
     function renderAiBox(el, data, badge) {
       el.innerHTML =
         '<div class="muted" style="margin-bottom:6px;">' + esc(badge) + '</div>' +
-        '<p style="margin:0 0 6px;">' + esc(data.validation || '') + '</p>' +
-        '<p style="margin:0 0 6px;"><strong>Perspective:</strong> ' + esc(data.reframe || '') + '</p>' +
-        '<p style="margin:0;"><strong>2-Min Step:</strong> ' + esc(data.microAction || '') + '</p>';
+        '<p style="margin:0 0 6px;">' + esc(data.validation |
+
+| '') + '</p>' +
+        '<p style="margin:0 0 6px;"><strong>Perspective:</strong> ' + esc(data.reframe |
+
+| '') + '</p>' +
+        '<p style="margin:0;"><strong>2-Min Step:</strong> ' + esc(data.microAction |
+
+| '') + '</p>';
     }
 
     /* =====================================================================
@@ -1896,6 +2132,15 @@
       document.querySelectorAll('.nav-btn').forEach(function (btn) {
         btn.addEventListener('click', function () { switchTab(btn.getAttribute('data-tab')); });
       });
+      document.querySelectorAll('.js-open-legal').forEach(function (el) {
+        el.addEventListener('click', function (e) {
+          e.preventDefault();
+          const target = el.getAttribute('data-legal') |
+
+| 'privacy';
+          openLegalSection(target);
+        });
+      });
 
       document.getElementById('btnExportIcs').addEventListener('click', exportReminderIcs);
       document.getElementById('btnBreathToggle').addEventListener('click', toggleBreathing);
@@ -1918,7 +2163,9 @@
       document.getElementById('btnFocusToggle').addEventListener('click', toggleFocusTimer);
 
       document.getElementById('masterVol').addEventListener('input', function (e) {
-        const pct = Number(e.target.value) || 0;
+        const pct = Number(e.target.value) |
+
+| 0;
         document.getElementById('masterVal').textContent = pct + '%';
         restoreMasterGain();
       });
@@ -1932,7 +2179,9 @@
       });
       document.getElementById('btnStopAudio').addEventListener('click', silenceAllAudio);
       document.getElementById('btnSleepSet').addEventListener('click', function () {
-        const mins = Number(document.getElementById('sleepTimerSel').value) || 0;
+        const mins = Number(document.getElementById('sleepTimerSel').value) |
+
+| 0;
         clearInterval(sleepInterval);
         sleepInterval = null;
         restoreMasterGain();
@@ -2036,7 +2285,7 @@
       });
 
       window.addEventListener('hashchange', function () {
-        checkIncomingCompatHash();
+        checkHashRoute();
         renderQuizAndProfile();
       });
     }
@@ -2052,7 +2301,7 @@
       renderJournalEntries();
       renderValuesAndGoals();
       renderVaultStats();
-      checkIncomingCompatHash();
+      checkHashRoute();
     }
 
     bindEvents();
