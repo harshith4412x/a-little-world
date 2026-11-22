@@ -16,7 +16,7 @@
   --muted: #7a746c;
   --paper: #f7f4ef;
   --card: #fffefa;
-  --card-glass: rgba(255, 254, 250, 0.88);
+  --card-glass: rgba(255, 254, 250, 0.9);
   --deck-1: #ede4da;
   --deck-2: #f5eee6;
   --line: #e6dfd5;
@@ -41,7 +41,7 @@
   --muted: #968d82;
   --paper: #161412;
   --card: #1f1c19;
-  --card-glass: rgba(31, 28, 25, 0.88);
+  --card-glass: rgba(31, 28, 25, 0.9);
   --deck-1: #26221e;
   --deck-2: #2c2722;
   --line: #302b26;
@@ -354,6 +354,64 @@ h2.screen-title {
   box-shadow: 0 0 0 4px rgba(166, 104, 80, 0.12);
 }
 
+/* Integrated Search Bar with Enter Button */
+.search-bar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 24px;
+  padding: 6px 6px 6px 18px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--card);
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.search-bar:focus-within {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 4px rgba(166, 104, 80, 0.12);
+}
+
+.search-bar input {
+  flex: 1;
+  border: 0;
+  background: transparent;
+  color: var(--ink);
+  font-size: 15px;
+  outline: none;
+  min-width: 0;
+}
+
+.search-submit {
+  border: 0;
+  background: var(--ink);
+  color: var(--paper);
+  border-radius: 999px;
+  padding: 11px 22px;
+  font-size: 13px;
+  font-weight: 600;
+  white-space: nowrap;
+  transition: opacity 0.2s ease, transform 0.18s ease;
+}
+
+.search-submit:hover {
+  opacity: 0.9;
+  transform: translateY(-1px);
+}
+
+.search-hint-box {
+  margin-top: 20px;
+  padding: 16px 18px;
+  border-radius: 16px;
+  border: 1px dashed var(--line-strong);
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.6;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
 .primary {
   border: 0;
   background: var(--ink);
@@ -441,9 +499,7 @@ h2.screen-title {
   transition: all 0.2s ease;
 }
 
-.option:hover {
-  border-color: var(--line-strong);
-}
+.option:hover { border-color: var(--line-strong); }
 
 .option.selected {
   border-color: var(--accent);
@@ -496,12 +552,12 @@ textarea {
   background: var(--accent-bg);
 }
 
-/* Search Profiles */
+/* Search Results */
 .person-list {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 14px;
-  margin-top: 24px;
+  margin-top: 22px;
 }
 
 .person {
@@ -519,7 +575,7 @@ textarea {
 .person:hover {
   transform: translateY(-3px);
   box-shadow: var(--shadow-sm);
-  border-color: var(--line-strong);
+  border-color: var(--accent);
 }
 
 .person h3 {
@@ -652,6 +708,7 @@ textarea {
   font-size: 11px;
   letter-spacing: 0.08em;
   gap: 10px;
+  flex-wrap: wrap;
 }
 
 .card-actions {
@@ -717,7 +774,7 @@ textarea {
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 14px;
+  gap: 12px;
   margin-top: 18px;
 }
 
@@ -749,6 +806,183 @@ textarea {
   opacity: 0.35;
   cursor: not-allowed;
 }
+
+.deep-btn {
+  height: 48px;
+  padding: 0 20px;
+  border-radius: 999px;
+  border: 1px solid var(--accent);
+  background: var(--accent-bg);
+  color: var(--accent);
+  font-size: 13px;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.deep-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-sm);
+}
+
+/* Deeper Reflection Chatbot Modal/Drawer */
+.chat-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(20, 18, 16, 0.52);
+  backdrop-filter: blur(5px);
+  z-index: 50;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  padding: 16px;
+  animation: fadeInBg 0.22s ease;
+}
+
+@keyframes fadeInBg {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.chat-sheet {
+  width: 100%;
+  max-width: 620px;
+  height: min(78vh, 640px);
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 28px;
+  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.28);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  animation: slideUp 0.28s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(24px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.chat-head {
+  padding: 18px 22px;
+  border-bottom: 1px solid var(--line);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.chat-head-title {
+  font-family: var(--serif);
+  font-size: 20px;
+  font-weight: 500;
+  margin: 2px 0 0;
+}
+
+.chat-close {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  border: 1px solid var(--line);
+  background: transparent;
+  color: var(--muted);
+  font-size: 16px;
+  display: grid;
+  place-items: center;
+}
+.chat-close:hover { color: var(--ink); border-color: var(--line-strong); }
+
+.chat-messages {
+  flex: 1;
+  overflow-y: auto;
+  padding: 20px 22px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.msg {
+  max-width: 84%;
+  padding: 13px 16px;
+  border-radius: 20px;
+  font-size: 14px;
+  line-height: 1.65;
+  white-space: pre-line;
+}
+
+.msg.bot {
+  align-self: flex-start;
+  background: var(--paper);
+  border: 1px solid var(--line);
+  color: var(--ink-soft);
+  font-family: var(--serif);
+  font-size: 15.5px;
+  border-bottom-left-radius: 6px;
+}
+
+.msg.user {
+  align-self: flex-end;
+  background: var(--ink);
+  color: var(--paper);
+  border-bottom-right-radius: 6px;
+}
+
+.chat-prompts {
+  padding: 8px 22px 10px;
+  display: flex;
+  gap: 7px;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.chat-prompts::-webkit-scrollbar { display: none; }
+
+.chat-prompt-chip {
+  border: 1px solid var(--line);
+  background: var(--paper);
+  color: var(--muted);
+  border-radius: 999px;
+  padding: 6px 13px;
+  font-size: 12px;
+  white-space: nowrap;
+  flex-shrink: 0;
+  transition: all 0.18s ease;
+}
+.chat-prompt-chip:hover {
+  border-color: var(--accent);
+  color: var(--ink);
+}
+
+.chat-input-row {
+  padding: 12px 16px 16px;
+  border-top: 1px solid var(--line);
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.chat-input-row input {
+  flex: 1;
+  border: 1px solid var(--line);
+  background: var(--paper);
+  color: var(--ink);
+  border-radius: 999px;
+  padding: 12px 16px;
+  font-size: 14px;
+  outline: none;
+}
+.chat-input-row input:focus { border-color: var(--accent); }
+
+.chat-send {
+  border: 0;
+  background: var(--accent);
+  color: #fff;
+  border-radius: 999px;
+  padding: 12px 20px;
+  font-size: 13px;
+  font-weight: 600;
+}
+.chat-send:disabled { opacity: 0.45; cursor: not-allowed; }
 
 .notice {
   padding: 14px 16px;
@@ -790,6 +1024,8 @@ textarea {
   main { padding: 18px 18px 54px; }
   .person-list { grid-template-columns: 1fr; }
   .deck, .story-card { min-height: 380px; }
+  .chat-backdrop { padding: 0; }
+  .chat-sheet { border-radius: 24px 24px 0 0; height: 84vh; }
 }
 </style>
 </head>
@@ -818,8 +1054,8 @@ textarea {
         <button class="home-card" id="predefined">
           <div class="home-icon">❀</div>
           <h2>Explore personalities</h2>
-          <p>Meet the personalities already written and explore their stories, one card at a time.</p>
-          <div class="arrow">Explore stories <span>↗</span></div>
+          <p>Search for a specific name and uncover their written story, one card at a time.</p>
+          <div class="arrow">Search stories <span>↗</span></div>
         </button>
         <button class="home-card" id="private">
           <div class="home-icon">♡</div>
@@ -858,7 +1094,7 @@ const reflectionSparks = [
   "Usually automatic for me"
 ];
 
-let visitorName = "", answers = [], qIndex = 0, selected = -1, storyCards = [], cardIndex = 0, dragStart = null, inStoryView = false, currentStoryOwner = "";
+let visitorName = "", answers = [], qIndex = 0, selected = -1, storyCards = [], cardIndex = 0, dragStart = null, inStoryView = false, currentStoryOwner = "", currentProfileData = null, chatHistory = [];
 
 function toggleTheme() {
   const isDark = document.documentElement.getAttribute("data-theme") === "dark";
@@ -880,6 +1116,7 @@ function toggleTheme() {
 
 function home() {
   inStoryView = false;
+  closeChat();
   main.innerHTML = homeMarkup;
   wireHome();
 }
@@ -892,6 +1129,7 @@ function wireHome() {
 
 function shell(content) {
   inStoryView = false;
+  closeChat();
   main.innerHTML = `<div class="panel fade-in"><div class="panel-head"><button class="back" onclick="home()">← Back to home</button><span class="step">A LITTLE WORLD</span></div>${content}</div>`;
 }
 
@@ -1038,43 +1276,59 @@ async function generatePublicStory() {
   }
 }
 
+/* Search-only Explore Personalities with Enter button & zero popups */
 function predefinedScreen() {
-  const profiles = window.originalProfiles || {};
-  const entries = Object.entries(profiles);
-
   shell(`
     <section class="surface">
       <div class="eyebrow">Explore Personalities</div>
-      <h2 class="screen-title">Written worlds.</h2>
-      <p class="sub">Browse the personalities already captured, or filter by name.</p>
-      <input class="field" id="personSearch" placeholder="Filter by name..." autocomplete="off">
-      <div id="exploreNotice"></div>
+      <h2 class="screen-title">Find a written world.</h2>
+      <p class="sub">Stories stay tucked away until you look for them. Type a name and press Enter to search.</p>
+      <div class="search-bar">
+        <input id="personSearch" placeholder="Enter a name..." autocomplete="off">
+        <button type="button" class="search-submit" id="searchEnterBtn">Enter ↵</button>
+      </div>
+      <div id="exploreState">
+        <div class="search-hint-box">
+          <span>⌕</span>
+          <span>Enter a person's name above and press <strong>Enter</strong> to reveal their story.</span>
+        </div>
+      </div>
       <div id="personResults" class="person-list" aria-live="polite"></div>
     </section>
   `);
 
   const search = document.getElementById("personSearch");
+  const enterBtn = document.getElementById("searchEnterBtn");
   const results = document.getElementById("personResults");
-  const notice = document.getElementById("exploreNotice");
+  const stateBox = document.getElementById("exploreState");
+  search.focus();
 
-  function renderMatches(query) {
+  function executeSearch() {
+    const query = search.value.trim().toLowerCase();
     results.innerHTML = "";
-    notice.innerHTML = "";
 
-    if (!entries.length) {
-      notice.innerHTML = '<div class="notice">No written personalities are available right now. Check back soon or create your own story from the home screen.</div>';
+    if (!query) {
+      stateBox.innerHTML = '<div class="notice">Type a name first, then press Enter to search.</div>';
       return;
     }
 
-    const matches = query
-      ? entries.filter(([key, profile]) => (profile.displayName || key).toLowerCase().includes(query))
-      : entries;
+    const profiles = window.originalProfiles;
+    if (!profiles || typeof profiles !== "object") {
+      stateBox.innerHTML = '<div class="notice">Personalities could not be loaded right now. Please try again shortly.</div>';
+      return;
+    }
+
+    const matches = Object.entries(profiles).filter(([key, profile]) => {
+      const displayName = (profile?.displayName || key).toLowerCase();
+      return displayName.includes(query) || key.toLowerCase().includes(query);
+    });
 
     if (!matches.length) {
-      results.innerHTML = '<p class="sub" style="grid-column:1/-1;">No matching personalities found.</p>';
+      stateBox.innerHTML = `<div class="notice">No personality story found matching "${escapeHtml(search.value.trim())}".</div>`;
       return;
     }
 
+    stateBox.innerHTML = "";
     matches.forEach(([key, profile]) => {
       const button = document.createElement("button");
       button.className = "person";
@@ -1089,23 +1343,38 @@ function predefinedScreen() {
           <h3>${escapeHtml(profile.displayName || key)}</h3>
           <p>${escapeHtml(preview)}</p>
         </div>
-        <span>Read story ↗</span>
+        <span>Open story ↗</span>
       `;
       button.addEventListener("click", () => openPredefined(key));
       results.appendChild(button);
     });
   }
 
-  renderMatches("");
-  search.addEventListener("input", () => renderMatches(search.value.trim().toLowerCase()));
+  enterBtn.addEventListener("click", executeSearch);
+  search.addEventListener("keydown", e => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      executeSearch();
+    }
+  });
+  search.addEventListener("input", () => {
+    if (!search.value.trim()) {
+      results.innerHTML = "";
+      stateBox.innerHTML = `
+        <div class="search-hint-box">
+          <span>⌕</span>
+          <span>Enter a person's name above and press <strong>Enter</strong> to reveal their story.</span>
+        </div>`;
+    }
+  });
 }
 
 function openPredefined(key) {
   const p = window.originalProfiles?.[key];
-  const notice = document.getElementById("exploreNotice");
+  const stateBox = document.getElementById("exploreState");
   if (!p) {
-    if (notice) {
-      notice.innerHTML = '<div class="notice">This story could not be opened right now. Please try another profile.</div>';
+    if (stateBox) {
+      stateBox.innerHTML = '<div class="notice">This story could not be opened right now.</div>';
     }
     return;
   }
@@ -1168,6 +1437,9 @@ async function loadPrivate() {
 
 function showStory(profile, name) {
   currentStoryOwner = name;
+  currentProfileData = profile;
+  chatHistory = [];
+
   const traits = Array.isArray(profile.traits) ? profile.traits : [];
   storyCards = [];
   traits.forEach((t, i) => storyCards.push({
@@ -1236,15 +1508,16 @@ function showStory(profile, name) {
             <span id="cardLabel"></span>
             <div class="card-actions">
               <button type="button" class="pill-btn" id="resonateBtn" onclick="toggleResonate()">♡ Resonates</button>
-              <button type="button" class="pill-btn" onclick="downloadCardImage()" title="Save this card as an image">↓ Save card</button>
+              <button type="button" class="pill-btn" onclick="downloadCardImage()" title="Save this card as an image">↓ Save PNG</button>
             </div>
           </div>
         </article>
       </div>
       <div class="dots" id="dots"></div>
-      <div class="swipe-hint">Swipe, double-tap to mark what resonates, or save a card to share</div>
+      <div class="swipe-hint">Swipe cards, save a PNG, or explore deeper with the reflection guide</div>
       <div class="story-controls">
         <button class="round" id="prevCardBtn" onclick="moveCard(-1)" aria-label="Previous card">←</button>
+        <button class="deep-btn" onclick="openChat()">✦ Explore deeper</button>
         <button class="round next" id="nextCardBtn" onclick="moveCard(1)" aria-label="Next card">→</button>
       </div>
     </div>
@@ -1290,6 +1563,154 @@ function showStory(profile, name) {
     card.classList.remove("dragging");
     card.style.transform = "translateX(0) rotate(0)";
   });
+}
+
+/* Deeper Personality Chatbot */
+function openChat() {
+  if (document.getElementById("chatBackdrop")) return;
+  const activeCard = storyCards[cardIndex];
+  if (!chatHistory.length) {
+    chatHistory.push({
+      role: "bot",
+      text: `You're looking at ${currentStoryOwner}'s world—specifically "${activeCard?.title || "their story"}". Ask anything you'd like to understand more deeply about how this mind works, blind spots, or relationships.`
+    });
+  }
+
+  const backdrop = document.createElement("div");
+  backdrop.className = "chat-backdrop";
+  backdrop.id = "chatBackdrop";
+  backdrop.innerHTML = `
+    <div class="chat-sheet" role="dialog" aria-label="Explore personality deeper">
+      <div class="chat-head">
+        <div>
+          <div class="eyebrow">Deeper Reflection</div>
+          <div class="chat-head-title">Exploring ${escapeHtml(currentStoryOwner)}'s world</div>
+        </div>
+        <button type="button" class="chat-close" onclick="closeChat()" aria-label="Close">✕</button>
+      </div>
+      <div class="chat-messages" id="chatMessages"></div>
+      <div class="chat-prompts">
+        <button type="button" class="chat-prompt-chip" onclick="sendChatPrompt('What might be a hidden blind spot here?')">Hidden blind spot?</button>
+        <button type="button" class="chat-prompt-chip" onclick="sendChatPrompt('How does this personality act under stress?')">Behavior under stress?</button>
+        <button type="button" class="chat-prompt-chip" onclick="sendChatPrompt('What kind of people feel safest around this mind?')">Closest relationships?</button>
+        <button type="button" class="chat-prompt-chip" onclick="sendChatPrompt('Unpack this card in simpler words.')">Unpack current card</button>
+      </div>
+      <div class="chat-input-row">
+        <input id="chatInput" placeholder="Ask a deeper question..." autocomplete="off">
+        <button type="button" class="chat-send" id="chatSendBtn" onclick="submitChat()">Send</button>
+      </div>
+    </div>
+  `;
+
+  backdrop.addEventListener("click", e => {
+    if (e.target === backdrop) closeChat();
+  });
+
+  document.body.appendChild(backdrop);
+  renderChatMessages();
+
+  const input = document.getElementById("chatInput");
+  input.focus();
+  input.addEventListener("keydown", e => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      submitChat();
+    }
+  });
+}
+
+function closeChat() {
+  const el = document.getElementById("chatBackdrop");
+  if (el) el.remove();
+}
+
+function renderChatMessages() {
+  const container = document.getElementById("chatMessages");
+  if (!container) return;
+  container.innerHTML = chatHistory
+    .map(m => `<div class="msg ${m.role === "user" ? "user" : "bot"}">${escapeHtml(m.text)}</div>`)
+    .join("");
+  container.scrollTop = container.scrollHeight;
+}
+
+function sendChatPrompt(text) {
+  const input = document.getElementById("chatInput");
+  if (!input) return;
+  input.value = text;
+  submitChat();
+}
+
+async function submitChat() {
+  const input = document.getElementById("chatInput");
+  const sendBtn = document.getElementById("chatSendBtn");
+  if (!input || !sendBtn) return;
+
+  const text = input.value.trim();
+  if (!text) return;
+
+  input.value = "";
+  chatHistory.push({ role: "user", text });
+  renderChatMessages();
+
+  sendBtn.disabled = true;
+  chatHistory.push({ role: "bot", text: "Thinking gently…" });
+  renderChatMessages();
+
+  const activeCard = storyCards[cardIndex];
+  const storySummary = storyCards.map(c => `${c.title}: ${c.body}`).join("\n");
+
+  try {
+    const r = await fetch(WORKER_URL, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        action: "chat",
+        name: currentStoryOwner,
+        currentCard: activeCard ? { title: activeCard.title, body: activeCard.body } : null,
+        storyContext: storySummary,
+        messages: chatHistory.slice(0, -1)
+      })
+    });
+    const d = await r.json();
+    chatHistory.pop();
+
+    if (r.ok && (d.reply || d.message || d.answer)) {
+      chatHistory.push({ role: "bot", text: d.reply || d.message || d.answer });
+    } else {
+      chatHistory.push({ role: "bot", text: synthesizeLocalReflection(text, activeCard, storyCards, currentStoryOwner) });
+    }
+  } catch (_) {
+    chatHistory.pop();
+    chatHistory.push({ role: "bot", text: synthesizeLocalReflection(text, activeCard, storyCards, currentStoryOwner) });
+  }
+
+  sendBtn.disabled = false;
+  renderChatMessages();
+}
+
+function synthesizeLocalReflection(question, activeCard, cards, name) {
+  const q = question.toLowerCase();
+  const focusTitle = activeCard?.title || "this side of them";
+  const focusBody = activeCard?.body || "";
+  const firstSentence = focusBody.split(/[.!?]/)[0]?.trim() || "";
+
+  if (q.includes("blind spot") || q.includes("weakness") || q.includes("work")) {
+    const workingOn = cards.find(c => c.kicker.includes("WORKING ON"));
+    if (workingOn) {
+      return `Looking closely at ${name}'s story, the tension often shows up around "${workingOn.title}". ${workingOn.body}`;
+    }
+    return `Every strength casts a shadow. Because ${name} leans into "${focusTitle}", they can sometimes over-index on ${firstSentence ? firstSentence.toLowerCase() : "internal processing"}—holding back when quicker or simpler openness might lighten the weight.`;
+  }
+
+  if (q.includes("stress") || q.includes("conflict") || q.includes("pressure")) {
+    return `Under pressure, ${name} tends to retreat into the pattern described in "${focusTitle}". ${firstSentence ? firstSentence + "." : ""} Instead of reacting loudly, they usually try to regain inner footing before letting others see the full picture.`;
+  }
+
+  if (q.includes("relationship") || q.includes("friend") || q.includes("safe") || q.includes("people")) {
+    return `${name} connects best with people who respect space and depth rather than surface-level small talk. When someone meets "${focusTitle}" with patience instead of rushing them, trust builds quietly and deeply.`;
+  }
+
+  return `At the heart of "${focusTitle}" is how ${name} filters the world: ${firstSentence ? firstSentence.toLowerCase() + "." : "quietly, intentionally, and on their own terms."} Notice how this connects to the rest of their cards—it's less about rigid rules and more about staying true to what feels authentic.`;
 }
 
 function toggleResonate() {
@@ -1432,7 +1853,11 @@ function moveCard(dir) {
 }
 
 document.addEventListener("keydown", e => {
-  if (!inStoryView) return;
+  if (e.key === "Escape" && document.getElementById("chatBackdrop")) {
+    closeChat();
+    return;
+  }
+  if (!inStoryView || document.getElementById("chatBackdrop")) return;
   if (e.key === "ArrowRight") moveCard(1);
   if (e.key === "ArrowLeft") moveCard(-1);
 });
