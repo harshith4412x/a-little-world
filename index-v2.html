@@ -3,27 +3,27 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>Meonix — Campus Beta</title>
+  <title>Meonix — Campus Social</title>
   <style>
     :root {
-      --bg-outer: #05060a;
-      --bg-app: #0c0f18;
-      --surface: #141926;
-      --surface-elevated: #1c2335;
-      --border: rgba(255, 255, 255, 0.08);
-      --text-primary: #f3f5fb;
-      --text-secondary: #98a2bd;
-      --text-muted: #65708d;
-      --accent: #7c5cff;
-      --accent-soft: rgba(124, 92, 255, 0.16);
-      --accent-glow: rgba(124, 92, 255, 0.35);
-      --layer-activity: #38bdf8;
-      --layer-emotional: #f472b6;
-      --layer-event: #fbbf24;
-      --success: #34d399;
-      --radius-lg: 22px;
-      --radius-md: 16px;
-      --radius-sm: 12px;
+      --bg-outer: #090605;
+      --bg-app: #110c09;
+      --surface: #1a130e;
+      --surface-elevated: #241a13;
+      --border: rgba(255, 175, 120, 0.12);
+      --text-primary: #fff7f2;
+      --text-secondary: #c9b3a3;
+      --text-muted: #8c7465;
+      --orange: #ff6b2b;
+      --orange-light: #ff9a5a;
+      --orange-deep: #d94e14;
+      --orange-soft: rgba(255, 107, 43, 0.16);
+      --orange-glow: rgba(255, 107, 43, 0.35);
+      --grad-orange: linear-gradient(135deg, #ff8c42 0%, #ff5722 55%, #e63946 100%);
+      --layer-activity: #ffb703;
+      --layer-emotional: #ff758f;
+      --layer-event: #fb8500;
+      --mint: #34d399;
     }
 
     * {
@@ -35,7 +35,7 @@
 
     body {
       font-family: -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", Roboto, sans-serif;
-      background: radial-gradient(circle at top, #13182b 0%, var(--bg-outer) 65%);
+      background: radial-gradient(circle at top, #26160d 0%, var(--bg-outer) 70%);
       color: var(--text-primary);
       min-height: 100vh;
       display: flex;
@@ -43,7 +43,6 @@
       align-items: center;
     }
 
-    /* App Shell (Mobile Device Frame on Desktop, Edge-to-Edge on Mobile) */
     .app-shell {
       width: 100%;
       max-width: 430px;
@@ -61,219 +60,237 @@
     @media (min-width: 500px) {
       .app-shell {
         height: 92vh;
-        border-radius: 36px;
-        border: 1px solid rgba(255, 255, 255, 0.12);
-        box-shadow: 0 30px 90px rgba(0, 0, 0, 0.75);
+        border-radius: 38px;
+        border: 1px solid rgba(255, 154, 90, 0.18);
+        box-shadow: 0 32px 90px rgba(0, 0, 0, 0.85);
       }
     }
 
-    /* Top App Header */
-    .top-bar {
-      padding: 16px 18px 12px;
+    /* Instagram-Style Top Bar */
+    .ig-topbar {
+      height: 56px;
+      padding: 0 16px;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      background: rgba(12, 15, 24, 0.85);
+      background: rgba(17, 12, 9, 0.92);
       backdrop-filter: blur(18px);
       border-bottom: 1px solid var(--border);
       z-index: 20;
+      flex-shrink: 0;
     }
 
-    .brand-group {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-
-    .brand-logo {
-      width: 32px;
-      height: 32px;
-      border-radius: 11px;
-      background: linear-gradient(135deg, var(--accent), #ec4899);
-      display: grid;
-      place-items: center;
+    .ig-wordmark {
+      font-size: 22px;
       font-weight: 800;
-      font-size: 16px;
-      box-shadow: 0 6px 18px var(--accent-glow);
-    }
-
-    .circle-pill {
-      background: var(--surface-elevated);
-      border: 1px solid var(--border);
-      color: var(--text-primary);
-      padding: 6px 12px;
-      border-radius: 999px;
-      font-size: 13px;
-      font-weight: 600;
+      letter-spacing: -0.03em;
+      background: var(--grad-orange);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
       display: flex;
       align-items: center;
       gap: 6px;
       cursor: pointer;
-      transition: transform 0.15s ease;
     }
 
-    .circle-pill:active { transform: scale(0.95); }
-
-    .header-actions {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .icon-btn {
-      width: 36px;
-      height: 36px;
-      border-radius: 50%;
-      background: var(--surface);
+    .circle-dropdown {
+      background: var(--surface-elevated);
       border: 1px solid var(--border);
       color: var(--text-primary);
-      display: grid;
-      place-items: center;
+      font-size: 12px;
+      font-weight: 600;
+      padding: 5px 11px;
+      border-radius: 999px;
+      display: flex;
+      align-items: center;
+      gap: 5px;
       cursor: pointer;
-      position: relative;
-      font-size: 16px;
-      transition: transform 0.15s ease, background 0.2s;
+    }
+    .circle-dropdown:active { transform: scale(0.95); }
+
+    .topbar-icons {
+      display: flex;
+      align-items: center;
+      gap: 14px;
     }
 
-    .icon-btn:active { transform: scale(0.92); }
+    .nav-svg-btn {
+      background: none;
+      border: none;
+      color: var(--text-primary);
+      position: relative;
+      cursor: pointer;
+      display: grid;
+      place-items: center;
+      padding: 4px;
+    }
+    .nav-svg-btn:active { transform: scale(0.9); }
 
-    .calm-dot {
+    .badge-dot {
       position: absolute;
-      top: 6px;
-      right: 7px;
+      top: 1px;
+      right: 1px;
       width: 8px;
       height: 8px;
       border-radius: 50%;
-      background: var(--accent);
-      box-shadow: 0 0 8px var(--accent);
+      background: var(--orange);
+      box-shadow: 0 0 8px var(--orange);
     }
 
-    .quiet-banner {
-      background: rgba(52, 211, 153, 0.1);
-      border-bottom: 1px solid rgba(52, 211, 153, 0.2);
-      color: var(--success);
+    .badge-pill {
+      position: absolute;
+      top: -2px;
+      right: -5px;
+      background: var(--orange);
+      color: #fff;
+      font-size: 10px;
+      font-weight: 800;
+      padding: 1px 5px;
+      border-radius: 999px;
+      line-height: 1.2;
+    }
+
+    .quiet-strip {
+      background: rgba(255, 107, 43, 0.14);
+      border-bottom: 1px solid rgba(255, 107, 43, 0.25);
+      color: var(--orange-light);
       font-size: 11px;
       font-weight: 600;
       text-align: center;
       padding: 6px 12px;
       display: none;
     }
-    .quiet-banner.show { display: block; }
+    .quiet-strip.show { display: block; }
 
-    /* Scrollable Main Area */
+    /* Main Scroll Container */
     .main-scroll {
       flex: 1;
       overflow-y: auto;
-      padding: 14px 16px 96px;
+      padding-bottom: 78px;
       scrollbar-width: none;
     }
     .main-scroll::-webkit-scrollbar { display: none; }
 
-    .view-panel { display: none; animation: fadeIn 0.22s ease; }
-    .view-panel.active { display: block; }
+    .screen { display: none; animation: fadeIn 0.2s ease; }
+    .screen.active { display: block; }
 
     @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(6px); }
+      from { opacity: 0; transform: translateY(4px); }
       to { opacity: 1; transform: translateY(0); }
     }
 
-    /* Section Headings */
-    .section-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 10px;
-    }
-
-    .section-title {
-      font-size: 12px;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      color: var(--text-secondary);
-      font-weight: 700;
-    }
-
-    .section-meta {
-      font-size: 11px;
-      color: var(--text-muted);
-    }
-
-    /* 1. Ephemeral Inbox Whispers (Notes Bar) */
-    .whispers-strip {
+    /* Instagram Notes / Whispers Tray */
+    .notes-tray {
       display: flex;
       gap: 14px;
       overflow-x: auto;
-      padding: 16px 2px 12px;
-      margin-bottom: 14px;
+      padding: 18px 14px 12px;
+      border-bottom: 1px solid var(--border);
       scrollbar-width: none;
     }
-    .whispers-strip::-webkit-scrollbar { display: none; }
+    .notes-tray::-webkit-scrollbar { display: none; }
 
-    .whisper-node {
+    .note-item {
       flex: 0 0 auto;
       width: 78px;
       display: flex;
       flex-direction: column;
       align-items: center;
-      position: relative;
       cursor: pointer;
     }
 
-    .whisper-bubble {
+    .note-bubble {
       background: var(--surface-elevated);
-      border: 1px solid rgba(255, 255, 255, 0.12);
-      border-radius: 14px;
+      border: 1px solid rgba(255, 154, 90, 0.22);
+      border-radius: 16px;
       padding: 6px 8px;
       font-size: 11px;
       line-height: 1.25;
       color: var(--text-primary);
       text-align: center;
       width: 82px;
-      min-height: 38px;
+      min-height: 40px;
       display: flex;
       flex-direction: column;
       justify-content: center;
-      margin-bottom: -8px;
+      margin-bottom: -10px;
       z-index: 2;
-      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.35);
+      box-shadow: 0 8px 18px rgba(0, 0, 0, 0.45);
       word-break: break-word;
+      position: relative;
     }
 
-    .whisper-bubble.add-bubble {
+    .note-bubble::after {
+      content: "";
+      position: absolute;
+      bottom: -4px;
+      left: 20px;
+      width: 8px;
+      height: 8px;
+      background: var(--surface-elevated);
+      border-right: 1px solid rgba(255, 154, 90, 0.22);
+      border-bottom: 1px solid rgba(255, 154, 90, 0.22);
+      transform: rotate(45deg);
+    }
+
+    .note-bubble.new-note {
       border-style: dashed;
-      border-color: var(--accent);
-      color: var(--text-secondary);
-      background: var(--accent-soft);
+      border-color: var(--orange);
+      background: var(--orange-soft);
+      color: var(--orange-light);
     }
 
-    .layer-tag {
+    .layer-pill {
       font-size: 9px;
-      font-weight: 700;
+      font-weight: 800;
       text-transform: uppercase;
       letter-spacing: 0.04em;
       margin-bottom: 2px;
     }
-    .layer-activity { color: var(--layer-activity); }
-    .layer-emotional { color: var(--layer-emotional); }
-    .layer-event { color: var(--layer-event); }
+    .l-activity { color: var(--layer-activity); }
+    .l-emotional { color: var(--layer-emotional); }
+    .l-event { color: var(--layer-event); }
 
-    .avatar-ring {
-      width: 54px;
-      height: 54px;
+    .ig-ring {
+      width: 60px;
+      height: 60px;
       border-radius: 50%;
-      background: var(--surface);
-      border: 2px solid var(--border);
+      padding: 2.5px;
+      background: var(--border);
       display: grid;
       place-items: center;
-      font-size: 20px;
-      font-weight: 700;
       position: relative;
     }
-    .avatar-ring.has-whisper {
-      border-color: var(--accent);
+    .ig-ring.active-ring {
+      background: var(--grad-orange);
     }
 
-    .whisper-name {
+    .ig-avatar {
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      background: var(--surface);
+      border: 2px solid var(--bg-app);
+      display: grid;
+      place-items: center;
+      font-weight: 700;
+      font-size: 19px;
+      color: var(--text-primary);
+    }
+
+    .beat-pill {
+      position: absolute;
+      bottom: -2px;
+      right: -3px;
+      background: var(--surface-elevated);
+      border: 1px solid rgba(255, 154, 90, 0.35);
+      border-radius: 999px;
+      padding: 1px 6px;
+      font-size: 10px;
+      font-weight: 700;
+    }
+
+    .note-username {
       margin-top: 5px;
       font-size: 11px;
       color: var(--text-secondary);
@@ -283,97 +300,137 @@
       white-space: nowrap;
     }
 
-    .beat-badge {
-      position: absolute;
-      bottom: -2px;
-      right: -4px;
-      background: var(--surface-elevated);
-      border: 1px solid var(--border);
-      border-radius: 999px;
-      padding: 1px 5px;
-      font-size: 10px;
-      color: var(--text-primary);
+    /* Instagram-Style Feed Cards */
+    .feed-post {
+      border-bottom: 1px solid var(--border);
+      padding: 14px 16px 16px;
     }
 
-    /* App Cards */
-    .card {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: var(--radius-lg);
-      padding: 16px;
-      margin-bottom: 14px;
-    }
-
-    .card-top {
+    .post-header {
       display: flex;
-      justify-content: space-between;
       align-items: center;
+      justify-content: space-between;
       margin-bottom: 10px;
     }
 
-    .card-chip {
-      font-size: 11px;
+    .post-author-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .mini-avatar {
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      background: var(--grad-orange);
+      display: grid;
+      place-items: center;
+      font-size: 14px;
+      font-weight: 800;
+      color: #fff;
+    }
+
+    .post-author-name {
+      font-size: 13px;
       font-weight: 700;
-      padding: 4px 10px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .post-sub-meta {
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    .tag-chip {
+      font-size: 10px;
+      font-weight: 700;
+      padding: 3px 9px;
       border-radius: 999px;
-      background: var(--accent-soft);
-      color: var(--accent);
+      background: var(--orange-soft);
+      color: var(--orange-light);
+      border: 1px solid rgba(255, 107, 43, 0.25);
     }
 
-    .card-chip.warm {
-      background: rgba(251, 191, 36, 0.14);
-      color: var(--layer-event);
+    .post-body-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 15px;
+      margin-bottom: 10px;
     }
 
-    .card-chip.mint {
-      background: rgba(52, 211, 153, 0.14);
-      color: var(--success);
-    }
-
-    .card-title {
+    .post-headline {
       font-size: 16px;
       font-weight: 700;
-      line-height: 1.35;
+      line-height: 1.38;
       margin-bottom: 6px;
     }
 
-    .card-sub {
+    .post-copy {
       font-size: 13px;
       color: var(--text-secondary);
       line-height: 1.45;
       margin-bottom: 12px;
     }
 
-    /* Buttons & Inputs */
-    .btn-row {
+    /* Instagram Action Row */
+    .ig-action-bar {
       display: flex;
-      gap: 10px;
+      align-items: center;
+      justify-content: space-between;
+      padding-top: 4px;
     }
+
+    .ig-left-actions {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .action-chip-btn {
+      background: none;
+      border: none;
+      color: var(--text-primary);
+      font-size: 13px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      cursor: pointer;
+    }
+    .action-chip-btn:active { transform: scale(0.92); }
+
+    /* Buttons & Inputs */
+    .btn-row { display: flex; gap: 9px; }
 
     .btn {
       flex: 1;
-      padding: 11px 14px;
-      border-radius: var(--radius-sm);
+      padding: 10px 14px;
+      border-radius: 12px;
       border: 1px solid var(--border);
       background: var(--surface-elevated);
       color: var(--text-primary);
       font-size: 13px;
       font-weight: 600;
       cursor: pointer;
-      transition: transform 0.14s ease, background 0.2s ease, border-color 0.2s ease;
+      transition: transform 0.14s ease, background 0.2s;
     }
     .btn:active { transform: scale(0.96); }
 
-    .btn-primary {
-      background: var(--accent);
-      border-color: var(--accent);
+    .btn-orange {
+      background: var(--grad-orange);
+      border: none;
       color: #fff;
-      box-shadow: 0 8px 22px var(--accent-glow);
+      box-shadow: 0 8px 20px var(--orange-glow);
     }
 
-    .btn-ghost {
+    .btn-outline {
       background: transparent;
-      color: var(--text-secondary);
+      border-color: rgba(255, 154, 90, 0.28);
+      color: var(--orange-light);
     }
 
     .btn-sm {
@@ -382,159 +439,238 @@
       font-size: 12px;
     }
 
-    input[type="text"], textarea, select {
+    input[type="text"], select {
       width: 100%;
       background: var(--bg-app);
       border: 1px solid var(--border);
-      border-radius: var(--radius-sm);
+      border-radius: 12px;
       padding: 11px 13px;
       color: var(--text-primary);
-      font-size: 14px;
+      font-size: 13px;
       font-family: inherit;
       outline: none;
     }
-    input[type="text"]:focus, textarea:focus {
-      border-color: var(--accent);
+    input[type="text"]:focus, select:focus {
+      border-color: var(--orange);
     }
 
     /* Mystery Poll Grid */
     .poll-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 9px;
+      gap: 8px;
       margin-bottom: 10px;
     }
 
-    .poll-option {
+    .poll-choice {
       background: var(--surface-elevated);
       border: 1px solid var(--border);
-      border-radius: var(--radius-md);
-      padding: 12px 10px;
+      border-radius: 13px;
+      padding: 10px;
       color: var(--text-primary);
       font-size: 13px;
       font-weight: 600;
-      text-align: left;
       display: flex;
       align-items: center;
       gap: 8px;
       cursor: pointer;
-      transition: transform 0.14s ease, border-color 0.2s;
     }
-    .poll-option:hover { border-color: var(--accent); }
-    .poll-option:active { transform: scale(0.96); }
+    .poll-choice:hover { border-color: var(--orange); }
+    .poll-choice:active { transform: scale(0.96); }
 
-    .poll-avatar {
-      width: 26px;
-      height: 26px;
+    .poll-dot {
+      width: 24px;
+      height: 24px;
       border-radius: 50%;
-      background: var(--accent-soft);
-      color: var(--accent);
+      background: var(--orange-soft);
+      color: var(--orange-light);
       display: grid;
       place-items: center;
+      font-size: 11px;
+      font-weight: 800;
+    }
+
+    .warmth-banner {
+      background: rgba(255, 107, 43, 0.14);
+      border: 1px solid rgba(255, 107, 43, 0.3);
+      border-radius: 11px;
+      padding: 9px 12px;
       font-size: 12px;
-      font-weight: 700;
-    }
-
-    .compliment-toast {
-      background: rgba(244, 114, 182, 0.1);
-      border: 1px solid rgba(244, 114, 182, 0.25);
-      border-radius: var(--radius-sm);
-      padding: 10px 12px;
-      font-size: 12px;
-      color: #fbcfe8;
-      margin-top: 10px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    /* Evening Capsule */
-    .capsule-veil {
-      background: linear-gradient(135deg, rgba(124, 92, 255, 0.14), rgba(236, 72, 153, 0.12));
-      border: 1px dashed rgba(255, 255, 255, 0.2);
-      border-radius: var(--radius-md);
-      padding: 14px;
-      text-align: center;
-      margin-bottom: 12px;
-    }
-
-    .capsule-item {
-      background: var(--bg-app);
-      border: 1px solid var(--border);
-      border-radius: var(--radius-sm);
-      padding: 10px 12px;
+      color: #ffd6be;
       margin-top: 8px;
-      text-align: left;
-      font-size: 13px;
     }
 
-    /* Curiosity Peek Drawer */
-    .peek-box {
+    /* Peek Box & Capsule */
+    .peek-drawer {
       background: var(--bg-app);
-      border-radius: var(--radius-md);
-      padding: 12px;
-      margin-top: 10px;
       border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 10px 12px;
+      margin-top: 10px;
       display: none;
     }
-    .peek-box.open { display: block; }
-    .peek-line {
-      font-size: 13px;
+    .peek-drawer.open { display: block; }
+    .peek-row {
+      font-size: 12.5px;
       padding: 6px 0;
       border-bottom: 1px solid var(--border);
+      color: var(--text-secondary);
     }
-    .peek-line:last-child { border-bottom: none; }
+    .peek-row:last-child { border-bottom: none; }
 
-    /* Pauseable Chapter */
-    .chapter-bar {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
+    .capsule-box {
+      background: linear-gradient(135deg, rgba(255, 140, 66, 0.14), rgba(230, 57, 70, 0.1));
+      border: 1px dashed rgba(255, 154, 90, 0.35);
+      border-radius: 14px;
+      padding: 13px;
+      text-align: center;
+      margin-bottom: 10px;
+    }
+
+    .capsule-note {
       background: var(--bg-app);
-      padding: 12px;
-      border-radius: var(--radius-md);
       border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 8px 11px;
+      margin-top: 7px;
+      text-align: left;
+      font-size: 12.5px;
     }
 
-    /* Bottom Navigation */
-    .bottom-nav {
+    /* Instagram-Style 5-Tab Bottom Navigation Bar */
+    .ig-bottom-nav {
       position: absolute;
       bottom: 0;
       left: 0;
       right: 0;
-      height: 70px;
-      background: rgba(15, 19, 30, 0.92);
+      height: 62px;
+      background: rgba(17, 12, 9, 0.96);
       backdrop-filter: blur(20px);
       border-top: 1px solid var(--border);
       display: flex;
-      justify-content: space-around;
       align-items: center;
-      padding-bottom: 6px;
-      z-index: 25;
+      justify-content: space-around;
+      z-index: 30;
+      padding-bottom: 4px;
     }
 
-    .nav-item {
+    .ig-tab {
       background: none;
       border: none;
       color: var(--text-muted);
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 4px;
-      font-size: 11px;
+      justify-content: center;
+      gap: 3px;
+      font-size: 10px;
       font-weight: 600;
       cursor: pointer;
-      padding: 6px 14px;
-      transition: color 0.15s;
+      width: 58px;
+      height: 100%;
     }
-    .nav-item span.nav-ico { font-size: 19px; }
-    .nav-item.active { color: var(--accent); }
+    .ig-tab.active { color: var(--orange-light); }
+    .ig-tab svg { width: 22px; height: 22px; stroke-width: 2; }
 
-    /* Bottom Sheets & Onboarding Modal */
+    .ig-create-pill {
+      width: 40px;
+      height: 32px;
+      border-radius: 11px;
+      background: var(--grad-orange);
+      color: #fff;
+      display: grid;
+      place-items: center;
+      box-shadow: 0 6px 16px var(--orange-glow);
+    }
+
+    .nav-profile-dot {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background: var(--surface-elevated);
+      border: 1.5px solid var(--text-muted);
+      display: grid;
+      place-items: center;
+      font-size: 11px;
+      font-weight: 800;
+      color: var(--text-primary);
+    }
+    .ig-tab.active .nav-profile-dot {
+      border-color: var(--orange);
+      box-shadow: 0 0 0 2px var(--orange-soft);
+    }
+
+    /* Secondary Screens Padding */
+    .screen-pad { padding: 16px; }
+
+    .panel-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 15px;
+      margin-bottom: 12px;
+    }
+
+    /* Profile Header (Instagram Style) */
+    .ig-profile-top {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      margin-bottom: 14px;
+    }
+    .ig-profile-pic {
+      width: 74px;
+      height: 74px;
+      border-radius: 50%;
+      padding: 3px;
+      background: var(--grad-orange);
+    }
+    .ig-profile-pic-inner {
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      background: var(--surface);
+      border: 3px solid var(--bg-app);
+      display: grid;
+      place-items: center;
+      font-size: 28px;
+      font-weight: 800;
+    }
+    .ig-stats {
+      flex: 1;
+      display: flex;
+      justify-content: space-around;
+      text-align: center;
+    }
+    .ig-stat-num { font-size: 17px; font-weight: 800; }
+    .ig-stat-lbl { font-size: 11px; color: var(--text-secondary); }
+
+    /* DM & Locked Message Rows */
+    .dm-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 15px;
+      margin-bottom: 9px;
+    }
+
+    .locked-pill {
+      font-size: 10px;
+      font-weight: 700;
+      padding: 3px 8px;
+      border-radius: 999px;
+      background: rgba(255, 183, 3, 0.15);
+      color: var(--layer-activity);
+    }
+
+    /* Sheets & Modals */
     .overlay {
       position: absolute;
       inset: 0;
-      background: rgba(3, 5, 10, 0.78);
+      background: rgba(6, 4, 3, 0.82);
       backdrop-filter: blur(8px);
       display: none;
       align-items: flex-end;
@@ -549,17 +685,16 @@
       background: var(--surface);
       border-top: 1px solid var(--border);
       border-radius: 26px 26px 0 0;
-      padding: 20px 18px 28px;
-      animation: slideUp 0.22s ease;
+      padding: 20px 18px 26px;
+      animation: slideUp 0.2s ease;
     }
 
-    .modal-card {
+    .modal-box {
       width: 100%;
       background: var(--surface);
-      border: 1px solid rgba(255, 255, 255, 0.12);
+      border: 1px solid rgba(255, 154, 90, 0.22);
       border-radius: 26px;
       padding: 22px 20px;
-      animation: fadeIn 0.2s ease;
     }
 
     @keyframes slideUp {
@@ -567,67 +702,55 @@
       to { transform: translateY(0); }
     }
 
-    .progress-track {
+    .progress-bar {
       height: 5px;
       background: var(--bg-app);
       border-radius: 999px;
       overflow: hidden;
-      margin-bottom: 16px;
+      margin-bottom: 14px;
     }
-    .progress-fill {
+    .progress-inner {
       height: 100%;
-      background: var(--accent);
+      background: var(--grad-orange);
       transition: width 0.25s ease;
     }
 
-    .swatch-row {
-      display: flex;
-      gap: 10px;
-      margin: 12px 0 18px;
-    }
+    .swatch-row { display: flex; gap: 10px; margin: 12px 0 16px; }
     .swatch {
       flex: 1;
-      height: 44px;
+      height: 42px;
       border-radius: 12px;
       border: 2px solid transparent;
       cursor: pointer;
     }
     .swatch.selected { border-color: #fff; transform: scale(1.04); }
 
-    /* Mood Stack & Cookie Inspector Rows */
-    .stack-item, .cookie-row {
+    .cookie-card {
       background: var(--bg-app);
       border: 1px solid var(--border);
-      border-radius: var(--radius-sm);
-      padding: 11px 13px;
-      margin-bottom: 9px;
-      font-size: 13px;
+      border-radius: 12px;
+      padding: 10px 12px;
+      margin-bottom: 8px;
+      font-size: 12px;
     }
-    .cookie-meta {
-      display: flex;
-      justify-content: space-between;
-      font-size: 11px;
-      color: var(--text-muted);
-      margin-top: 4px;
-    }
-    .cookie-val {
+    .cookie-code {
       font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
-      font-size: 11px;
+      font-size: 10.5px;
       color: var(--text-secondary);
-      word-break: break-all;
-      margin-top: 6px;
       background: var(--surface);
-      padding: 6px 8px;
+      padding: 6px;
       border-radius: 8px;
+      margin-top: 5px;
+      word-break: break-all;
     }
 
     .toast {
       position: absolute;
-      top: 70px;
+      top: 66px;
       left: 50%;
       transform: translateX(-50%);
       background: var(--surface-elevated);
-      border: 1px solid var(--accent);
+      border: 1px solid var(--orange);
       color: var(--text-primary);
       padding: 8px 16px;
       border-radius: 999px;
@@ -638,318 +761,428 @@
       pointer-events: none;
       transition: opacity 0.2s;
       white-space: nowrap;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+      box-shadow: 0 10px 28px rgba(0,0,0,0.6);
     }
     .toast.show { opacity: 1; }
   </style>
 </head>
 <body>
   <div class="app-shell">
-    <!-- Toast Feedback -->
     <div id="toast" class="toast">Saved</div>
 
-    <!-- Top Header -->
-    <header class="top-bar">
-      <div class="brand-group">
-        <div class="brand-logo">M</div>
-        <button class="circle-pill" id="circleSwitcherBtn" onclick="openCircleSheet()">
-          <span id="activeCircleLabel">Hostel Crew</span> ▾
+    <!-- Instagram-Style Top Navigation Bar -->
+    <header class="ig-topbar">
+      <div style="display:flex; align-items:center; gap:10px;">
+        <div class="ig-wordmark" onclick="switchTab('home')">Meonix</div>
+        <button class="circle-dropdown" onclick="openCircleSheet()">
+          <span id="activeCircleHeader">CSE Squad</span> ▾
         </button>
       </div>
-      <div class="header-actions">
-        <button class="icon-btn" title="Batched Digest" onclick="openDigestSheet()">
-          🔔
-          <span class="calm-dot" id="digestDot"></span>
+
+      <div class="topbar-icons">
+        <!-- Quiet Mode Toggle -->
+        <button class="nav-svg-btn" title="Quiet Mode" onclick="toggleQuietMode()" id="quietBtn">
+          <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+          </svg>
         </button>
-        <button class="icon-btn" title="Quiet Mode" id="quietToggleBtn" onclick="toggleQuietMode()">🌙</button>
+        <!-- Batched Digest (Activity Heart) -->
+        <button class="nav-svg-btn" title="Batched Digest" onclick="openOverlay('digestSheet')">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+          </svg>
+          <span class="badge-dot" id="digestDot"></span>
+        </button>
+        <!-- Inbox / Locked DMs (Messenger Plane) -->
+        <button class="nav-svg-btn" title="Inbox & Locked Queue" onclick="switchTab('inbox')">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="22" y1="2" x2="11" y2="13"/>
+            <polygon points="22 2 15 22 11 13 2 9 22 2"/>
+          </svg>
+          <span class="badge-pill" id="lockedCountBadge">2</span>
+        </button>
       </div>
     </header>
 
-    <div id="quietBanner" class="quiet-banner">
-      Quiet Mode active — batched digests paused, your chapters stay safe.
+    <div id="quietStrip" class="quiet-strip">
+      Quiet Mode on — notifications bundled, your chapter stays safe.
     </div>
 
-    <!-- Main Scroll Area -->
+    <!-- Scrollable Content -->
     <main class="main-scroll">
-      <!-- TAB 1: PULSE FEED -->
-      <section id="tab-pulse" class="view-panel active">
-        <div class="section-header">
-          <span class="section-title">Inbox Whispers · 24h</span>
-          <span class="section-meta" id="userBadge">You</span>
-        </div>
+      <!-- ==================== TAB 1: HOME (IG FEED + WHISPERS) ==================== -->
+      <section id="screen-home" class="screen active">
+        <!-- Instagram-Notes-Style Inbox Whispers Tray -->
+        <div class="notes-tray" id="whispersTray"></div>
 
-        <!-- Feature 1: Ephemeral Inbox Whispers -->
-        <div class="whispers-strip" id="whispersStrip"></div>
-
-        <!-- Feature 7: Honest Curiosity Teaser with Free Opt-Outs -->
-        <div class="card">
-          <div class="card-top">
-            <span class="card-chip">Curiosity Peek</span>
-            <span class="section-meta" id="teaserCount">3 friends weighed in</span>
-          </div>
-          <div class="card-title" id="teaserPrompt">Tonight's mess paneer vs outside roll debate in <span class="circleNameInline">Hostel Crew</span></div>
-          <div class="card-sub">No pressure to vote — peek quietly or toss your take in.</div>
-          <div class="btn-row">
-            <button class="btn btn-ghost" onclick="togglePeek()">Just peek</button>
-            <button class="btn btn-primary" onclick="openTakeInput()">Drop your take</button>
-          </div>
-          <div id="peekBox" class="peek-box"></div>
-        </div>
-
-        <!-- Feature 2: Positive-Only Mystery Poll with Hourly Cap -->
-        <div class="card">
-          <div class="card-top">
-            <span class="card-chip warm">Positive Poll</span>
-            <span class="section-meta" id="pollQuotaLabel">12 / 12 left this hour</span>
-          </div>
-          <div class="card-title" id="pollQuestion">Who makes boring 9 AM lectures survivable?</div>
-          <div class="card-sub">Pick a friend — they get an anonymous warmth ping, never free-text drama.</div>
-          <div class="poll-grid" id="pollOptionsGrid"></div>
-          <div class="btn-row">
-            <button class="btn btn-ghost btn-sm" onclick="nextPollPrompt()">Skip prompt ↻</button>
-            <button class="btn btn-ghost btn-sm" onclick="switchTab('stack')">View warmth pings</button>
-          </div>
-          <div id="pollFeedback" class="compliment-toast" style="display:none;"></div>
-        </div>
-
-        <!-- Feature 4: Evening Collective Unwrap Capsule -->
-        <div class="card">
-          <div class="card-top">
-            <span class="card-chip mint">Evening Capsule</span>
-            <span class="section-meta" id="capsuleTimerLabel">Unwraps 8:30 PM</span>
-          </div>
-          <div class="card-title">Today's Shared Unwrap</div>
-          <div class="card-sub">Drop a candid note whenever you feel like it — no countdown command, and everyone watches the reveal together.</div>
-          <div id="capsuleContainer" class="capsule-veil"></div>
-          <div style="display:flex; gap:8px;">
-            <input type="text" id="capsuleInput" placeholder="Toss a thought into tonight's capsule..." maxlength="120" />
-            <button class="btn btn-primary btn-sm" onclick="addCapsuleNote()">Drop</button>
-          </div>
-        </div>
-
-        <!-- Feature 6: Pauseable Chapters (Anti-Streak Continuity) -->
-        <div class="card">
-          <div class="card-top">
-            <span class="card-chip">Pauseable Chapter</span>
-            <span class="section-meta">Never resets to 0</span>
-          </div>
-          <div class="chapter-bar">
-            <div>
-              <div style="font-weight:700; font-size:15px;" id="chapterHeadline">Chapter 14 · 48 shared moments</div>
-              <div style="font-size:12px; color:var(--text-secondary); margin-top:2px;" id="chapterSub">Active & relaxed — step away anytime.</div>
+        <!-- Feed Post 1: Honest Curiosity Teaser (Campus Spot / Vibe) -->
+        <article class="feed-post">
+          <div class="post-header">
+            <div class="post-author-row">
+              <div class="mini-avatar">?</div>
+              <div>
+                <div class="post-author-name">Curiosity Peek <span class="tag-chip">No Pressure</span></div>
+                <div class="post-sub-meta"><span class="circleNameInline">CSE Squad</span> · <span id="teaserCount">3 friends weighed in</span></div>
+              </div>
             </div>
-            <button class="btn btn-sm" id="pauseChapterBtn" onclick="toggleChapterPause()">Pause</button>
+          </div>
+
+          <div class="post-body-card">
+            <div class="post-headline">Best campus spot after 6 PM classes end?</div>
+            <div class="post-copy">Peek quietly without voting, or drop your own 1-liner if you feel like it.</div>
+            <div class="btn-row">
+              <button class="btn btn-outline" onclick="togglePeek()">Just peek</button>
+              <button class="btn btn-orange" onclick="addQuickTake()">Drop your take</button>
+            </div>
+            <div id="peekDrawer" class="peek-drawer"></div>
+          </div>
+        </article>
+
+        <!-- Feed Post 2: Positive-Only Mystery Poll -->
+        <article class="feed-post">
+          <div class="post-header">
+            <div class="post-author-row">
+              <div class="mini-avatar">✨</div>
+              <div>
+                <div class="post-author-name">Positive Mystery Poll <span class="tag-chip" id="pollQuotaBadge">12/12 left</span></div>
+                <div class="post-sub-meta">Pre-written warmth · Zero free-text drama</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="post-body-card">
+            <div class="post-headline" id="pollPromptText">Who makes boring 9 AM lectures survivable?</div>
+            <div class="post-copy">Tap a friend to send them an anonymous warmth ping.</div>
+            <div class="poll-grid" id="pollGrid"></div>
+            <div class="ig-action-bar">
+              <div class="ig-left-actions">
+                <button class="action-chip-btn" onclick="skipPoll()">↻ Next prompt</button>
+                <button class="action-chip-btn" onclick="switchTab('profile')">☰ Warmth log</button>
+              </div>
+            </div>
+            <div id="pollToastBox" class="warmth-banner" style="display:none;"></div>
+          </div>
+        </article>
+
+        <!-- Feed Post 3: Evening Collective Unwrap Capsule -->
+        <article class="feed-post">
+          <div class="post-header">
+            <div class="post-author-row">
+              <div class="mini-avatar">🎁</div>
+              <div>
+                <div class="post-author-name">Evening Unwrap <span class="tag-chip" id="capsuleStatusTag">8:30 PM</span></div>
+                <div class="post-sub-meta">Drop anytime · Collective reveal together</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="post-body-card">
+            <div id="capsuleArea" class="capsule-box"></div>
+            <div style="display:flex; gap:8px;">
+              <input type="text" id="capsuleNoteInput" placeholder="Drop a candid thought into tonight's capsule..." maxlength="110" />
+              <button class="btn btn-orange btn-sm" onclick="dropCapsuleNote()">Drop</button>
+            </div>
+          </div>
+        </article>
+
+        <!-- Feed Post 4: Pauseable Chapter (Anti-Streak) -->
+        <article class="feed-post" style="border-bottom:none;">
+          <div class="post-header">
+            <div class="post-author-row">
+              <div class="mini-avatar">📖</div>
+              <div>
+                <div class="post-author-name">Pauseable Chapter <span class="tag-chip">Never resets</span></div>
+                <div class="post-sub-meta">Shared memory counter · Zero guilt</div>
+              </div>
+            </div>
+          </div>
+          <div class="post-body-card" style="display:flex; align-items:center; justify-content:space-between; gap:10px;">
+            <div>
+              <div style="font-weight:700; font-size:15px;" id="chapterTitle">Chapter 14 · 48 shared moments</div>
+              <div style="font-size:12px; color:var(--text-secondary); margin-top:2px;" id="chapterDesc">Step away anytime — your chapter stays intact.</div>
+            </div>
+            <button class="btn btn-outline btn-sm" id="chapterPauseBtn" onclick="toggleChapterPause()">Pause</button>
+          </div>
+        </article>
+      </section>
+
+      <!-- ==================== TAB 2: CIRCLES (BACKSTAGE SPACES) ==================== -->
+      <section id="screen-circles" class="screen screen-pad">
+        <div style="font-size:18px; font-weight:800; margin-bottom:4px;">Backstage Circles</div>
+        <div style="font-size:13px; color:var(--text-secondary); margin-bottom:14px;">
+          Separate small circles prevent audience collapse and mutual-like surveillance.
+        </div>
+
+        <div id="circlesContainer"></div>
+
+        <div class="panel-card" style="margin-top:14px;">
+          <div style="font-weight:700; font-size:14px; margin-bottom:8px;">Create a Private Circle</div>
+          <div style="display:flex; gap:8px;">
+            <input type="text" id="newCircleName" placeholder="e.g., Library Bench or Fest Crew" maxlength="22" />
+            <button class="btn btn-orange btn-sm" onclick="addCircle()">Create</button>
           </div>
         </div>
       </section>
 
-      <!-- TAB 2: BACKSTAGE CIRCLES (Feature 3) -->
-      <section id="tab-circles" class="view-panel">
-        <div class="section-header">
-          <span class="section-title">Backstage Circles</span>
-          <span class="section-meta">Zero public audience</span>
-        </div>
-        <div class="card">
-          <div class="card-title">Separate contexts, zero surveillance</div>
-          <div class="card-sub">Keep your hostel friends, project squad, and trip crew completely separate so you never worry about mutual-like exposure or overlapping lists.</div>
-          <div id="circlesList"></div>
-          <div style="display:flex; gap:8px; margin-top:12px;">
-            <input type="text" id="newCircleInput" placeholder="New Circle (e.g., Library Gang)" maxlength="24" />
-            <button class="btn btn-primary btn-sm" onclick="createCircle()">Create</button>
+      <!-- ==================== TAB 3: INBOX & LOCKED-MESSAGE QUEUE ==================== -->
+      <section id="screen-inbox" class="screen screen-pad">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+          <div>
+            <div style="font-size:18px; font-weight:800;">Direct & Locked Queue</div>
+            <div style="font-size:12px; color:var(--text-secondary);">Time-locked messages deliver peacefully at your chosen window</div>
           </div>
         </div>
+
+        <div class="panel-card">
+          <div style="font-size:12px; font-weight:700; color:var(--orange-light); margin-bottom:8px;">SEND A LOCKED MESSAGE</div>
+          <div style="display:flex; gap:8px; margin-bottom:8px;">
+            <select id="dmRecipient" style="flex:1;">
+              <option value="Riya">To: Riya</option>
+              <option value="Kabir">To: Kabir</option>
+              <option value="Ananya">To: Ananya</option>
+              <option value="Dev">To: Dev</option>
+            </select>
+            <select id="dmUnlockTime" style="flex:1;">
+              <option value="Unlocks 8:30 PM">Unlocks 8:30 PM</option>
+              <option value="Unlocks After Class">After 6 PM Class</option>
+              <option value="Instant DM">Instant DM</option>
+            </select>
+          </div>
+          <div style="display:flex; gap:8px;">
+            <input type="text" id="dmInput" placeholder="Write a message..." maxlength="120" />
+            <button class="btn btn-orange btn-sm" onclick="sendLockedDM()">Queue</button>
+          </div>
+        </div>
+
+        <div id="dmListContainer"></div>
       </section>
 
-      <!-- TAB 3: MOOD STACK (Meonix Permanent Personal History) -->
-      <section id="tab-stack" class="view-panel">
-        <div class="section-header">
-          <span class="section-title">Your Mood Stack</span>
-          <span class="section-meta">Private history & warmth</span>
-        </div>
-        <div class="card">
-          <div class="card-title">Personal Ephemeral Archive</div>
-          <div class="card-sub">Whispers vanish from your friends' inbox after 24 hours, but stay archived privately in your Mood Stack alongside anonymous Beats & compliments.</div>
-          <div id="moodStackList"></div>
-        </div>
-      </section>
-
-      <!-- TAB 4: SETTINGS & COOKIE INSPECTOR -->
-      <section id="tab-settings" class="view-panel">
-        <div class="section-header">
-          <span class="section-title">Privacy & Cookie Inspector</span>
-          <span class="section-meta" id="storageModeBadge">Checking...</span>
-        </div>
-
-        <div class="card">
-          <div class="card-title">Live App Cookies (4 KB limit / cookie)</div>
-          <div class="card-sub" id="cookieExplainBanner">
-            Every preference, whisper, poll quota, and chapter below is stored in compact client cookies with <code>SameSite=Lax</code>.
+      <!-- ==================== TAB 4: PROFILE, MOOD STACK & COOKIES ==================== -->
+      <section id="screen-profile" class="screen screen-pad">
+        <div class="ig-profile-top">
+          <div class="ig-profile-pic">
+            <div class="ig-profile-pic-inner" id="profileInitial">A</div>
           </div>
-          <div id="cookieInspectorList"></div>
-          <div class="btn-row" style="margin-top:12px;">
-            <button class="btn" onclick="openOnboarding(true)">Re-run 90s Setup</button>
-            <button class="btn btn-ghost" style="color:#f87171;" onclick="resetAllCookies()">Clear All Cookies</button>
+          <div class="ig-stats">
+            <div>
+              <div class="ig-stat-num" id="statMoments">48</div>
+              <div class="ig-stat-lbl">Moments</div>
+            </div>
+            <div>
+              <div class="ig-stat-num" id="statStack">3</div>
+              <div class="ig-stat-lbl">Mood Stack</div>
+            </div>
+            <div>
+              <div class="ig-stat-num" id="statCircles">3</div>
+              <div class="ig-stat-lbl">Circles</div>
+            </div>
           </div>
         </div>
+
+        <div style="margin-bottom:14px;">
+          <div style="font-size:16px; font-weight:800;" id="profileNameDisplay">Aarav</div>
+          <div style="font-size:12.5px; color:var(--text-secondary);">Signature Beat: <span id="profileBeatDisplay">🎵</span> · Private Campus Beta</div>
+        </div>
+
+        <div class="btn-row" style="margin-bottom:16px;">
+          <button class="btn btn-outline btn-sm" style="flex:1;" onclick="openOnboarding(true)">Edit 90s Setup</button>
+          <button class="btn btn-sm" style="flex:1;" onclick="toggleCookieDrawer()">Inspect Cookies</button>
+        </div>
+
+        <!-- Cookie Inspector Drawer -->
+        <div id="cookieDrawer" style="display:none; margin-bottom:16px;">
+          <div class="panel-card">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+              <strong style="font-size:14px;">Live Browser Cookies</strong>
+              <span id="cookieEngineStatus" style="font-size:11px; color:var(--orange-light);">Active</span>
+            </div>
+            <div id="cookieNoteText" style="font-size:12px; color:var(--text-secondary); margin-bottom:10px;"></div>
+            <div id="cookieRows"></div>
+            <button class="btn btn-outline btn-sm" style="width:100%; margin-top:6px; color:#ff758f;" onclick="clearAllCookies()">Reset All Cookies (Max-Age=0)</button>
+          </div>
+        </div>
+
+        <!-- Permanent Mood Stack -->
+        <div style="font-size:12px; font-weight:800; letter-spacing:0.06em; color:var(--orange-light); margin-bottom:8px;">
+          PERMANENT MOOD STACK & WARMTH LOG
+        </div>
+        <div id="moodStackContainer"></div>
       </section>
     </main>
 
-    <!-- Bottom Tab Navigation -->
-    <nav class="bottom-nav">
-      <button class="nav-item active" data-tab="pulse" onclick="switchTab('pulse')">
-        <span class="nav-ico">✦</span><span>Pulse</span>
+    <!-- Instagram-Style Bottom Navigation Bar -->
+    <nav class="ig-bottom-nav">
+      <button class="ig-tab active" data-tab="home" onclick="switchTab('home')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+          <path d="M3 9.5L12 3l9 6.5V20a1 1 0 0 1-1 1h-5v-6h-6v6H4a1 1 0 0 1-1-1V9.5z"/>
+        </svg>
+        <span>Home</span>
       </button>
-      <button class="nav-item" data-tab="circles" onclick="switchTab('circles')">
-        <span class="nav-ico">◎</span><span>Circles</span>
+
+      <button class="ig-tab" data-tab="circles" onclick="switchTab('circles')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+          <circle cx="12" cy="12" r="9"/>
+          <circle cx="12" cy="12" r="4"/>
+        </svg>
+        <span>Circles</span>
       </button>
-      <button class="nav-item" data-tab="stack" onclick="switchTab('stack')">
-        <span class="nav-ico">☰</span><span>Stack</span>
+
+      <button class="ig-tab" onclick="openOverlay('createWhisperSheet')" aria-label="Create Mood Whisper">
+        <div class="ig-create-pill">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <line x1="12" y1="5" x2="12" y2="19"/>
+            <line x1="5" y1="12" x2="19" y2="12"/>
+          </svg>
+        </div>
       </button>
-      <button class="nav-item" data-tab="settings" onclick="switchTab('settings')">
-        <span class="nav-ico">⚙</span><span>Cookies</span>
+
+      <button class="ig-tab" data-tab="inbox" onclick="switchTab('inbox')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+          <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/>
+        </svg>
+        <span>Inbox</span>
+      </button>
+
+      <button class="ig-tab" data-tab="profile" onclick="switchTab('profile')">
+        <div class="nav-profile-dot" id="navInitial">A</div>
+        <span>Stack</span>
       </button>
     </nav>
 
-    <!-- Feature 5: 90-Second "Add-an-Egg" Co-Created Onboarding Modal -->
+    <!-- 90-Second "Add-an-Egg" Onboarding Modal -->
     <div id="onboardingOverlay" class="overlay center">
-      <div class="modal-card">
-        <div class="progress-track"><div class="progress-fill" id="onboardProgress" style="width:33%"></div></div>
-        <div id="onboardStep1">
-          <div class="card-chip" style="display:inline-block; margin-bottom:10px;">Step 1 of 3 · Your Space</div>
-          <div class="card-title">Claim your corner on Meonix</div>
-          <div class="card-sub">Just two tiny choices so your first circle feels like yours from second one.</div>
-          <input type="text" id="obNameInput" placeholder="Your campus nickname (e.g. Aarav)" maxlength="18" style="margin-bottom:10px;" />
-          <input type="text" id="obCircleInput" placeholder="First Backstage Circle (e.g. Hostel Crew)" maxlength="22" />
-          <div class="btn-row" style="margin-top:16px;">
-            <button class="btn btn-primary" onclick="nextOnboardStep(2)">Next →</button>
+      <div class="modal-box">
+        <div class="progress-bar"><div class="progress-inner" id="obProgress" style="width:33%"></div></div>
+
+        <div id="obStep1">
+          <span class="tag-chip" style="display:inline-block; margin-bottom:10px;">Step 1 of 3 · Your Space</span>
+          <div class="post-headline">Welcome to Meonix</div>
+          <div class="post-copy">Set your campus handle and first private circle in seconds.</div>
+          <input type="text" id="obName" placeholder="Your nickname (e.g. Aarav)" maxlength="18" style="margin-bottom:10px;" />
+          <input type="text" id="obCircle" placeholder="First Circle (e.g. CSE Squad)" maxlength="22" />
+          <div class="btn-row" style="margin-top:14px;">
+            <button class="btn btn-orange" onclick="goObStep(2)">Continue →</button>
           </div>
         </div>
 
-        <div id="onboardStep2" style="display:none;">
-          <div class="card-chip" style="display:inline-block; margin-bottom:10px;">Step 2 of 3 · Vibe Paint</div>
-          <div class="card-title">Pick your room's aura</div>
-          <div class="card-sub">Saved directly in your profile cookie.</div>
+        <div id="obStep2" style="display:none;">
+          <span class="tag-chip" style="display:inline-block; margin-bottom:10px;">Step 2 of 3 · Warmth Shade</span>
+          <div class="post-headline">Pick your warm orange accent</div>
+          <div class="post-copy">Saved directly in your profile cookie.</div>
           <div class="swatch-row">
-            <div class="swatch selected" data-color="#7c5cff" style="background:#7c5cff;" onclick="selectAccent(this)"></div>
-            <div class="swatch" data-color="#ec4899" style="background:#ec4899;" onclick="selectAccent(this)"></div>
-            <div class="swatch" data-color="#0ea5e9" style="background:#0ea5e9;" onclick="selectAccent(this)"></div>
-            <div class="swatch" data-color="#10b981" style="background:#10b981;" onclick="selectAccent(this)"></div>
+            <div class="swatch selected" data-c="#ff6b2b" style="background:#ff6b2b;" onclick="pickShade(this)"></div>
+            <div class="swatch" data-c="#ff8c42" style="background:#ff8c42;" onclick="pickShade(this)"></div>
+            <div class="swatch" data-c="#f97316" style="background:#f97316;" onclick="pickShade(this)"></div>
+            <div class="swatch" data-c="#fb5607" style="background:#fb5607;" onclick="pickShade(this)"></div>
           </div>
           <div class="btn-row">
-            <button class="btn btn-ghost" onclick="nextOnboardStep(1)">Back</button>
-            <button class="btn btn-primary" onclick="nextOnboardStep(3)">Next →</button>
+            <button class="btn" onclick="goObStep(1)">Back</button>
+            <button class="btn btn-orange" onclick="goObStep(3)">Continue →</button>
           </div>
         </div>
 
-        <div id="onboardStep3" style="display:none;">
-          <div class="card-chip" style="display:inline-block; margin-bottom:10px;">Step 3 of 3 · Pin Your Beat</div>
-          <div class="card-title">Choose your signature Beat</div>
-          <div class="card-sub">Tap friends' moods with a single low-pressure Beat reaction.</div>
-          <div class="btn-row" style="margin:14px 0 18px;" id="beatChoices">
-            <button class="btn" onclick="selectBeat('🎵', this)">🎵 Beat</button>
-            <button class="btn" onclick="selectBeat('🫶', this)">🫶 Warmth</button>
-            <button class="btn" onclick="selectBeat('⚡', this)">⚡ Hype</button>
+        <div id="obStep3" style="display:none;">
+          <span class="tag-chip" style="display:inline-block; margin-bottom:10px;">Step 3 of 3 · Signature Beat</span>
+          <div class="post-headline">Choose your Beat reaction</div>
+          <div class="post-copy">Send low-pressure reactions to friends' layered moods.</div>
+          <div class="btn-row" style="margin:14px 0;" id="obBeats">
+            <button class="btn btn-orange" onclick="pickBeat('🎵', this)">🎵 Beat</button>
+            <button class="btn" onclick="pickBeat('🔥', this)">🔥 Warmth</button>
+            <button class="btn" onclick="pickBeat('🧡', this)">🧡 Heart</button>
           </div>
           <div class="btn-row">
-            <button class="btn btn-ghost" onclick="nextOnboardStep(2)">Back</button>
-            <button class="btn btn-primary" onclick="finishOnboarding()">Enter Meonix ✓</button>
+            <button class="btn" onclick="goObStep(2)">Back</button>
+            <button class="btn btn-orange" onclick="saveOnboarding()">Launch Meonix ✓</button>
           </div>
         </div>
       </div>
     </div>
 
-    <!-- Bottom Sheet: Drop a New Whisper -->
-    <div id="whisperSheet" class="overlay" onclick="closeSheetOnBg(event, 'whisperSheet')">
+    <!-- Sheet: Post New Layered Whisper -->
+    <div id="createWhisperSheet" class="overlay" onclick="closeOnBg(event, 'createWhisperSheet')">
       <div class="sheet">
-        <div class="card-title">Drop an Inbox Whisper</div>
-        <div class="card-sub">Floats softly for friends in <strong class="circleNameInline">Hostel Crew</strong>, then clears itself.</div>
-        <select id="whisperLayerSelect" style="margin-bottom:10px;">
-          <option value="Activity">Activity Layer (e.g., Surviving lab)</option>
-          <option value="Emotional">Emotional Layer (e.g., Need chai asap)</option>
-          <option value="Event">Event Layer (e.g., Canteen at 5?)</option>
+        <div class="post-headline">Drop a 24h Inbox Whisper</div>
+        <div class="post-copy">Visible to <strong class="circleNameInline">CSE Squad</strong> for 24 hours, and archived permanently in your Mood Stack.</div>
+        <select id="newWhisperLayer" style="margin-bottom:10px;">
+          <option value="Activity">Activity Layer (e.g., Library 3rd floor)</option>
+          <option value="Emotional">Emotional Layer (e.g., Need evening chai)</option>
+          <option value="Event">Event Layer (e.g., Quad hangout @ 6?)</option>
         </select>
-        <input type="text" id="whisperTextInput" placeholder="One-line thought (max 50 chars)..." maxlength="50" style="margin-bottom:14px;" />
+        <input type="text" id="newWhisperText" placeholder="What's your current vibe? (max 48 chars)" maxlength="48" style="margin-bottom:14px;" />
         <div class="btn-row">
-          <button class="btn btn-ghost" onclick="closeOverlay('whisperSheet')">Cancel</button>
-          <button class="btn btn-primary" onclick="saveNewWhisper()">Post Whisper</button>
+          <button class="btn" onclick="closeOverlay('createWhisperSheet')">Cancel</button>
+          <button class="btn btn-orange" onclick="createWhisper()">Share Whisper</button>
         </div>
       </div>
     </div>
 
-    <!-- Bottom Sheet: React / Reply to a Friend's Whisper -->
-    <div id="whisperDetailSheet" class="overlay" onclick="closeSheetOnBg(event, 'whisperDetailSheet')">
+    <!-- Sheet: React to Friend's Whisper -->
+    <div id="whisperModal" class="overlay" onclick="closeOnBg(event, 'whisperModal')">
       <div class="sheet">
-        <div class="card-chip" id="detailLayerChip" style="display:inline-block; margin-bottom:8px;">Activity</div>
-        <div class="card-title" id="detailAuthor">Riya</div>
-        <div class="card-sub" id="detailBody" style="font-size:16px; color:var(--text-primary); margin-bottom:14px;"></div>
+        <span class="tag-chip" id="wmLayer" style="display:inline-block; margin-bottom:8px;">Activity</span>
+        <div class="post-headline" id="wmAuthor">Riya</div>
+        <div class="post-copy" id="wmText" style="font-size:16px; color:var(--text-primary);"></div>
         <div class="btn-row">
-          <button class="btn btn-primary" id="sendBeatBtn" onclick="sendBeatToWhisper()">🎵 Send Beat</button>
-          <button class="btn" onclick="closeOverlay('whisperDetailSheet')">Done</button>
+          <button class="btn btn-orange" id="wmBeatBtn" onclick="reactBeat()">🎵 Send Beat</button>
+          <button class="btn" onclick="closeOverlay('whisperModal')">Close</button>
         </div>
       </div>
     </div>
 
-    <!-- Bottom Sheet: Switch Circle -->
-    <div id="circleSheet" class="overlay" onclick="closeSheetOnBg(event, 'circleSheet')">
+    <!-- Sheet: Switch Circle -->
+    <div id="circleSheet" class="overlay" onclick="closeOnBg(event, 'circleSheet')">
       <div class="sheet">
-        <div class="card-title">Switch Backstage Circle</div>
-        <div class="card-sub">Each circle keeps its own private whispers and chapters.</div>
-        <div id="circleSheetOptions"></div>
+        <div class="post-headline">Switch Backstage Circle</div>
+        <div class="post-copy">Each circle isolates its whispers and moments.</div>
+        <div id="circleSheetList"></div>
       </div>
     </div>
 
-    <!-- Feature 8: Batched Digest Sheet -->
-    <div id="digestSheet" class="overlay" onclick="closeSheetOnBg(event, 'digestSheet')">
+    <!-- Sheet: Batched Digest -->
+    <div id="digestSheet" class="overlay" onclick="closeOnBg(event, 'digestSheet')">
       <div class="sheet">
-        <div class="card-top">
-          <span class="card-chip">Batched Digest</span>
-          <span class="section-meta">Zero spam pings</span>
-        </div>
-        <div class="card-title">Calm Catch-Up</div>
-        <div class="card-sub">Instead of buzzing your phone for every tap, Meonix bundles quiet ripples until you choose to check in.</div>
-        <div class="stack-item">💬 <strong>2 whispers</strong> in your active circle since lunch</div>
-        <div class="stack-item">✨ <strong>1 anonymous poll hug</strong> waiting in your Mood Stack</div>
-        <div class="stack-item">🌙 <strong>Evening Capsule</strong> opens smoothly at 8:30 PM</div>
-        <button class="btn btn-primary" style="width:100%; margin-top:10px;" onclick="markDigestRead()">Got it, stay relaxed</button>
+        <span class="tag-chip" style="display:inline-block; margin-bottom:8px;">Batched Digest</span>
+        <div class="post-headline">Calm Activity Summary</div>
+        <div class="post-copy">Meonix bundles quiet ripples instead of spamming push notifications.</div>
+        <div class="cookie-card">🎵 <strong>Riya & Kabir</strong> are active in your circle right now</div>
+        <div class="cookie-card">🧡 <strong>1 anonymous warmth ping</strong> logged in your Mood Stack</div>
+        <div class="cookie-card">🔒 <strong>2 locked messages</strong> scheduled in your Inbox queue</div>
+        <button class="btn btn-orange" style="width:100%; margin-top:10px;" onclick="markDigestSeen()">All caught up</button>
       </div>
     </div>
   </div>
 
   <script>
     /* ============================================================
-       1. COOKIE PERSISTENCE ENGINE (with safe file:// fallback)
+       COOKIE PERSISTENCE ENGINE (with safe file:// fallback)
        ============================================================ */
-    const CookieEngine = (() => {
-      let cookieSupported = false;
+    const CookieStore = (() => {
+      let nativeSupported = false;
       try {
-        document.cookie = "mx_probe=1; max-age=60; path=/; SameSite=Lax";
-        cookieSupported = document.cookie.indexOf("mx_probe=1") !== -1;
-        document.cookie = "mx_probe=; max-age=0; path=/; SameSite=Lax";
+        document.cookie = "mx_test=1; max-age=60; path=/; SameSite=Lax";
+        nativeSupported = document.cookie.indexOf("mx_test=1") !== -1;
+        document.cookie = "mx_test=; max-age=0; path=/; SameSite=Lax";
       } catch (e) {
-        cookieSupported = false;
+        nativeSupported = false;
       }
 
-      const LS_PREFIX = "meonix_cookie_mirror_";
+      const PREFIX = "meonix_v2_";
 
-      function set(name, data, days = 30) {
-        const serialized = encodeURIComponent(JSON.stringify(data));
-        // Enforce awareness of 4KB cookie ceiling
-        if (serialized.length > 3800) {
-          console.warn(`Cookie ${name} nearing 4KB browser limit (${serialized.length} bytes).`);
-        }
-        document.cookie = `${name}=${serialized}; max-age=${days * 86400}; path=/; SameSite=Lax`;
-        if (!cookieSupported) {
-          localStorage.setItem(LS_PREFIX + name, JSON.stringify(data));
+      function set(key, value, days = 30) {
+        const encoded = encodeURIComponent(JSON.stringify(value));
+        document.cookie = `${key}=${encoded}; max-age=${days * 86400}; path=/; SameSite=Lax`;
+        if (!nativeSupported) {
+          localStorage.setItem(PREFIX + key, JSON.stringify(value));
         }
       }
 
-      function get(name, fallback) {
-        const match = document.cookie.match(new RegExp("(?:^|; )" + name + "=([^;]*)"));
+      function get(key, fallback) {
+        const match = document.cookie.match(new RegExp("(?:^|; )" + key + "=([^;]*)"));
         if (match) {
           try { return JSON.parse(decodeURIComponent(match[1])); } catch (e) {}
         }
-        if (!cookieSupported) {
-          const raw = localStorage.getItem(LS_PREFIX + name);
+        if (!nativeSupported) {
+          const raw = localStorage.getItem(PREFIX + key);
           if (raw) {
             try { return JSON.parse(raw); } catch (e) {}
           }
@@ -957,499 +1190,533 @@
         return fallback;
       }
 
-      function remove(name) {
-        document.cookie = `${name}=; max-age=0; path=/; SameSite=Lax`;
-        localStorage.removeItem(LS_PREFIX + name);
+      function remove(key) {
+        document.cookie = `${key}=; max-age=0; path=/; SameSite=Lax`;
+        localStorage.removeItem(PREFIX + key);
       }
 
-      function listAll() {
-        const keys = ["mx_user", "mx_circles", "mx_whispers", "mx_polls", "mx_capsule", "mx_chapter", "mx_prefs"];
+      function inspectAll() {
+        const keys = ["mx_user", "mx_circles", "mx_whispers", "mx_polls", "mx_capsule", "mx_chapter", "mx_dms", "mx_prefs"];
         return keys.map(k => {
           const val = get(k, null);
           const bytes = val ? encodeURIComponent(JSON.stringify(val)).length : 0;
-          return { key: k, value: val, bytes };
-        }).filter(item => item.value !== null);
+          return { key: k, val, bytes };
+        }).filter(x => x.val !== null);
       }
 
-      return { set, get, remove, listAll, isNativeCookieActive: () => cookieSupported };
+      return { set, get, remove, inspectAll, isNative: () => nativeSupported };
     })();
 
     /* ============================================================
-       2. INITIAL APPLICATION STATE
+       DEFAULT STATE (ZERO HOSTEL MESS REFERENCES)
        ============================================================ */
-    const DEFAULT_USER = { name: "You", accent: "#7c5cff", beat: "🎵", onboarded: false };
-    const DEFAULT_CIRCLES = { active: "Hostel Crew", list: ["Hostel Crew", "CSE Squad", "Trip Gang"] };
-    const DEFAULT_WHISPERS = [
-      { id: 1, author: "Riya", layer: "Emotional", text: "Need filter coffee rn", circle: "Hostel Crew", beats: 3 },
-      { id: 2, author: "Kabir", layer: "Activity", text: "Library 3rd floor", circle: "Hostel Crew", beats: 1 },
-      { id: 3, author: "Ananya", layer: "Event", text: "Maggi run @ 11?", circle: "Hostel Crew", beats: 4 },
-      { id: 4, author: "Dev", layer: "Activity", text: "Debugging CSS lol", circle: "CSE Squad", beats: 2 }
-    ];
-    const DEFAULT_POLLS = {
-      index: 0,
-      quota: 12,
-      compliments: ["Someone in Hostel Crew picked you for: Always shares notes before exams ✨"]
-    };
-    const DEFAULT_CAPSULE = {
-      revealed: false,
-      notes: [
-        { author: "Riya", text: "Prof cancelled the 4 PM quiz, small win!" },
-        { author: "Kabir", text: "Sunset from terrace block B looked unreal" }
-      ]
-    };
-    const DEFAULT_CHAPTER = { num: 14, moments: 48, paused: false };
-    const DEFAULT_PREFS = {
-      quiet: false,
-      digestSeen: false,
-      takes: [
-        "Riya: Outside paneer roll clears mess food every day.",
-        "Kabir: Mess paneer only works on Sundays.",
-        "Ananya: Night canteen > both."
+    const DEFAULT_STATE = {
+      user: { name: "Aarav", accent: "#ff6b2b", beat: "🎵", onboarded: false },
+      circles: { active: "CSE Squad", list: ["CSE Squad", "Last Bench", "Weekend Crew"] },
+      whispers: [
+        { id: 1, author: "Riya", layer: "Emotional", text: "Need evening chai rn", circle: "CSE Squad", beats: 3 },
+        { id: 2, author: "Kabir", layer: "Activity", text: "Library 3rd floor", circle: "CSE Squad", beats: 2 },
+        { id: 3, author: "Ananya", layer: "Event", text: "Quad chill @ 6 PM?", circle: "CSE Squad", beats: 4 },
+        { id: 4, author: "Dev", layer: "Activity", text: "Fixing JS bugs lol", circle: "Last Bench", beats: 1 }
       ],
-      stack: [
-        { layer: "Emotional", text: "Lowkey hyped for semester break", time: "Yesterday · Archived" }
-      ]
+      polls: {
+        idx: 0,
+        quota: 12,
+        warmth: ["Someone in CSE Squad picked you for: Best notes before internals 🧡"]
+      },
+      capsule: {
+        open: false,
+        notes: [
+          { author: "Riya", text: "Lab sir let us leave 20 mins early today!" },
+          { author: "Kabir", text: "Golden hour view from block C steps was insane" }
+        ]
+      },
+      chapter: { num: 14, moments: 48, paused: false },
+      dms: [
+        { id: 101, from: "Riya", text: "Saved a seat near the window for tomorrow's lecture", status: "Unlocks 8:30 PM", unlocked: false },
+        { id: 102, from: "Kabir", text: "Send me that playlist link whenever you're free", status: "Delivered", unlocked: true }
+      ],
+      prefs: {
+        quiet: false,
+        digestSeen: false,
+        takes: [
+          "Riya: Main steps near the auditorium at sunset.",
+          "Kabir: Corner bench outside the library.",
+          "Ananya: Rooftop cafeteria breeze after 5:30 PM."
+        ],
+        stack: [
+          { layer: "Emotional", text: "Lowkey hyped for weekend break", time: "Yesterday · Archived" }
+        ]
+      }
     };
 
-    const POLL_PROMPTS = [
+    const POLL_BANK = [
       { q: "Who makes boring 9 AM lectures survivable?", friends: ["Riya", "Kabir", "Ananya", "Dev"] },
-      { q: "Most likely to plan a midnight chai run?", friends: ["Kabir", "Zoya", "Riya", "Arjun"] },
+      { q: "Most likely to plan an impromptu evening chai run?", friends: ["Kabir", "Zoya", "Riya", "Arjun"] },
       { q: "Who always has the best playlist on aux?", friends: ["Ananya", "Dev", "Zoya", "Riya"] }
     ];
 
     let state = {
-      user: CookieEngine.get("mx_user", DEFAULT_USER),
-      circles: CookieEngine.get("mx_circles", DEFAULT_CIRCLES),
-      whispers: CookieEngine.get("mx_whispers", DEFAULT_WHISPERS),
-      polls: CookieEngine.get("mx_polls", DEFAULT_POLLS),
-      capsule: CookieEngine.get("mx_capsule", DEFAULT_CAPSULE),
-      chapter: CookieEngine.get("mx_chapter", DEFAULT_CHAPTER),
-      prefs: CookieEngine.get("mx_prefs", DEFAULT_PREFS)
+      user: CookieStore.get("mx_user", DEFAULT_STATE.user),
+      circles: CookieStore.get("mx_circles", DEFAULT_STATE.circles),
+      whispers: CookieStore.get("mx_whispers", DEFAULT_STATE.whispers),
+      polls: CookieStore.get("mx_polls", DEFAULT_STATE.polls),
+      capsule: CookieStore.get("mx_capsule", DEFAULT_STATE.capsule),
+      chapter: CookieStore.get("mx_chapter", DEFAULT_STATE.chapter),
+      dms: CookieStore.get("mx_dms", DEFAULT_STATE.dms),
+      prefs: CookieStore.get("mx_prefs", DEFAULT_STATE.prefs)
     };
 
-    let selectedWhisperId = null;
-    let tempAccent = state.user.accent;
-    let tempBeat = state.user.beat;
+    let activeWhisperId = null;
+    let draftAccent = state.user.accent;
+    let draftBeat = state.user.beat;
+
+    function esc(str) {
+      return String(str).replace(/[&<>"']/g, m => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[m]));
+    }
+
+    function toast(msg) {
+      const el = document.getElementById("toast");
+      el.textContent = msg;
+      el.classList.add("show");
+      setTimeout(() => el.classList.remove("show"), 2000);
+    }
+
+    function applyOrangeAccent() {
+      document.documentElement.style.setProperty("--orange", state.user.accent);
+      document.documentElement.style.setProperty("--orange-soft", state.user.accent + "28");
+      document.documentElement.style.setProperty("--orange-glow", state.user.accent + "55");
+    }
 
     /* ============================================================
-       3. HELPERS & RENDERING
+       RENDER FUNCTIONS
        ============================================================ */
-    function escapeHtml(str) {
-      return String(str).replace(/[&<>"']/g, m => ({
-        "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
-      }[m]));
-    }
-
-    function showToast(msg) {
-      const t = document.getElementById("toast");
-      t.textContent = msg;
-      t.classList.add("show");
-      setTimeout(() => t.classList.remove("show"), 2000);
-    }
-
-    function applyTheme() {
-      document.documentElement.style.setProperty("--accent", state.user.accent);
-      document.documentElement.style.setProperty("--accent-soft", state.user.accent + "28");
-      document.documentElement.style.setProperty("--accent-glow", state.user.accent + "55");
-    }
-
     function renderAll() {
-      applyTheme();
-      document.getElementById("activeCircleLabel").textContent = state.circles.active;
+      applyOrangeAccent();
+      const initial = (state.user.name || "A")[0].toUpperCase();
+      document.getElementById("activeCircleHeader").textContent = state.circles.active;
       document.querySelectorAll(".circleNameInline").forEach(el => el.textContent = state.circles.active);
-      document.getElementById("userBadge").textContent = state.user.name;
+      document.getElementById("navInitial").textContent = initial;
+      document.getElementById("profileInitial").textContent = initial;
+      document.getElementById("profileNameDisplay").textContent = state.user.name;
+      document.getElementById("profileBeatDisplay").textContent = state.user.beat;
 
-      // Quiet Mode & Digest Dot
-      document.getElementById("quietBanner").classList.toggle("show", state.prefs.quiet);
-      document.getElementById("quietToggleBtn").style.borderColor = state.prefs.quiet ? "var(--success)" : "var(--border)";
-      document.getElementById("digestDot").style.display = (state.prefs.quiet |
+      document.getElementById("quietStrip").classList.toggle("show", state.prefs.quiet);
+      document.getElementById("quietBtn").style.color = state.prefs.quiet ? "var(--orange)" : "var(--text-primary)";
+      document.getElementById("digestDot").style.display = (state.prefs.quiet || state.prefs.digestSeen) ? "none" : "block";
 
-| state.prefs.digestSeen) ? "none" : "block";
+      const lockedCount = state.dms.filter(d => !d.unlocked).length;
+      const badge = document.getElementById("lockedCountBadge");
+      badge.textContent = lockedCount;
+      badge.style.display = lockedCount > 0 ? "inline-block" : "none";
 
       renderWhispers();
       renderTeaser();
-      renderPoll();
+      renderPolls();
       renderCapsule();
       renderChapter();
-      renderCirclesTab();
-      renderStackTab();
-      renderCookieInspector();
+      renderCircles();
+      renderInbox();
+      renderProfileAndCookies();
     }
 
     function renderWhispers() {
-      const strip = document.getElementById("whispersStrip");
-      const activeList = state.whispers.filter(w => w.circle === state.circles.active |
-
-| w.author === state.user.name);
+      const tray = document.getElementById("whispersTray");
+      const list = state.whispers.filter(w => w.circle === state.circles.active || w.author === state.user.name);
       let html = `
-        <div class="whisper-node" onclick="openOverlay('whisperSheet')">
-          <div class="whisper-bubble add-bubble">+ Drop mood</div>
-          <div class="avatar-ring">${escapeHtml(state.user.name[0].toUpperCase())}</div>
-          <div class="whisper-name">You</div>
+        <div class="note-item" onclick="openOverlay('createWhisperSheet')">
+          <div class="note-bubble new-note">+ Your mood</div>
+          <div class="ig-ring">
+            <div class="ig-avatar">${esc((state.user.name || "A")[0].toUpperCase())}</div>
+          </div>
+          <div class="note-username">Your note</div>
         </div>
       `;
-      activeList.forEach(w => {
-        const layerCls = "layer-" + w.layer.toLowerCase();
+      list.forEach(w => {
+        const cls = "l-" + w.layer.toLowerCase();
         html += `
-          <div class="whisper-node" onclick="openWhisperDetail(${w.id})">
-            <div class="whisper-bubble">
-              <span class="layer-tag ${layerCls}">${escapeHtml(w.layer)}</span>
-              <span>${escapeHtml(w.text)}</span>
+          <div class="note-item" onclick="openWhisper(${w.id})">
+            <div class="note-bubble">
+              <span class="layer-pill ${cls}">${esc(w.layer)}</span>
+              <span>${esc(w.text)}</span>
             </div>
-            <div class="avatar-ring has-whisper">
-              ${escapeHtml(w.author[0].toUpperCase())}
-              <span class="beat-badge">${escapeHtml(state.user.beat)} ${w.beats}</span>
+            <div class="ig-ring active-ring">
+              <div class="ig-avatar">${esc(w.author[0].toUpperCase())}</div>
+              <span class="beat-pill">${esc(state.user.beat)} ${w.beats}</span>
             </div>
-            <div class="whisper-name">${escapeHtml(w.author)}</div>
+            <div class="note-username">${esc(w.author)}</div>
           </div>
         `;
       });
-      strip.innerHTML = html;
+      tray.innerHTML = html;
     }
 
     function renderTeaser() {
       document.getElementById("teaserCount").textContent = `${state.prefs.takes.length} friends weighed in`;
-      const peek = document.getElementById("peekBox");
-      peek.innerHTML = state.prefs.takes.map(t => `<div class="peek-line">${escapeHtml(t)}</div>`).join("");
+      document.getElementById("peekDrawer").innerHTML = state.prefs.takes
+        .map(t => `<div class="peek-row">${esc(t)}</div>`)
+        .join("");
     }
 
-    function renderPoll() {
-      const current = POLL_PROMPTS[state.polls.index % POLL_PROMPTS.length];
-      document.getElementById("pollQuestion").textContent = current.q;
-      document.getElementById("pollQuotaLabel").textContent = `${state.polls.quota} / 12 left this hour`;
-      const grid = document.getElementById("pollOptionsGrid");
-      grid.innerHTML = current.friends.map(f => `
-        <button class="poll-option" onclick="castPollVote('${escapeHtml(f)}')">
-          <span class="poll-avatar">${escapeHtml(f[0])}</span>
-          <span>${escapeHtml(f)}</span>
+    function renderPolls() {
+      const p = POLL_BANK[state.polls.idx % POLL_BANK.length];
+      document.getElementById("pollPromptText").textContent = p.q;
+      document.getElementById("pollQuotaBadge").textContent = `${state.polls.quota}/12 left`;
+      document.getElementById("pollGrid").innerHTML = p.friends.map(f => `
+        <button class="poll-choice" onclick="votePoll('${esc(f)}')">
+          <span class="poll-dot">${esc(f[0])}</span>
+          <span>${esc(f)}</span>
         </button>
       `).join("");
     }
 
     function renderCapsule() {
-      const box = document.getElementById("capsuleContainer");
-      const timer = document.getElementById("capsuleTimerLabel");
-      if (!state.capsule.revealed) {
-        timer.textContent = "Unwraps 8:30 PM";
-        box.innerHTML = `
+      const area = document.getElementById("capsuleArea");
+      const tag = document.getElementById("capsuleStatusTag");
+      if (!state.capsule.open) {
+        tag.textContent = "8:30 PM";
+        area.innerHTML = `
           <div style="font-size:13px; color:var(--text-secondary); margin-bottom:10px;">
-            🎁 <strong>${state.capsule.notes.length} notes</strong> gently veiled until tonight's collective reveal.
+            🧡 <strong>${state.capsule.notes.length} candid notes</strong> waiting for tonight's collective unwrap.
           </div>
-          <button class="btn btn-sm" onclick="toggleCapsuleReveal()">Preview Unwrap Now (Demo)</button>
+          <button class="btn btn-outline btn-sm" onclick="toggleCapsule()">Preview Unwrap Now</button>
         `;
       } else {
-        timer.textContent = "Unwrapped ✨";
-        box.innerHTML = `
+        tag.textContent = "Unwrapped ✨";
+        area.innerHTML = `
           <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
-            <span style="font-size:12px; color:var(--success); font-weight:700;">Tonight's Capsule Revealed</span>
-            <button class="btn btn-ghost btn-sm" onclick="toggleCapsuleReveal()">Re-veil</button>
+            <span style="font-size:12px; font-weight:700; color:var(--orange-light);">Tonight's Capsule</span>
+            <button class="btn btn-sm" onclick="toggleCapsule()">Re-veil</button>
           </div>
           ${state.capsule.notes.map(n => `
-            <div class="capsule-item"><strong>${escapeHtml(n.author)}:</strong> ${escapeHtml(n.text)}</div>
+            <div class="capsule-note"><strong>${esc(n.author)}:</strong> ${esc(n.text)}</div>
           `).join("")}
         `;
       }
     }
 
     function renderChapter() {
-      document.getElementById("chapterHeadline").textContent =
-        `Chapter ${state.chapter.num} · ${state.chapter.moments} shared moments`;
-      document.getElementById("chapterSub").textContent = state.chapter.paused
-        ? "Paused peacefully — your 48 moments remain untouched."
-        : "Active & relaxed — step away anytime without losing progress.";
-      document.getElementById("pauseChapterBtn").textContent = state.chapter.paused ? "Resume" : "Pause";
+      document.getElementById("chapterTitle").textContent = `Chapter ${state.chapter.num} · ${state.chapter.moments} shared moments`;
+      document.getElementById("chapterDesc").textContent = state.chapter.paused
+        ? "Paused peacefully — all 48 moments stay safe."
+        : "Step away anytime — your chapter never resets to zero.";
+      document.getElementById("chapterPauseBtn").textContent = state.chapter.paused ? "Resume" : "Pause";
     }
 
-    function renderCirclesTab() {
-      const list = document.getElementById("circlesList");
-      list.innerHTML = state.circles.list.map(c => {
-        const isCurrent = c === state.circles.active;
+    function renderCircles() {
+      document.getElementById("circlesContainer").innerHTML = state.circles.list.map(c => {
+        const active = c === state.circles.active;
         return `
-          <div class="stack-item" style="display:flex; justify-content:space-between; align-items:center; border-color:${isCurrent ? 'var(--accent)' : 'var(--border)'}">
+          <div class="panel-card" style="display:flex; justify-content:space-between; align-items:center; border-color:${active ? 'var(--orange)' : 'var(--border)'}">
             <div>
-              <strong>${escapeHtml(c)}</strong>
-              <div style="font-size:11px; color:var(--text-muted);">Invite-only · 4–15 close peers</div>
+              <div style="font-weight:700; font-size:15px;">${esc(c)}</div>
+              <div style="font-size:11.5px; color:var(--text-muted);">Invite-only · Private context</div>
             </div>
-            <button class="btn btn-sm ${isCurrent ? 'btn-primary' : ''}" onclick="switchCircle('${escapeHtml(c)}')">
-              ${isCurrent ? 'Active' : 'Enter'}
+            <button class="btn btn-sm ${active ? 'btn-orange' : 'btn-outline'}" onclick="setCircle('${esc(c)}')">
+              ${active ? 'Active' : 'Switch'}
             </button>
           </div>
         `;
       }).join("");
     }
 
-    function renderStackTab() {
-      const box = document.getElementById("moodStackList");
-      const items = [
-        ...state.polls.compliments.map(c => `<div class="stack-item" style="border-color:rgba(244,114,182,0.35);">✨ ${escapeHtml(c)}</div>`),
-        ...state.prefs.stack.map(s => `
-          <div class="stack-item">
-            <span class="layer-tag layer-${s.layer.toLowerCase()}">${escapeHtml(s.layer)}</span>
-            <div style="margin-top:3px;">${escapeHtml(s.text)}</div>
-            <div style="font-size:11px; color:var(--text-muted); margin-top:4px;">${escapeHtml(s.time)}</div>
+    function renderInbox() {
+      document.getElementById("dmListContainer").innerHTML = state.dms.map(d => `
+        <div class="dm-row">
+          <div style="flex:1; padding-right:10px;">
+            <div style="display:flex; align-items:center; gap:8px; margin-bottom:4px;">
+              <strong style="font-size:14px;">${esc(d.from)}</strong>
+              <span class="locked-pill">${esc(d.status)}</span>
+            </div>
+            <div style="font-size:13px; color:${d.unlocked ? 'var(--text-primary)' : 'var(--text-muted)'};">
+              ${d.unlocked ? esc(d.text) : '🔒 Locked until delivery window — tap to preview unlock'}
+            </div>
           </div>
-        `)
-      ];
-      box.innerHTML = items.join("");
+          ${!d.unlocked ? `<button class="btn btn-outline btn-sm" onclick="unlockDM(${d.id})">Unlock</button>` : ''}
+        </div>
+      `).join("");
     }
 
-    function renderCookieInspector() {
-      const badge = document.getElementById("storageModeBadge");
-      const explain = document.getElementById("cookieExplainBanner");
-      if (CookieEngine.isNativeCookieActive()) {
-        badge.textContent = "Native HTTP Cookies Active";
-        badge.style.color = "var(--success)";
+    function renderProfileAndCookies() {
+      document.getElementById("statMoments").textContent = state.chapter.moments;
+      document.getElementById("statStack").textContent = state.prefs.stack.length + state.polls.warmth.length;
+      document.getElementById("statCircles").textContent = state.circles.list.length;
+
+      const stackHtml = [
+        ...state.polls.warmth.map(w => `<div class="panel-card" style="border-color:rgba(255,107,43,0.35);">🧡 ${esc(w)}</div>`),
+        ...state.prefs.stack.map(s => `
+          <div class="panel-card">
+            <span class="layer-pill l-${s.layer.toLowerCase()}">${esc(s.layer)}</span>
+            <div style="font-size:14px; margin-top:3px;">${esc(s.text)}</div>
+            <div style="font-size:11px; color:var(--text-muted); margin-top:4px;">${esc(s.time)}</div>
+          </div>
+        `)
+      ].join("");
+      document.getElementById("moodStackContainer").innerHTML = stackHtml;
+
+      const status = document.getElementById("cookieEngineStatus");
+      const note = document.getElementById("cookieNoteText");
+      if (CookieStore.isNative()) {
+        status.textContent = "Native HTTP Cookies";
+        note.innerHTML = "Persisted via <code>document.cookie</code> with <code>SameSite=Lax</code> (4 KB limit per cookie).";
       } else {
-        badge.textContent = "file:// Fallback Active";
-        badge.style.color = "var(--layer-event)";
-        explain.innerHTML = `Opened via <code>file://</code> — Chrome/Safari block <code>document.cookie</code> on local files. Serve via <code>http://localhost</code> for native cookies (using local mirror right now).`;
+        status.textContent = "file:// Mirror Active";
+        note.innerHTML = "Opened via <code>file://</code> — browsers block <code>document.cookie</code> on local files. Run via <code>http://localhost</code> for native cookies.";
       }
 
-      const rows = CookieEngine.listAll();
-      document.getElementById("cookieInspectorList").innerHTML = rows.length
-        ? rows.map(r => `
-            <div class="cookie-row">
-              <strong>${escapeHtml(r.key)}</strong>
-              <div class="cookie-meta">
-                <span>Size: ${r.bytes} / 4096 bytes</span>
-                <span>Max-Age: 30d · SameSite=Lax</span>
-              </div>
-              <div class="cookie-val">${escapeHtml(JSON.stringify(r.value))}</div>
-            </div>
-          `).join("")
-        : `<div class="stack-item">No cookies stored yet. Interact with the app to write cookies.</div>`;
+      const list = CookieStore.inspectAll();
+      document.getElementById("cookieRows").innerHTML = list.map(item => `
+        <div class="cookie-card">
+          <div style="display:flex; justify-content:space-between;">
+            <strong>${esc(item.key)}</strong>
+            <span style="color:var(--text-muted);">${item.bytes} / 4096 B</span>
+          </div>
+          <div class="cookie-code">${esc(JSON.stringify(item.val))}</div>
+        </div>
+      `).join("");
     }
 
     /* ============================================================
-       4. FEATURE INTERACTIONS & PERSISTENCE ACTIONS
+       USER ACTIONS & COOKIE UPDATES
        ============================================================ */
     function switchTab(tab) {
-      document.querySelectorAll(".view-panel").forEach(p => p.classList.remove("active"));
-      document.getElementById("tab-" + tab).classList.add("active");
-      document.querySelectorAll(".nav-item").forEach(b => b.classList.toggle("active", b.dataset.tab === tab));
-      if (tab === "settings") renderCookieInspector();
+      document.querySelectorAll(".screen").forEach(s => s.classList.remove("active"));
+      document.getElementById("screen-" + tab).classList.add("active");
+      document.querySelectorAll(".ig-tab").forEach(b => b.classList.toggle("active", b.dataset.tab === tab));
+      if (tab === "profile") renderProfileAndCookies();
     }
 
     function openOverlay(id) { document.getElementById(id).classList.add("open"); }
     function closeOverlay(id) { document.getElementById(id).classList.remove("open"); }
-    function closeSheetOnBg(e, id) { if (e.target.id === id) closeOverlay(id); }
+    function closeOnBg(e, id) { if (e.target.id === id) closeOverlay(id); }
 
-    // Feature 1: Inbox Whispers + Mood Stack + Beats
-    function saveNewWhisper() {
-      const layer = document.getElementById("whisperLayerSelect").value;
-      const text = document.getElementById("whisperTextInput").value.trim();
+    function createWhisper() {
+      const layer = document.getElementById("newWhisperLayer").value;
+      const text = document.getElementById("newWhisperText").value.trim();
       if (!text) return;
-      const newW = { id: Date.now(), author: state.user.name, layer, text, circle: state.circles.active, beats: 0 };
-      state.whispers.unshift(newW);
-      state.whispers = state.whispers.slice(0, 12); // Keep cookie compact < 4KB
+      state.whispers.unshift({ id: Date.now(), author: state.user.name, layer, text, circle: state.circles.active, beats: 0 });
+      state.whispers = state.whispers.slice(0, 12);
       state.prefs.stack.unshift({ layer, text, time: `Today · ${state.circles.active}` });
       state.prefs.stack = state.prefs.stack.slice(0, 10);
       state.chapter.moments += 1;
 
-      CookieEngine.set("mx_whispers", state.whispers);
-      CookieEngine.set("mx_prefs", state.prefs);
-      CookieEngine.set("mx_chapter", state.chapter);
+      CookieStore.set("mx_whispers", state.whispers);
+      CookieStore.set("mx_prefs", state.prefs);
+      CookieStore.set("mx_chapter", state.chapter);
 
-      document.getElementById("whisperTextInput").value = "";
-      closeOverlay("whisperSheet");
+      document.getElementById("newWhisperText").value = "";
+      closeOverlay("createWhisperSheet");
       renderAll();
-      showToast("Whisper floated + saved to Mood Stack");
+      toast("Whisper posted + archived to Stack");
     }
 
-    function openWhisperDetail(id) {
-      const w = state.whispers.find(item => item.id === id);
+    function openWhisper(id) {
+      const w = state.whispers.find(x => x.id === id);
       if (!w) return;
-      selectedWhisperId = id;
-      document.getElementById("detailLayerChip").textContent = w.layer + " Layer";
-      document.getElementById("detailAuthor").textContent = w.author;
-      document.getElementById("detailBody").textContent = `"${w.text}"`;
-      document.getElementById("sendBeatBtn").textContent = `${state.user.beat} Send Beat (${w.beats})`;
-      openOverlay("whisperDetailSheet");
+      activeWhisperId = id;
+      document.getElementById("wmLayer").textContent = w.layer + " Layer";
+      document.getElementById("wmAuthor").textContent = w.author;
+      document.getElementById("wmText").textContent = `"${w.text}"`;
+      document.getElementById("wmBeatBtn").textContent = `${state.user.beat} Send Beat (${w.beats})`;
+      openOverlay("whisperModal");
     }
 
-    function sendBeatToWhisper() {
-      const w = state.whispers.find(item => item.id === selectedWhisperId);
+    function reactBeat() {
+      const w = state.whispers.find(x => x.id === activeWhisperId);
       if (!w) return;
       w.beats += 1;
-      CookieEngine.set("mx_whispers", state.whispers);
-      document.getElementById("sendBeatBtn").textContent = `${state.user.beat} Sent! (${w.beats})`;
+      CookieStore.set("mx_whispers", state.whispers);
+      document.getElementById("wmBeatBtn").textContent = `${state.user.beat} Sent (${w.beats})`;
       renderWhispers();
-      renderCookieInspector();
-      showToast(`${state.user.beat} Beat sent to ${w.author}`);
+      toast(`${state.user.beat} Beat sent to ${w.author}`);
     }
 
-    // Feature 2: Positive Mystery Poll
-    function castPollVote(friend) {
+    function togglePeek() {
+      document.getElementById("peekDrawer").classList.toggle("open");
+    }
+
+    function addQuickTake() {
+      const val = prompt("Drop a quick 1-line take:");
+      if (val && val.trim()) {
+        state.prefs.takes.unshift(`${state.user.name}: ${val.trim()}`);
+        state.prefs.takes = state.prefs.takes.slice(0, 6);
+        CookieStore.set("mx_prefs", state.prefs);
+        document.getElementById("peekDrawer").classList.add("open");
+        renderTeaser();
+      }
+    }
+
+    function votePoll(friend) {
       if (state.polls.quota <= 0) {
-        showToast("Hourly cap reached — take a breather!");
+        toast("Hourly cap reached — take a breather!");
         return;
       }
-      const prompt = POLL_PROMPTS[state.polls.index % POLL_PROMPTS.length].q;
+      const q = POLL_BANK[state.polls.idx % POLL_BANK.length].q;
       state.polls.quota -= 1;
-      state.polls.index += 1;
-      state.polls.compliments.unshift(`You cheered ${friend} on: "${prompt}"`);
-      state.polls.compliments = state.polls.compliments.slice(0, 6);
+      state.polls.idx += 1;
+      state.polls.warmth.unshift(`You cheered ${friend} on: "${q}"`);
+      state.polls.warmth = state.polls.warmth.slice(0, 6);
       state.chapter.moments += 1;
 
-      CookieEngine.set("mx_polls", state.polls, 1); // 1-day TTL for poll quota cookie
-      CookieEngine.set("mx_chapter", state.chapter);
+      CookieStore.set("mx_polls", state.polls, 1);
+      CookieStore.set("mx_chapter", state.chapter);
 
-      const fb = document.getElementById("pollFeedback");
-      fb.style.display = "flex";
-      fb.innerHTML = `<span>✨ Anonymous warmth ping sent to <strong>${escapeHtml(friend)}</strong></span>`;
+      const box = document.getElementById("pollToastBox");
+      box.style.display = "block";
+      box.innerHTML = `🧡 Anonymous warmth ping sent to <strong>${esc(friend)}</strong>`;
       renderAll();
     }
 
-    function nextPollPrompt() {
-      state.polls.index += 1;
-      CookieEngine.set("mx_polls", state.polls, 1);
-      renderPoll();
+    function skipPoll() {
+      state.polls.idx += 1;
+      CookieStore.set("mx_polls", state.polls, 1);
+      renderPolls();
     }
 
-    // Feature 3: Circles
-    function openCircleSheet() {
-      document.getElementById("circleSheetOptions").innerHTML = state.circles.list.map(c => `
-        <button class="btn ${c === state.circles.active ? 'btn-primary' : ''}" style="width:100%; margin-bottom:8px;" onclick="switchCircle('${escapeHtml(c)}'); closeOverlay('circleSheet');">
-          ${escapeHtml(c)}
-        </button>
-      `).join("");
-      openOverlay("circleSheet");
-    }
-
-    function switchCircle(name) {
-      state.circles.active = name;
-      CookieEngine.set("mx_circles", state.circles);
-      renderAll();
-      showToast(`Switched to ${name}`);
-    }
-
-    function createCircle() {
-      const inp = document.getElementById("newCircleInput");
-      const name = inp.value.trim();
-      if (!name |
-
-| state.circles.list.includes(name)) return;
-      state.circles.list.push(name);
-      state.circles.active = name;
-      CookieEngine.set("mx_circles", state.circles);
-      inp.value = "";
-      renderAll();
-      showToast(`Created private circle "${name}"`);
-    }
-
-    // Feature 4: Evening Capsule
-    function addCapsuleNote() {
-      const inp = document.getElementById("capsuleInput");
+    function dropCapsuleNote() {
+      const inp = document.getElementById("capsuleNoteInput");
       const text = inp.value.trim();
       if (!text) return;
       state.capsule.notes.push({ author: state.user.name, text });
       state.capsule.notes = state.capsule.notes.slice(-6);
       state.chapter.moments += 1;
-      CookieEngine.set("mx_capsule", state.capsule, 1);
-      CookieEngine.set("mx_chapter", state.chapter);
+      CookieStore.set("mx_capsule", state.capsule, 1);
+      CookieStore.set("mx_chapter", state.chapter);
       inp.value = "";
       renderAll();
-      showToast("Dropped into tonight's capsule");
+      toast("Dropped into tonight's capsule");
     }
 
-    function toggleCapsuleReveal() {
-      state.capsule.revealed = !state.capsule.revealed;
-      CookieEngine.set("mx_capsule", state.capsule, 1);
+    function toggleCapsule() {
+      state.capsule.open = !state.capsule.open;
+      CookieStore.set("mx_capsule", state.capsule, 1);
       renderCapsule();
     }
 
-    // Feature 5: 90s Add-an-Egg Onboarding
-    function openOnboarding(force = false) {
-      if (state.user.onboarded && !force) return;
-      document.getElementById("obNameInput").value = state.user.name === "You" ? "" : state.user.name;
-      document.getElementById("obCircleInput").value = state.circles.active;
-      nextOnboardStep(1);
-      openOverlay("onboardingOverlay");
-    }
-
-    function nextOnboardStep(step) {
-      [1, 2, 3].forEach(n => document.getElementById("onboardStep" + n).style.display = n === step ? "block" : "none");
-      document.getElementById("onboardProgress").style.width = (step * 33.33) + "%";
-    }
-
-    function selectAccent(el) {
-      document.querySelectorAll(".swatch").forEach(s => s.classList.remove("selected"));
-      el.classList.add("selected");
-      tempAccent = el.dataset.color;
-      document.documentElement.style.setProperty("--accent", tempAccent);
-    }
-
-    function selectBeat(beat, btn) {
-      tempBeat = beat;
-      document.querySelectorAll("#beatChoices .btn").forEach(b => b.classList.remove("btn-primary"));
-      btn.classList.add("btn-primary");
-    }
-
-    function finishOnboarding() {
-      const name = document.getElementById("obNameInput").value.trim() |
-
-| "Aarav";
-      const circle = document.getElementById("obCircleInput").value.trim() |
-
-| "Hostel Crew";
-      state.user = { name, accent: tempAccent, beat: tempBeat, onboarded: true };
-      if (!state.circles.list.includes(circle)) state.circles.list.unshift(circle);
-      state.circles.active = circle;
-
-      CookieEngine.set("mx_user", state.user);
-      CookieEngine.set("mx_circles", state.circles);
-      closeOverlay("onboardingOverlay");
-      renderAll();
-      showToast(`Welcome to ${circle}, ${name}`);
-    }
-
-    // Feature 6: Pauseable Chapter
     function toggleChapterPause() {
       state.chapter.paused = !state.chapter.paused;
-      CookieEngine.set("mx_chapter", state.chapter);
+      CookieStore.set("mx_chapter", state.chapter);
       renderChapter();
-      showToast(state.chapter.paused ? "Chapter paused safely" : "Chapter resumed");
+      toast(state.chapter.paused ? "Chapter paused safely" : "Chapter resumed");
     }
 
-    // Feature 7: Honest Curiosity Teaser
-    function togglePeek() {
-      document.getElementById("peekBox").classList.toggle("open");
+    function openCircleSheet() {
+      document.getElementById("circleSheetList").innerHTML = state.circles.list.map(c => `
+        <button class="btn ${c === state.circles.active ? 'btn-orange' : ''}" style="width:100%; margin-bottom:8px;" onclick="setCircle('${esc(c)}'); closeOverlay('circleSheet');">
+          ${esc(c)}
+        </button>
+      `).join("");
+      openOverlay("circleSheet");
     }
 
-    function openTakeInput() {
-      const take = prompt("Drop a quick 1-line take:");
-      if (take && take.trim()) {
-        state.prefs.takes.unshift(`${state.user.name}: ${take.trim()}`);
-        state.prefs.takes = state.prefs.takes.slice(0, 6);
-        CookieEngine.set("mx_prefs", state.prefs);
-        document.getElementById("peekBox").classList.add("open");
-        renderTeaser();
-      }
+    function setCircle(name) {
+      state.circles.active = name;
+      CookieStore.set("mx_circles", state.circles);
+      renderAll();
+      toast(`Switched to ${name}`);
     }
 
-    // Feature 8: Quiet Mode & Batched Digest
+    function addCircle() {
+      const inp = document.getElementById("newCircleName");
+      const name = inp.value.trim();
+      if (!name || state.circles.list.includes(name)) return;
+      state.circles.list.push(name);
+      state.circles.active = name;
+      CookieStore.set("mx_circles", state.circles);
+      inp.value = "";
+      renderAll();
+      toast(`Created "${name}"`);
+    }
+
+    function sendLockedDM() {
+      const to = document.getElementById("dmRecipient").value;
+      const win = document.getElementById("dmUnlockTime").value;
+      const inp = document.getElementById("dmInput");
+      const text = inp.value.trim();
+      if (!text) return;
+      const instant = win === "Instant DM";
+      state.dms.unshift({ id: Date.now(), from: `You → ${to}`, text, status: instant ? "Delivered" : win, unlocked: instant });
+      state.dms = state.dms.slice(0, 8);
+      CookieStore.set("mx_dms", state.dms);
+      inp.value = "";
+      renderAll();
+      toast(instant ? "Sent DM" : `Queued (${win})`);
+    }
+
+    function unlockDM(id) {
+      const item = state.dms.find(d => d.id === id);
+      if (!item) return;
+      item.unlocked = true;
+      item.status = "Unlocked";
+      CookieStore.set("mx_dms", state.dms);
+      renderAll();
+      toast("Message unlocked");
+    }
+
     function toggleQuietMode() {
       state.prefs.quiet = !state.prefs.quiet;
-      CookieEngine.set("mx_prefs", state.prefs);
+      CookieStore.set("mx_prefs", state.prefs);
       renderAll();
-      showToast(state.prefs.quiet ? "Quiet Mode on" : "Quiet Mode off");
+      toast(state.prefs.quiet ? "Quiet Mode enabled" : "Quiet Mode off");
     }
 
-    function openDigestSheet() { openOverlay("digestSheet"); }
-    function markDigestRead() {
+    function markDigestSeen() {
       state.prefs.digestSeen = true;
-      CookieEngine.set("mx_prefs", state.prefs);
+      CookieStore.set("mx_prefs", state.prefs);
       closeOverlay("digestSheet");
       renderAll();
     }
 
-    // Reset Cookies (Deletion via Max-Age=0)
-    function resetAllCookies() {
-      ["mx_user", "mx_circles", "mx_whispers", "mx_polls", "mx_capsule", "mx_chapter", "mx_prefs"].forEach(CookieEngine.remove);
+    function toggleCookieDrawer() {
+      const d = document.getElementById("cookieDrawer");
+      d.style.display = d.style.display === "none" ? "block" : "none";
+      renderProfileAndCookies();
+    }
+
+    function openOnboarding(force = false) {
+      if (state.user.onboarded && !force) return;
+      document.getElementById("obName").value = state.user.name;
+      document.getElementById("obCircle").value = state.circles.active;
+      goObStep(1);
+      openOverlay("onboardingOverlay");
+    }
+
+    function goObStep(n) {
+      [1, 2, 3].forEach(i => document.getElementById("obStep" + i).style.display = i === n ? "block" : "none");
+      document.getElementById("obProgress").style.width = (n * 33.33) + "%";
+    }
+
+    function pickShade(el) {
+      document.querySelectorAll(".swatch").forEach(s => s.classList.remove("selected"));
+      el.classList.add("selected");
+      draftAccent = el.dataset.c;
+      document.documentElement.style.setProperty("--orange", draftAccent);
+    }
+
+    function pickBeat(b, btn) {
+      draftBeat = b;
+      document.querySelectorAll("#obBeats .btn").forEach(x => x.classList.remove("btn-orange"));
+      btn.classList.add("btn-orange");
+    }
+
+    function saveOnboarding() {
+      const name = document.getElementById("obName").value.trim() || "Aarav";
+      const circle = document.getElementById("obCircle").value.trim() || "CSE Squad";
+      state.user = { name, accent: draftAccent, beat: draftBeat, onboarded: true };
+      if (!state.circles.list.includes(circle)) state.circles.list.unshift(circle);
+      state.circles.active = circle;
+      CookieStore.set("mx_user", state.user);
+      CookieStore.set("mx_circles", state.circles);
+      closeOverlay("onboardingOverlay");
+      renderAll();
+      toast(`Welcome to Meonix, ${name}`);
+    }
+
+    function clearAllCookies() {
+      ["mx_user", "mx_circles", "mx_whispers", "mx_polls", "mx_capsule", "mx_chapter", "mx_dms", "mx_prefs"].forEach(CookieStore.remove);
       location.reload();
     }
 
-    // Boot
     renderAll();
     if (!state.user.onboarded) openOnboarding(true);
   </script>
