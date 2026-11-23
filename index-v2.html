@@ -1,1724 +1,618 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>Meonix — Campus Social</title>
-  <style>
-    :root {
-      --bg-outer: #090605;
-      --bg-app: #110c09;
-      --surface: #1a130e;
-      --surface-elevated: #241a13;
-      --border: rgba(255, 175, 120, 0.12);
-      --text-primary: #fff7f2;
-      --text-secondary: #c9b3a3;
-      --text-muted: #8c7465;
-      --orange: #ff6b2b;
-      --orange-light: #ff9a5a;
-      --orange-deep: #d94e14;
-      --orange-soft: rgba(255, 107, 43, 0.16);
-      --orange-glow: rgba(255, 107, 43, 0.35);
-      --grad-orange: linear-gradient(135deg, #ff8c42 0%, #ff5722 55%, #e63946 100%);
-      --layer-activity: #ffb703;
-      --layer-emotional: #ff758f;
-      --layer-event: #fb8500;
-      --mint: #34d399;
-    }
-
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      -webkit-tap-highlight-color: transparent;
-    }
-
-    body {
-      font-family: -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", Roboto, sans-serif;
-      background: radial-gradient(circle at top, #26160d 0%, var(--bg-outer) 70%);
-      color: var(--text-primary);
-      min-height: 100vh;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-    }
-
-    .app-shell {
-      width: 100%;
-      max-width: 430px;
-      height: 100vh;
-      max-height: 890px;
-      background: var(--bg-app);
-      position: relative;
-      display: flex;
-      flex-direction: column;
-      overflow: hidden;
-      border-left: 1px solid var(--border);
-      border-right: 1px solid var(--border);
-    }
-
-    @media (min-width: 500px) {
-      .app-shell {
-        height: 92vh;
-        border-radius: 38px;
-        border: 1px solid rgba(255, 154, 90, 0.18);
-        box-shadow: 0 32px 90px rgba(0, 0, 0, 0.85);
-      }
-    }
-
-    /* Instagram-Style Top Bar */
-    .ig-topbar {
-      height: 56px;
-      padding: 0 16px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      background: rgba(17, 12, 9, 0.92);
-      backdrop-filter: blur(18px);
-      border-bottom: 1px solid var(--border);
-      z-index: 20;
-      flex-shrink: 0;
-    }
-
-    .ig-wordmark {
-      font-size: 22px;
-      font-weight: 800;
-      letter-spacing: -0.03em;
-      background: var(--grad-orange);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      cursor: pointer;
-    }
-
-    .circle-dropdown {
-      background: var(--surface-elevated);
-      border: 1px solid var(--border);
-      color: var(--text-primary);
-      font-size: 12px;
-      font-weight: 600;
-      padding: 5px 11px;
-      border-radius: 999px;
-      display: flex;
-      align-items: center;
-      gap: 5px;
-      cursor: pointer;
-    }
-    .circle-dropdown:active { transform: scale(0.95); }
-
-    .topbar-icons {
-      display: flex;
-      align-items: center;
-      gap: 14px;
-    }
-
-    .nav-svg-btn {
-      background: none;
-      border: none;
-      color: var(--text-primary);
-      position: relative;
-      cursor: pointer;
-      display: grid;
-      place-items: center;
-      padding: 4px;
-    }
-    .nav-svg-btn:active { transform: scale(0.9); }
-
-    .badge-dot {
-      position: absolute;
-      top: 1px;
-      right: 1px;
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
-      background: var(--orange);
-      box-shadow: 0 0 8px var(--orange);
-    }
-
-    .badge-pill {
-      position: absolute;
-      top: -2px;
-      right: -5px;
-      background: var(--orange);
-      color: #fff;
-      font-size: 10px;
-      font-weight: 800;
-      padding: 1px 5px;
-      border-radius: 999px;
-      line-height: 1.2;
-    }
-
-    .quiet-strip {
-      background: rgba(255, 107, 43, 0.14);
-      border-bottom: 1px solid rgba(255, 107, 43, 0.25);
-      color: var(--orange-light);
-      font-size: 11px;
-      font-weight: 600;
-      text-align: center;
-      padding: 6px 12px;
-      display: none;
-    }
-    .quiet-strip.show { display: block; }
-
-    /* Main Scroll Container */
-    .main-scroll {
-      flex: 1;
-      overflow-y: auto;
-      padding-bottom: 78px;
-      scrollbar-width: none;
-    }
-    .main-scroll::-webkit-scrollbar { display: none; }
-
-    .screen { display: none; animation: fadeIn 0.2s ease; }
-    .screen.active { display: block; }
-
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(4px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    /* Instagram Notes / Whispers Tray */
-    .notes-tray {
-      display: flex;
-      gap: 14px;
-      overflow-x: auto;
-      padding: 18px 14px 12px;
-      border-bottom: 1px solid var(--border);
-      scrollbar-width: none;
-    }
-    .notes-tray::-webkit-scrollbar { display: none; }
-
-    .note-item {
-      flex: 0 0 auto;
-      width: 78px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      cursor: pointer;
-    }
-
-    .note-bubble {
-      background: var(--surface-elevated);
-      border: 1px solid rgba(255, 154, 90, 0.22);
-      border-radius: 16px;
-      padding: 6px 8px;
-      font-size: 11px;
-      line-height: 1.25;
-      color: var(--text-primary);
-      text-align: center;
-      width: 82px;
-      min-height: 40px;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      margin-bottom: -10px;
-      z-index: 2;
-      box-shadow: 0 8px 18px rgba(0, 0, 0, 0.45);
-      word-break: break-word;
-      position: relative;
-    }
-
-    .note-bubble::after {
-      content: "";
-      position: absolute;
-      bottom: -4px;
-      left: 20px;
-      width: 8px;
-      height: 8px;
-      background: var(--surface-elevated);
-      border-right: 1px solid rgba(255, 154, 90, 0.22);
-      border-bottom: 1px solid rgba(255, 154, 90, 0.22);
-      transform: rotate(45deg);
-    }
-
-    .note-bubble.new-note {
-      border-style: dashed;
-      border-color: var(--orange);
-      background: var(--orange-soft);
-      color: var(--orange-light);
-    }
-
-    .layer-pill {
-      font-size: 9px;
-      font-weight: 800;
-      text-transform: uppercase;
-      letter-spacing: 0.04em;
-      margin-bottom: 2px;
-    }
-    .l-activity { color: var(--layer-activity); }
-    .l-emotional { color: var(--layer-emotional); }
-    .l-event { color: var(--layer-event); }
-
-    .ig-ring {
-      width: 60px;
-      height: 60px;
-      border-radius: 50%;
-      padding: 2.5px;
-      background: var(--border);
-      display: grid;
-      place-items: center;
-      position: relative;
-    }
-    .ig-ring.active-ring {
-      background: var(--grad-orange);
-    }
-
-    .ig-avatar {
-      width: 100%;
-      height: 100%;
-      border-radius: 50%;
-      background: var(--surface);
-      border: 2px solid var(--bg-app);
-      display: grid;
-      place-items: center;
-      font-weight: 700;
-      font-size: 19px;
-      color: var(--text-primary);
-    }
-
-    .beat-pill {
-      position: absolute;
-      bottom: -2px;
-      right: -3px;
-      background: var(--surface-elevated);
-      border: 1px solid rgba(255, 154, 90, 0.35);
-      border-radius: 999px;
-      padding: 1px 6px;
-      font-size: 10px;
-      font-weight: 700;
-    }
-
-    .note-username {
-      margin-top: 5px;
-      font-size: 11px;
-      color: var(--text-secondary);
-      max-width: 76px;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-    }
-
-    /* Instagram-Style Feed Cards */
-    .feed-post {
-      border-bottom: 1px solid var(--border);
-      padding: 14px 16px 16px;
-    }
-
-    .post-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 10px;
-    }
-
-    .post-author-row {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-
-    .mini-avatar {
-      width: 34px;
-      height: 34px;
-      border-radius: 50%;
-      background: var(--grad-orange);
-      display: grid;
-      place-items: center;
-      font-size: 14px;
-      font-weight: 800;
-      color: #fff;
-    }
-
-    .post-author-name {
-      font-size: 13px;
-      font-weight: 700;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
-
-    .post-sub-meta {
-      font-size: 11px;
-      color: var(--text-muted);
-    }
-
-    .tag-chip {
-      font-size: 10px;
-      font-weight: 700;
-      padding: 3px 9px;
-      border-radius: 999px;
-      background: var(--orange-soft);
-      color: var(--orange-light);
-      border: 1px solid rgba(255, 107, 43, 0.25);
-    }
-
-    .post-body-card {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 18px;
-      padding: 15px;
-      margin-bottom: 10px;
-    }
-
-    .post-headline {
-      font-size: 16px;
-      font-weight: 700;
-      line-height: 1.38;
-      margin-bottom: 6px;
-    }
-
-    .post-copy {
-      font-size: 13px;
-      color: var(--text-secondary);
-      line-height: 1.45;
-      margin-bottom: 12px;
-    }
-
-    /* Instagram Action Row */
-    .ig-action-bar {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding-top: 4px;
-    }
-
-    .ig-left-actions {
-      display: flex;
-      align-items: center;
-      gap: 14px;
-    }
-
-    .action-chip-btn {
-      background: none;
-      border: none;
-      color: var(--text-primary);
-      font-size: 13px;
-      font-weight: 600;
-      display: flex;
-      align-items: center;
-      gap: 5px;
-      cursor: pointer;
-    }
-    .action-chip-btn:active { transform: scale(0.92); }
-
-    /* Buttons & Inputs */
-    .btn-row { display: flex; gap: 9px; }
-
-    .btn {
-      flex: 1;
-      padding: 10px 14px;
-      border-radius: 12px;
-      border: 1px solid var(--border);
-      background: var(--surface-elevated);
-      color: var(--text-primary);
-      font-size: 13px;
-      font-weight: 600;
-      cursor: pointer;
-      transition: transform 0.14s ease, background 0.2s;
-    }
-    .btn:active { transform: scale(0.96); }
-
-    .btn-orange {
-      background: var(--grad-orange);
-      border: none;
-      color: #fff;
-      box-shadow: 0 8px 20px var(--orange-glow);
-    }
-
-    .btn-outline {
-      background: transparent;
-      border-color: rgba(255, 154, 90, 0.28);
-      color: var(--orange-light);
-    }
-
-    .btn-sm {
-      flex: 0 0 auto;
-      padding: 6px 12px;
-      font-size: 12px;
-    }
-
-    input[type="text"], select {
-      width: 100%;
-      background: var(--bg-app);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 11px 13px;
-      color: var(--text-primary);
-      font-size: 13px;
-      font-family: inherit;
-      outline: none;
-    }
-    input[type="text"]:focus, select:focus {
-      border-color: var(--orange);
-    }
-
-    /* Mystery Poll Grid */
-    .poll-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 8px;
-      margin-bottom: 10px;
-    }
-
-    .poll-choice {
-      background: var(--surface-elevated);
-      border: 1px solid var(--border);
-      border-radius: 13px;
-      padding: 10px;
-      color: var(--text-primary);
-      font-size: 13px;
-      font-weight: 600;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      cursor: pointer;
-    }
-    .poll-choice:hover { border-color: var(--orange); }
-    .poll-choice:active { transform: scale(0.96); }
-
-    .poll-dot {
-      width: 24px;
-      height: 24px;
-      border-radius: 50%;
-      background: var(--orange-soft);
-      color: var(--orange-light);
-      display: grid;
-      place-items: center;
-      font-size: 11px;
-      font-weight: 800;
-    }
-
-    .warmth-banner {
-      background: rgba(255, 107, 43, 0.14);
-      border: 1px solid rgba(255, 107, 43, 0.3);
-      border-radius: 11px;
-      padding: 9px 12px;
-      font-size: 12px;
-      color: #ffd6be;
-      margin-top: 8px;
-    }
-
-    /* Peek Box & Capsule */
-    .peek-drawer {
-      background: var(--bg-app);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 10px 12px;
-      margin-top: 10px;
-      display: none;
-    }
-    .peek-drawer.open { display: block; }
-    .peek-row {
-      font-size: 12.5px;
-      padding: 6px 0;
-      border-bottom: 1px solid var(--border);
-      color: var(--text-secondary);
-    }
-    .peek-row:last-child { border-bottom: none; }
-
-    .capsule-box {
-      background: linear-gradient(135deg, rgba(255, 140, 66, 0.14), rgba(230, 57, 70, 0.1));
-      border: 1px dashed rgba(255, 154, 90, 0.35);
-      border-radius: 14px;
-      padding: 13px;
-      text-align: center;
-      margin-bottom: 10px;
-    }
-
-    .capsule-note {
-      background: var(--bg-app);
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      padding: 8px 11px;
-      margin-top: 7px;
-      text-align: left;
-      font-size: 12.5px;
-    }
-
-    /* Instagram-Style 5-Tab Bottom Navigation Bar */
-    .ig-bottom-nav {
-      position: absolute;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      height: 62px;
-      background: rgba(17, 12, 9, 0.96);
-      backdrop-filter: blur(20px);
-      border-top: 1px solid var(--border);
-      display: flex;
-      align-items: center;
-      justify-content: space-around;
-      z-index: 30;
-      padding-bottom: 4px;
-    }
-
-    .ig-tab {
-      background: none;
-      border: none;
-      color: var(--text-muted);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      gap: 3px;
-      font-size: 10px;
-      font-weight: 600;
-      cursor: pointer;
-      width: 58px;
-      height: 100%;
-    }
-    .ig-tab.active { color: var(--orange-light); }
-    .ig-tab svg { width: 22px; height: 22px; stroke-width: 2; }
-
-    .ig-create-pill {
-      width: 40px;
-      height: 32px;
-      border-radius: 11px;
-      background: var(--grad-orange);
-      color: #fff;
-      display: grid;
-      place-items: center;
-      box-shadow: 0 6px 16px var(--orange-glow);
-    }
-
-    .nav-profile-dot {
-      width: 24px;
-      height: 24px;
-      border-radius: 50%;
-      background: var(--surface-elevated);
-      border: 1.5px solid var(--text-muted);
-      display: grid;
-      place-items: center;
-      font-size: 11px;
-      font-weight: 800;
-      color: var(--text-primary);
-    }
-    .ig-tab.active .nav-profile-dot {
-      border-color: var(--orange);
-      box-shadow: 0 0 0 2px var(--orange-soft);
-    }
-
-    /* Secondary Screens Padding */
-    .screen-pad { padding: 16px; }
-
-    .panel-card {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 18px;
-      padding: 15px;
-      margin-bottom: 12px;
-    }
-
-    /* Profile Header (Instagram Style) */
-    .ig-profile-top {
-      display: flex;
-      align-items: center;
-      gap: 18px;
-      margin-bottom: 14px;
-    }
-    .ig-profile-pic {
-      width: 74px;
-      height: 74px;
-      border-radius: 50%;
-      padding: 3px;
-      background: var(--grad-orange);
-    }
-    .ig-profile-pic-inner {
-      width: 100%;
-      height: 100%;
-      border-radius: 50%;
-      background: var(--surface);
-      border: 3px solid var(--bg-app);
-      display: grid;
-      place-items: center;
-      font-size: 28px;
-      font-weight: 800;
-    }
-    .ig-stats {
-      flex: 1;
-      display: flex;
-      justify-content: space-around;
-      text-align: center;
-    }
-    .ig-stat-num { font-size: 17px; font-weight: 800; }
-    .ig-stat-lbl { font-size: 11px; color: var(--text-secondary); }
-
-    /* DM & Locked Message Rows */
-    .dm-row {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 12px;
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 15px;
-      margin-bottom: 9px;
-    }
-
-    .locked-pill {
-      font-size: 10px;
-      font-weight: 700;
-      padding: 3px 8px;
-      border-radius: 999px;
-      background: rgba(255, 183, 3, 0.15);
-      color: var(--layer-activity);
-    }
-
-    /* Sheets & Modals */
-    .overlay {
-      position: absolute;
-      inset: 0;
-      background: rgba(6, 4, 3, 0.82);
-      backdrop-filter: blur(8px);
-      display: none;
-      align-items: flex-end;
-      justify-content: center;
-      z-index: 50;
-    }
-    .overlay.open { display: flex; }
-    .overlay.center { align-items: center; padding: 18px; }
-
-    .sheet {
-      width: 100%;
-      background: var(--surface);
-      border-top: 1px solid var(--border);
-      border-radius: 26px 26px 0 0;
-      padding: 20px 18px 26px;
-      animation: slideUp 0.2s ease;
-    }
-
-    .modal-box {
-      width: 100%;
-      background: var(--surface);
-      border: 1px solid rgba(255, 154, 90, 0.22);
-      border-radius: 26px;
-      padding: 22px 20px;
-    }
-
-    @keyframes slideUp {
-      from { transform: translateY(100%); }
-      to { transform: translateY(0); }
-    }
-
-    .progress-bar {
-      height: 5px;
-      background: var(--bg-app);
-      border-radius: 999px;
-      overflow: hidden;
-      margin-bottom: 14px;
-    }
-    .progress-inner {
-      height: 100%;
-      background: var(--grad-orange);
-      transition: width 0.25s ease;
-    }
-
-    .swatch-row { display: flex; gap: 10px; margin: 12px 0 16px; }
-    .swatch {
-      flex: 1;
-      height: 42px;
-      border-radius: 12px;
-      border: 2px solid transparent;
-      cursor: pointer;
-    }
-    .swatch.selected { border-color: #fff; transform: scale(1.04); }
-
-    .cookie-card {
-      background: var(--bg-app);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 10px 12px;
-      margin-bottom: 8px;
-      font-size: 12px;
-    }
-    .cookie-code {
-      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
-      font-size: 10.5px;
-      color: var(--text-secondary);
-      background: var(--surface);
-      padding: 6px;
-      border-radius: 8px;
-      margin-top: 5px;
-      word-break: break-all;
-    }
-
-    .toast {
-      position: absolute;
-      top: 66px;
-      left: 50%;
-      transform: translateX(-50%);
-      background: var(--surface-elevated);
-      border: 1px solid var(--orange);
-      color: var(--text-primary);
-      padding: 8px 16px;
-      border-radius: 999px;
-      font-size: 12px;
-      font-weight: 600;
-      z-index: 80;
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity 0.2s;
-      white-space: nowrap;
-      box-shadow: 0 10px 28px rgba(0,0,0,0.6);
-    }
-    .toast.show { opacity: 1; }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="theme-color" content="#0a0f16" id="themeMeta">
+<title>A Little World</title>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,wght@0,400;0,500;1,400&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="profiles.js"></script>
+<style>
+/* DEEP SPACE / MIND PALETTE (Dark by default for maximum immersion) */
+:root {
+  --ink: #eaf0f6;
+  --ink-soft: #aab8c7;
+  --muted: #6e849c;
+  --paper: #0a0f16;
+  --card: #131b26;
+  --card-glass: rgba(19, 27, 38, 0.7);
+  --line: #223042;
+  --line-strong: #334863;
+  --accent: #5e9ddb;
+  --accent-bg: #142840;
+  --aurora-1: rgba(94, 157, 219, 0.15);
+  --aurora-2: rgba(139, 94, 219, 0.15);
+  --shadow: 0 24px 64px rgba(0, 0, 0, 0.6);
+  --serif: "Newsreader", Georgia, serif;
+  --sans: "Plus Jakarta Sans", sans-serif;
+  --spring: cubic-bezier(0.175, 0.885, 0.32, 1.15);
+}
+
+* { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+body {
+  margin: 0; background: var(--paper); color: var(--ink);
+  font-family: var(--sans); overflow: hidden; overscroll-behavior-y: none;
+}
+
+button, input, textarea { font: inherit; outline: none; border: none; }
+button { cursor: pointer; }
+
+/* AMBIENT BACKGROUND */
+.aurora {
+  position: fixed; inset: -50%; z-index: 0; pointer-events: none;
+  background: radial-gradient(circle at 40% 40%, var(--aurora-1) 0%, transparent 40%),
+              radial-gradient(circle at 60% 60%, var(--aurora-2) 0%, transparent 40%);
+  animation: breathe 20s ease-in-out infinite alternate; transition: background 1s ease;
+}
+@keyframes breathe { 0% { transform: scale(1) rotate(0deg); } 100% { transform: scale(1.2) rotate(10deg); } }
+body::after { content: ""; position: fixed; inset: 0; pointer-events: none; opacity: 0.1; background-image: radial-gradient(#6e849c 0.5px, transparent 0.5px); background-size: 24px 24px; z-index: 0; }
+
+/* APP LAYOUT */
+.app-container { height: 100vh; display: flex; flex-direction: column; position: relative; z-index: 1; }
+.topbar { padding: 20px 24px; display: flex; justify-content: space-between; align-items: center; z-index: 10; }
+.brand { font-size: 13px; letter-spacing: 0.2em; font-weight: 700; text-transform: uppercase; user-select: none; }
+.brand span { color: var(--accent); }
+.top-tools { display: flex; gap: 12px; }
+
+/* VIEW MANAGER (Tabs) */
+.view-area { flex: 1; overflow-y: auto; overflow-x: hidden; position: relative; padding-bottom: 90px; }
+.view { position: absolute; inset: 0; padding: 0 24px; opacity: 0; pointer-events: none; transform: translateX(20px); transition: opacity 0.4s ease, transform 0.4s var(--spring); overflow-y: auto; padding-bottom: 100px; }
+.view.active { opacity: 1; pointer-events: auto; transform: translateX(0); }
+
+/* BOTTOM NAVIGATION */
+.bottom-nav {
+  position: fixed; bottom: 0; left: 0; right: 0; height: 84px;
+  background: rgba(10, 15, 22, 0.85); backdrop-filter: blur(20px);
+  border-top: 1px solid var(--line); display: flex; justify-content: space-around; align-items: center; padding-bottom: 15px; z-index: 50;
+}
+.nav-item {
+  display: flex; flex-direction: column; align-items: center; gap: 4px; color: var(--muted);
+  font-size: 10px; font-weight: 600; letter-spacing: 0.05em; transition: color 0.3s ease, transform 0.2s var(--spring);
+}
+.nav-item i { font-size: 22px; font-style: normal; margin-bottom: 2px; }
+.nav-item.active { color: var(--accent); transform: translateY(-3px); }
+.nav-item:active { transform: scale(0.9); }
+
+/* UI COMPONENTS */
+.eyebrow { font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--accent); font-weight: 700; }
+h1.title { font-family: var(--serif); font-size: clamp(36px, 6vw, 54px); font-weight: 400; line-height: 1.1; margin: 12px 0 16px; letter-spacing: -0.03em; }
+p.sub { color: var(--muted); font-size: 15px; line-height: 1.7; margin: 0 0 24px; }
+
+/* CARDS */
+.glass-card {
+  background: var(--card-glass); backdrop-filter: blur(16px); border: 1px solid var(--line);
+  border-radius: 28px; padding: 28px; transition: transform 0.3s var(--spring), border-color 0.3s ease; position: relative; overflow: hidden;
+}
+.glass-card:active { transform: scale(0.98); }
+.action-card { display: flex; flex-direction: column; gap: 8px; margin-bottom: 16px; cursor: pointer; }
+.action-card .icon { width: 44px; height: 44px; border-radius: 14px; background: var(--accent-bg); color: var(--accent); display: grid; place-items: center; font-size: 20px; margin-bottom: 8px; }
+.action-card h3 { font-family: var(--serif); font-size: 22px; margin: 0; font-weight: 400; }
+.action-card p { font-size: 13px; color: var(--muted); margin: 0; line-height: 1.5; }
+.time-pill { position: absolute; top: 20px; right: 20px; background: rgba(0,0,0,0.3); border: 1px solid var(--line); border-radius: 99px; padding: 4px 10px; font-size: 10px; font-weight: 600; color: var(--muted); }
+
+/* MONETIZATION: AD SLOTS */
+.ad-slot {
+  margin: 24px 0; border: 1px dashed var(--line-strong); border-radius: 20px; background: rgba(0,0,0,0.2);
+  display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 30px 20px; text-align: center;
+}
+.ad-slot span { font-size: 10px; text-transform: uppercase; letter-spacing: 0.1em; color: var(--muted); margin-bottom: 8px; }
+.ad-slot div { font-size: 14px; color: var(--ink-soft); }
+
+/* BUTTONS & FORMS */
+.btn {
+  background: var(--ink); color: var(--paper); border-radius: 99px; padding: 16px 26px; font-size: 14px; font-weight: 600;
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px; transition: transform 0.2s var(--spring), opacity 0.2s;
+}
+.btn:active { transform: scale(0.95); }
+.btn-secondary { background: transparent; color: var(--ink); border: 1px solid var(--line); }
+.field { width: 100%; background: var(--card); border: 1px solid var(--line); border-radius: 16px; padding: 18px 20px; color: var(--ink); font-size: 16px; transition: border-color 0.3s; margin-bottom: 16px; }
+.field:focus { border-color: var(--accent); }
+
+/* QUIZ UI */
+.options-grid { display: grid; gap: 12px; margin-top: 24px; }
+.opt-btn { background: var(--card); border: 1px solid var(--line); border-radius: 18px; padding: 18px; text-align: left; color: var(--ink); font-size: 15px; line-height: 1.5; transition: all 0.2s; display: flex; align-items: center; gap: 14px; }
+.opt-btn::before { content: ""; width: 20px; height: 20px; border-radius: 50%; border: 2px solid var(--line-strong); flex-shrink: 0; transition: all 0.2s; }
+.opt-btn.selected { background: var(--accent-bg); border-color: var(--accent); }
+.opt-btn.selected::before { border-color: var(--accent); background: var(--accent); box-shadow: inset 0 0 0 4px var(--accent-bg); }
+.constellation { display: flex; align-items: center; justify-content: space-between; margin: 20px 0 30px; position: relative; }
+.constellation::before { content: ""; position: absolute; left: 0; right: 0; top: 50%; height: 2px; background: var(--line); z-index: 0; }
+.star { width: 10px; height: 10px; border-radius: 50%; background: var(--line-strong); position: relative; z-index: 1; transition: all 0.4s ease; }
+.star.lit { background: var(--accent); box-shadow: 0 0 10px var(--accent); transform: scale(1.3); }
+
+/* STORY DECK (3D Flipping) */
+.story-wrapper { max-width: 600px; margin: 0 auto; perspective: 1200px; }
+.story-card-container { position: relative; width: 100%; min-height: 480px; transform-style: preserve-3d; transition: transform 0.6s var(--spring); }
+.story-card-container.flipped { transform: rotateY(180deg); }
+.card-face { position: absolute; inset: 0; backface-visibility: hidden; background: var(--card); border: 1px solid var(--line); border-radius: 32px; padding: 34px; box-shadow: var(--shadow); display: flex; flex-direction: column; justify-content: space-between; }
+.card-back { transform: rotateY(180deg); background: var(--accent-bg); border-color: var(--accent); }
+.social-proof { display: flex; align-items: center; gap: 6px; font-size: 11px; color: var(--muted); margin-top: auto; padding-top: 16px; }
+
+/* PARTICLES */
+.particle { position: absolute; pointer-events: none; animation: floatUp 1s ease-out forwards; font-size: 20px; z-index: 100; }
+@keyframes floatUp { 0% { opacity: 1; transform: translateY(0) scale(0.5); } 100% { opacity: 0; transform: translateY(-80px) scale(1.2); } }
+
+/* CHAT DRAWER */
+.drawer { position: fixed; inset: 0; z-index: 100; pointer-events: none; display: flex; flex-direction: column; justify-content: flex-end; }
+.drawer-bg { position: absolute; inset: 0; background: rgba(0,0,0,0.6); backdrop-filter: blur(4px); opacity: 0; transition: opacity 0.3s; }
+.drawer-content { position: relative; background: var(--card); border-radius: 32px 32px 0 0; height: 80vh; transform: translateY(100%); transition: transform 0.4s var(--spring); display: flex; flex-direction: column; }
+.drawer.open { pointer-events: auto; }
+.drawer.open .drawer-bg { opacity: 1; }
+.drawer.open .drawer-content { transform: translateY(0); }
+.chat-log { flex: 1; overflow-y: auto; padding: 24px; display: flex; flex-direction: column; gap: 16px; }
+.msg { max-width: 85%; padding: 14px 18px; border-radius: 20px; font-size: 15px; line-height: 1.5; }
+.msg.bot { align-self: flex-start; background: var(--paper); border: 1px solid var(--line); border-bottom-left-radius: 4px; font-family: var(--serif); }
+.msg.user { align-self: flex-end; background: var(--accent); color: #fff; border-bottom-right-radius: 4px; }
+
+.toast { position: fixed; top: 20px; left: 50%; transform: translateX(-50%) translateY(-20px); background: var(--card); border: 1px solid var(--accent); color: var(--ink); padding: 12px 24px; border-radius: 99px; font-size: 13px; font-weight: 600; opacity: 0; transition: all 0.3s; z-index: 200; box-shadow: var(--shadow); pointer-events: none; }
+.toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+</style>
 </head>
 <body>
-  <div class="app-shell">
-    <div id="toast" class="toast">Saved</div>
 
-    <!-- Instagram-Style Top Navigation Bar -->
-    <header class="ig-topbar">
-      <div style="display:flex; align-items:center; gap:10px;">
-        <div class="ig-wordmark" onclick="switchTab('home')">Meonix</div>
-        <button class="circle-dropdown" onclick="openCircleSheet()">
-          <span id="activeCircleHeader">CSE Squad</span> ▾
-        </button>
-      </div>
+<div class="aurora" id="auroraBg"></div>
+<div class="toast" id="toast">Saved to Vault</div>
 
-      <div class="topbar-icons">
-        <!-- Quiet Mode Toggle -->
-        <button class="nav-svg-btn" title="Quiet Mode" onclick="toggleQuietMode()" id="quietBtn">
-          <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
-          </svg>
-        </button>
-        <!-- Batched Digest (Activity Heart) -->
-        <button class="nav-svg-btn" title="Batched Digest" onclick="openOverlay('digestSheet')">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
-          </svg>
-          <span class="badge-dot" id="digestDot"></span>
-        </button>
-        <!-- Inbox / Locked DMs (Messenger Plane) -->
-        <button class="nav-svg-btn" title="Inbox & Locked Queue" onclick="switchTab('inbox')">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <line x1="22" y1="2" x2="11" y2="13"/>
-            <polygon points="22 2 15 22 11 13 2 9 22 2"/>
-          </svg>
-          <span class="badge-pill" id="lockedCountBadge">2</span>
-        </button>
-      </div>
-    </header>
-
-    <div id="quietStrip" class="quiet-strip">
-      Quiet Mode on — notifications bundled, your chapter stays safe.
+<div class="app-container">
+  
+  <header class="topbar">
+    <div class="brand" onclick="triggerEasterEgg()">A LITTLE <span>WORLD</span></div>
+    <div class="top-tools">
+      <button class="btn btn-secondary" style="padding:8px 16px; font-size:12px;" onclick="shareApp()">⎘ Share</button>
     </div>
+  </header>
 
-    <!-- Scrollable Content -->
-    <main class="main-scroll">
-      <!-- ==================== TAB 1: HOME (IG FEED + WHISPERS) ==================== -->
-      <section id="screen-home" class="screen active">
-        <!-- Instagram-Notes-Style Inbox Whispers Tray -->
-        <div class="notes-tray" id="whispersTray"></div>
+  <div class="view-area">
+    <!-- HOME VIEW -->
+    <div class="view active" id="view-home">
+      <div class="eyebrow" id="greetingTime">Good evening</div>
+      <h1 class="title">Every mind has<br>its own <em>little world.</em></h1>
+      
+      <div class="glass-card action-card" onclick="openView('view-vibe')">
+        <span class="time-pill">3 min</span>
+        <div class="icon">✳</div>
+        <h3>Discover yourself</h3>
+        <p>Answer thoughtful questions to unlock a story mapped to your psychology.</p>
+      </div>
 
-        <!-- Feed Post 1: Honest Curiosity Teaser (Campus Spot / Vibe) -->
-        <article class="feed-post">
-          <div class="post-header">
-            <div class="post-author-row">
-              <div class="mini-avatar">?</div>
-              <div>
-                <div class="post-author-name">Curiosity Peek <span class="tag-chip">No Pressure</span></div>
-                <div class="post-sub-meta"><span class="circleNameInline">CSE Squad</span> · <span id="teaserCount">3 friends weighed in</span></div>
-              </div>
-            </div>
-          </div>
-
-          <div class="post-body-card">
-            <div class="post-headline">Best campus spot after 6 PM classes end?</div>
-            <div class="post-copy">Peek quietly without voting, or drop your own 1-liner if you feel like it.</div>
-            <div class="btn-row">
-              <button class="btn btn-outline" onclick="togglePeek()">Just peek</button>
-              <button class="btn btn-orange" onclick="addQuickTake()">Drop your take</button>
-            </div>
-            <div id="peekDrawer" class="peek-drawer"></div>
-          </div>
-        </article>
-
-        <!-- Feed Post 2: Positive-Only Mystery Poll -->
-        <article class="feed-post">
-          <div class="post-header">
-            <div class="post-author-row">
-              <div class="mini-avatar">✨</div>
-              <div>
-                <div class="post-author-name">Positive Mystery Poll <span class="tag-chip" id="pollQuotaBadge">12/12 left</span></div>
-                <div class="post-sub-meta">Pre-written warmth · Zero free-text drama</div>
-              </div>
-            </div>
-          </div>
-
-          <div class="post-body-card">
-            <div class="post-headline" id="pollPromptText">Who makes boring 9 AM lectures survivable?</div>
-            <div class="post-copy">Tap a friend to send them an anonymous warmth ping.</div>
-            <div class="poll-grid" id="pollGrid"></div>
-            <div class="ig-action-bar">
-              <div class="ig-left-actions">
-                <button class="action-chip-btn" onclick="skipPoll()">↻ Next prompt</button>
-                <button class="action-chip-btn" onclick="switchTab('profile')">☰ Warmth log</button>
-              </div>
-            </div>
-            <div id="pollToastBox" class="warmth-banner" style="display:none;"></div>
-          </div>
-        </article>
-
-        <!-- Feed Post 3: Evening Collective Unwrap Capsule -->
-        <article class="feed-post">
-          <div class="post-header">
-            <div class="post-author-row">
-              <div class="mini-avatar">🎁</div>
-              <div>
-                <div class="post-author-name">Evening Unwrap <span class="tag-chip" id="capsuleStatusTag">8:30 PM</span></div>
-                <div class="post-sub-meta">Drop anytime · Collective reveal together</div>
-              </div>
-            </div>
-          </div>
-
-          <div class="post-body-card">
-            <div id="capsuleArea" class="capsule-box"></div>
-            <div style="display:flex; gap:8px;">
-              <input type="text" id="capsuleNoteInput" placeholder="Drop a candid thought into tonight's capsule..." maxlength="110" />
-              <button class="btn btn-orange btn-sm" onclick="dropCapsuleNote()">Drop</button>
-            </div>
-          </div>
-        </article>
-
-        <!-- Feed Post 4: Pauseable Chapter (Anti-Streak) -->
-        <article class="feed-post" style="border-bottom:none;">
-          <div class="post-header">
-            <div class="post-author-row">
-              <div class="mini-avatar">📖</div>
-              <div>
-                <div class="post-author-name">Pauseable Chapter <span class="tag-chip">Never resets</span></div>
-                <div class="post-sub-meta">Shared memory counter · Zero guilt</div>
-              </div>
-            </div>
-          </div>
-          <div class="post-body-card" style="display:flex; align-items:center; justify-content:space-between; gap:10px;">
-            <div>
-              <div style="font-weight:700; font-size:15px;" id="chapterTitle">Chapter 14 · 48 shared moments</div>
-              <div style="font-size:12px; color:var(--text-secondary); margin-top:2px;" id="chapterDesc">Step away anytime — your chapter stays intact.</div>
-            </div>
-            <button class="btn btn-outline btn-sm" id="chapterPauseBtn" onclick="toggleChapterPause()">Pause</button>
-          </div>
-        </article>
-      </section>
-
-      <!-- ==================== TAB 2: CIRCLES (BACKSTAGE SPACES) ==================== -->
-      <section id="screen-circles" class="screen screen-pad">
-        <div style="font-size:18px; font-weight:800; margin-bottom:4px;">Backstage Circles</div>
-        <div style="font-size:13px; color:var(--text-secondary); margin-bottom:14px;">
-          Separate small circles prevent audience collapse and mutual-like surveillance.
-        </div>
-
-        <div id="circlesContainer"></div>
-
-        <div class="panel-card" style="margin-top:14px;">
-          <div style="font-weight:700; font-size:14px; margin-bottom:8px;">Create a Private Circle</div>
-          <div style="display:flex; gap:8px;">
-            <input type="text" id="newCircleName" placeholder="e.g., Library Bench or Fest Crew" maxlength="22" />
-            <button class="btn btn-orange btn-sm" onclick="addCircle()">Create</button>
-          </div>
-        </div>
-      </section>
-
-      <!-- ==================== TAB 3: INBOX & LOCKED-MESSAGE QUEUE ==================== -->
-      <section id="screen-inbox" class="screen screen-pad">
-        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
-          <div>
-            <div style="font-size:18px; font-weight:800;">Direct & Locked Queue</div>
-            <div style="font-size:12px; color:var(--text-secondary);">Time-locked messages deliver peacefully at your chosen window</div>
-          </div>
-        </div>
-
-        <div class="panel-card">
-          <div style="font-size:12px; font-weight:700; color:var(--orange-light); margin-bottom:8px;">SEND A LOCKED MESSAGE</div>
-          <div style="display:flex; gap:8px; margin-bottom:8px;">
-            <select id="dmRecipient" style="flex:1;">
-              <option value="Riya">To: Riya</option>
-              <option value="Kabir">To: Kabir</option>
-              <option value="Ananya">To: Ananya</option>
-              <option value="Dev">To: Dev</option>
-            </select>
-            <select id="dmUnlockTime" style="flex:1;">
-              <option value="Unlocks 8:30 PM">Unlocks 8:30 PM</option>
-              <option value="Unlocks After Class">After 6 PM Class</option>
-              <option value="Instant DM">Instant DM</option>
-            </select>
-          </div>
-          <div style="display:flex; gap:8px;">
-            <input type="text" id="dmInput" placeholder="Write a message..." maxlength="120" />
-            <button class="btn btn-orange btn-sm" onclick="sendLockedDM()">Queue</button>
-          </div>
-        </div>
-
-        <div id="dmListContainer"></div>
-      </section>
-
-      <!-- ==================== TAB 4: PROFILE, MOOD STACK & COOKIES ==================== -->
-      <section id="screen-profile" class="screen screen-pad">
-        <div class="ig-profile-top">
-          <div class="ig-profile-pic">
-            <div class="ig-profile-pic-inner" id="profileInitial">A</div>
-          </div>
-          <div class="ig-stats">
-            <div>
-              <div class="ig-stat-num" id="statMoments">48</div>
-              <div class="ig-stat-lbl">Moments</div>
-            </div>
-            <div>
-              <div class="ig-stat-num" id="statStack">3</div>
-              <div class="ig-stat-lbl">Mood Stack</div>
-            </div>
-            <div>
-              <div class="ig-stat-num" id="statCircles">3</div>
-              <div class="ig-stat-lbl">Circles</div>
-            </div>
-          </div>
-        </div>
-
-        <div style="margin-bottom:14px;">
-          <div style="font-size:16px; font-weight:800;" id="profileNameDisplay">Aarav</div>
-          <div style="font-size:12.5px; color:var(--text-secondary);">Signature Beat: <span id="profileBeatDisplay">🎵</span> · Private Campus Beta</div>
-        </div>
-
-        <div class="btn-row" style="margin-bottom:16px;">
-          <button class="btn btn-outline btn-sm" style="flex:1;" onclick="openOnboarding(true)">Edit 90s Setup</button>
-          <button class="btn btn-sm" style="flex:1;" onclick="toggleCookieDrawer()">Inspect Cookies</button>
-        </div>
-
-        <!-- Cookie Inspector Drawer -->
-        <div id="cookieDrawer" style="display:none; margin-bottom:16px;">
-          <div class="panel-card">
-            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
-              <strong style="font-size:14px;">Live Browser Cookies</strong>
-              <span id="cookieEngineStatus" style="font-size:11px; color:var(--orange-light);">Active</span>
-            </div>
-            <div id="cookieNoteText" style="font-size:12px; color:var(--text-secondary); margin-bottom:10px;"></div>
-            <div id="cookieRows"></div>
-            <button class="btn btn-outline btn-sm" style="width:100%; margin-top:6px; color:#ff758f;" onclick="clearAllCookies()">Reset All Cookies (Max-Age=0)</button>
-          </div>
-        </div>
-
-        <!-- Permanent Mood Stack -->
-        <div style="font-size:12px; font-weight:800; letter-spacing:0.06em; color:var(--orange-light); margin-bottom:8px;">
-          PERMANENT MOOD STACK & WARMTH LOG
-        </div>
-        <div id="moodStackContainer"></div>
-      </section>
-    </main>
-
-    <!-- Instagram-Style Bottom Navigation Bar -->
-    <nav class="ig-bottom-nav">
-      <button class="ig-tab active" data-tab="home" onclick="switchTab('home')">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-          <path d="M3 9.5L12 3l9 6.5V20a1 1 0 0 1-1 1h-5v-6h-6v6H4a1 1 0 0 1-1-1V9.5z"/>
-        </svg>
-        <span>Home</span>
-      </button>
-
-      <button class="ig-tab" data-tab="circles" onclick="switchTab('circles')">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-          <circle cx="12" cy="12" r="9"/>
-          <circle cx="12" cy="12" r="4"/>
-        </svg>
-        <span>Circles</span>
-      </button>
-
-      <button class="ig-tab" onclick="openOverlay('createWhisperSheet')" aria-label="Create Mood Whisper">
-        <div class="ig-create-pill">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-            <line x1="12" y1="5" x2="12" y2="19"/>
-            <line x1="5" y1="12" x2="19" y2="12"/>
-          </svg>
-        </div>
-      </button>
-
-      <button class="ig-tab" data-tab="inbox" onclick="switchTab('inbox')">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-          <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/>
-        </svg>
-        <span>Inbox</span>
-      </button>
-
-      <button class="ig-tab" data-tab="profile" onclick="switchTab('profile')">
-        <div class="nav-profile-dot" id="navInitial">A</div>
-        <span>Stack</span>
-      </button>
-    </nav>
-
-    <!-- 90-Second "Add-an-Egg" Onboarding Modal -->
-    <div id="onboardingOverlay" class="overlay center">
-      <div class="modal-box">
-        <div class="progress-bar"><div class="progress-inner" id="obProgress" style="width:33%"></div></div>
-
-        <div id="obStep1">
-          <span class="tag-chip" style="display:inline-block; margin-bottom:10px;">Step 1 of 3 · Your Space</span>
-          <div class="post-headline">Welcome to Meonix</div>
-          <div class="post-copy">Set your campus handle and first private circle in seconds.</div>
-          <input type="text" id="obName" placeholder="Your nickname (e.g. Aarav)" maxlength="18" style="margin-bottom:10px;" />
-          <input type="text" id="obCircle" placeholder="First Circle (e.g. CSE Squad)" maxlength="22" />
-          <div class="btn-row" style="margin-top:14px;">
-            <button class="btn btn-orange" onclick="goObStep(2)">Continue →</button>
-          </div>
-        </div>
-
-        <div id="obStep2" style="display:none;">
-          <span class="tag-chip" style="display:inline-block; margin-bottom:10px;">Step 2 of 3 · Warmth Shade</span>
-          <div class="post-headline">Pick your warm orange accent</div>
-          <div class="post-copy">Saved directly in your profile cookie.</div>
-          <div class="swatch-row">
-            <div class="swatch selected" data-c="#ff6b2b" style="background:#ff6b2b;" onclick="pickShade(this)"></div>
-            <div class="swatch" data-c="#ff8c42" style="background:#ff8c42;" onclick="pickShade(this)"></div>
-            <div class="swatch" data-c="#f97316" style="background:#f97316;" onclick="pickShade(this)"></div>
-            <div class="swatch" data-c="#fb5607" style="background:#fb5607;" onclick="pickShade(this)"></div>
-          </div>
-          <div class="btn-row">
-            <button class="btn" onclick="goObStep(1)">Back</button>
-            <button class="btn btn-orange" onclick="goObStep(3)">Continue →</button>
-          </div>
-        </div>
-
-        <div id="obStep3" style="display:none;">
-          <span class="tag-chip" style="display:inline-block; margin-bottom:10px;">Step 3 of 3 · Signature Beat</span>
-          <div class="post-headline">Choose your Beat reaction</div>
-          <div class="post-copy">Send low-pressure reactions to friends' layered moods.</div>
-          <div class="btn-row" style="margin:14px 0;" id="obBeats">
-            <button class="btn btn-orange" onclick="pickBeat('🎵', this)">🎵 Beat</button>
-            <button class="btn" onclick="pickBeat('🔥', this)">🔥 Warmth</button>
-            <button class="btn" onclick="pickBeat('🧡', this)">🧡 Heart</button>
-          </div>
-          <div class="btn-row">
-            <button class="btn" onclick="goObStep(2)">Back</button>
-            <button class="btn btn-orange" onclick="saveOnboarding()">Launch Meonix ✓</button>
-          </div>
-        </div>
+      <div class="glass-card action-card" onclick="openView('view-search')">
+        <span class="time-pill">Instant</span>
+        <div class="icon">❀</div>
+        <h3>Explore others</h3>
+        <p>Search for a specific name and uncover their written story.</p>
+      </div>
+      
+      <div class="ad-slot">
+        <span>Sponsored Discovery</span>
+        <div>Your AdMob / AdSense Space Here</div>
+      </div>
+      
+      <div class="glass-card action-card" onclick="openView('view-private')">
+        <span class="time-pill">Protected</span>
+        <div class="icon">♡</div>
+        <h3>Know me better</h3>
+        <p>A personal space. Password protected.</p>
       </div>
     </div>
 
-    <!-- Sheet: Post New Layered Whisper -->
-    <div id="createWhisperSheet" class="overlay" onclick="closeOnBg(event, 'createWhisperSheet')">
-      <div class="sheet">
-        <div class="post-headline">Drop a 24h Inbox Whisper</div>
-        <div class="post-copy">Visible to <strong class="circleNameInline">CSE Squad</strong> for 24 hours, and archived permanently in your Mood Stack.</div>
-        <select id="newWhisperLayer" style="margin-bottom:10px;">
-          <option value="Activity">Activity Layer (e.g., Library 3rd floor)</option>
-          <option value="Emotional">Emotional Layer (e.g., Need evening chai)</option>
-          <option value="Event">Event Layer (e.g., Quad hangout @ 6?)</option>
-        </select>
-        <input type="text" id="newWhisperText" placeholder="What's your current vibe? (max 48 chars)" maxlength="48" style="margin-bottom:14px;" />
-        <div class="btn-row">
-          <button class="btn" onclick="closeOverlay('createWhisperSheet')">Cancel</button>
-          <button class="btn btn-orange" onclick="createWhisper()">Share Whisper</button>
+    <!-- VIBE CHECK (Pre-Quiz) -->
+    <div class="view" id="view-vibe">
+      <button class="btn btn-secondary" style="margin-bottom:24px;" onclick="openView('view-home')">← Back</button>
+      <div class="eyebrow">Check in</div>
+      <h1 class="title">How is your mind right now?</h1>
+      <p class="sub">Your current state shapes your reflection.</p>
+      <div class="options-grid">
+        <button class="opt-btn" onclick="startQuiz('calm')">Calm & clear</button>
+        <button class="opt-btn" onclick="startQuiz('tired')">A bit tired</button>
+        <button class="opt-btn" onclick="startQuiz('racing')">Racing / Anxious</button>
+      </div>
+    </div>
+
+    <!-- QUIZ ENGINE -->
+    <div class="view" id="view-quiz">
+      <button class="btn btn-secondary" onclick="openView('view-home')">Pause & Save</button>
+      <div class="constellation" id="quizStars"></div>
+      <div class="eyebrow" id="qCategory">Category</div>
+      <h1 class="title" style="font-size:32px;" id="qTitle">Question?</h1>
+      <div class="options-grid" id="qOptions"></div>
+      <div style="display:flex; justify-content:space-between; margin-top:30px;">
+        <button class="btn btn-secondary" id="qPrev" onclick="quizPrev()">← Prev</button>
+        <button class="btn" id="qNext" onclick="quizNext()">Next →</button>
+      </div>
+    </div>
+
+    <!-- EXPLORE SEARCH -->
+    <div class="view" id="view-search">
+      <button class="btn btn-secondary" style="margin-bottom:24px;" onclick="openView('view-home')">← Back</button>
+      <div class="eyebrow">Explore</div>
+      <h1 class="title">Find a written world.</h1>
+      <input type="text" class="field" id="searchInput" placeholder="Enter a name and press Enter...">
+      <div id="searchResults" style="margin-top:20px; display:grid; gap:16px;"></div>
+    </div>
+
+    <!-- PRIVATE LOGIN -->
+    <div class="view" id="view-private">
+      <button class="btn btn-secondary" style="margin-bottom:24px;" onclick="openView('view-home')">← Back</button>
+      <div class="eyebrow">Protected</div>
+      <h1 class="title">Enter password.</h1>
+      <input type="password" class="field" id="pwdInput" placeholder="Password...">
+      <button class="btn" style="width:100%" onclick="unlockPrivate()">Unlock Story</button>
+    </div>
+
+    <!-- STORY DECK -->
+    <div class="view" id="view-story">
+      <div style="display:flex; justify-content:space-between; margin-bottom:24px; align-items:center;">
+        <button class="btn btn-secondary" style="padding:10px 16px;" onclick="openView('view-home')">← Exit</button>
+        <div class="eyebrow" id="storyProgress">1 / 8</div>
+      </div>
+      
+      <div class="story-wrapper">
+        <div class="story-card-container" id="flipCard">
+          <div class="card-face">
+            <div class="eyebrow" id="cardKicker">Trait</div>
+            <h1 class="title" style="font-size:36px; margin:16px 0;" id="cardTitle">Title</h1>
+            <p class="sub" style="font-family:var(--serif); font-size:18px; color:var(--ink);" id="cardBody">Body</p>
+            <div class="social-proof" id="socialProof">👁 142 people felt this</div>
+            <div style="display:flex; gap:8px; margin-top:16px; flex-wrap:wrap;">
+              <button class="btn btn-secondary" style="padding:10px 16px; font-size:12px;" onclick="flipCard()">✧ Translate</button>
+              <button class="btn btn-secondary" style="padding:10px 16px; font-size:12px;" onclick="saveToVault(event)">♡ Save to Vault</button>
+            </div>
+          </div>
+          <div class="card-face card-back">
+            <div class="eyebrow">Psychological Insight</div>
+            <h1 class="title" style="font-size:24px; margin:16px 0;" id="insightTitle">Insight</h1>
+            <p class="sub" style="color:var(--ink);" id="insightBody">Breakdown</p>
+            <button class="btn" style="margin-top:auto;" onclick="flipCard()">Close</button>
+          </div>
         </div>
       </div>
-    </div>
 
-    <!-- Sheet: React to Friend's Whisper -->
-    <div id="whisperModal" class="overlay" onclick="closeOnBg(event, 'whisperModal')">
-      <div class="sheet">
-        <span class="tag-chip" id="wmLayer" style="display:inline-block; margin-bottom:8px;">Activity</span>
-        <div class="post-headline" id="wmAuthor">Riya</div>
-        <div class="post-copy" id="wmText" style="font-size:16px; color:var(--text-primary);"></div>
-        <div class="btn-row">
-          <button class="btn btn-orange" id="wmBeatBtn" onclick="reactBeat()">🎵 Send Beat</button>
-          <button class="btn" onclick="closeOverlay('whisperModal')">Close</button>
-        </div>
+      <div style="display:flex; justify-content:space-between; margin-top:30px; align-items:center;">
+        <button class="btn btn-secondary" style="border-radius:50%; width:54px; height:54px; padding:0;" onclick="moveDeck(-1)">←</button>
+        <button class="btn" style="background:var(--accent);" onclick="openChat()">✦ Deep Explore</button>
+        <button class="btn btn-secondary" style="border-radius:50%; width:54px; height:54px; padding:0;" onclick="moveDeck(1)">→</button>
       </div>
     </div>
 
-    <!-- Sheet: Switch Circle -->
-    <div id="circleSheet" class="overlay" onclick="closeOnBg(event, 'circleSheet')">
-      <div class="sheet">
-        <div class="post-headline">Switch Backstage Circle</div>
-        <div class="post-copy">Each circle isolates its whispers and moments.</div>
-        <div id="circleSheetList"></div>
+    <!-- VAULT VIEW (Personal Library) -->
+    <div class="view" id="view-vault">
+      <div class="eyebrow">Your Library</div>
+      <h1 class="title">My Vault</h1>
+      <p class="sub">Traits and insights you saved along the way.</p>
+      <div id="vaultList" style="display:grid; gap:16px;"></div>
+      
+      <div class="ad-slot" style="margin-top:40px;">
+        <span>Sponsored</span>
+        <div>Ad Space</div>
       </div>
     </div>
 
-    <!-- Sheet: Batched Digest -->
-    <div id="digestSheet" class="overlay" onclick="closeOnBg(event, 'digestSheet')">
-      <div class="sheet">
-        <span class="tag-chip" style="display:inline-block; margin-bottom:8px;">Batched Digest</span>
-        <div class="post-headline">Calm Activity Summary</div>
-        <div class="post-copy">Meonix bundles quiet ripples instead of spamming push notifications.</div>
-        <div class="cookie-card">🎵 <strong>Riya & Kabir</strong> are active in your circle right now</div>
-        <div class="cookie-card">🧡 <strong>1 anonymous warmth ping</strong> logged in your Mood Stack</div>
-        <div class="cookie-card">🔒 <strong>2 locked messages</strong> scheduled in your Inbox queue</div>
-        <button class="btn btn-orange" style="width:100%; margin-top:10px;" onclick="markDigestSeen()">All caught up</button>
+  </div>
+
+  <!-- BOTTOM NAVIGATION -->
+  <nav class="bottom-nav">
+    <div class="nav-item active" onclick="switchNav('view-home', this)">
+      <i>✧</i><span>Home</span>
+    </div>
+    <div class="nav-item" onclick="switchNav('view-search', this)">
+      <i>⌕</i><span>Explore</span>
+    </div>
+    <div class="nav-item" onclick="switchNav('view-vault', this)">
+      <i>♡</i><span>Vault</span>
+    </div>
+  </nav>
+
+  <!-- CHAT DRAWER -->
+  <div class="drawer" id="chatDrawer">
+    <div class="drawer-bg" onclick="closeChat()"></div>
+    <div class="drawer-content">
+      <div style="padding:20px; border-bottom:1px solid var(--line); display:flex; justify-content:space-between;">
+        <div><div class="eyebrow">Reflection Guide</div><h3 style="margin:4px 0 0; font-weight:500;">Deeper Explore</h3></div>
+        <button class="btn btn-secondary" style="border-radius:50%; width:40px; height:40px; padding:0;" onclick="closeChat()">✕</button>
+      </div>
+      <div class="chat-log" id="chatLog"></div>
+      <div style="padding:16px; border-top:1px solid var(--line); display:flex; gap:8px;">
+        <input type="text" class="field" style="margin:0; border-radius:99px;" id="chatInput" placeholder="Ask about this trait...">
+        <button class="btn" style="padding:0 24px;" onclick="sendChat()">Send</button>
       </div>
     </div>
   </div>
 
-  <script>
-    /* ============================================================
-       COOKIE PERSISTENCE ENGINE (with safe file:// fallback)
-       ============================================================ */
-    const CookieStore = (() => {
-      let nativeSupported = false;
-      try {
-        document.cookie = "mx_test=1; max-age=60; path=/; SameSite=Lax";
-        nativeSupported = document.cookie.indexOf("mx_test=1") !== -1;
-        document.cookie = "mx_test=; max-age=0; path=/; SameSite=Lax";
-      } catch (e) {
-        nativeSupported = false;
-      }
+</div>
 
-      const PREFIX = "meonix_v2_";
+<script>
+/* CORE STATE */
+const WORKER_URL = "https://gentle-wood-0b71.harshith4412x.workers.dev/";
+let currentView = 'view-home';
+let eggCount = 0;
 
-      function set(key, value, days = 30) {
-        const encoded = encodeURIComponent(JSON.stringify(value));
-        document.cookie = `${key}=${encoded}; max-age=${days * 86400}; path=/; SameSite=Lax`;
-        if (!nativeSupported) {
-          localStorage.setItem(PREFIX + key, JSON.stringify(value));
-        }
-      }
+/* QUIZ DATA */
+const questions = [
+  { c: "Perception", q: "When something unexpected happens, what do you usually do first?", o: ["Consider explanations", "Focus on details", "Trust immediate impression", "Pause and gather info"] },
+  { c: "Belief systems", q: "When forming an opinion, what influences you most?", o: ["Past experiences", "Core principles", "Verifiable evidence", "A mix of perspectives"] },
+  { c: "Belief updating", q: "If strong evidence contradicts you, what do you do?", o: ["Look closer", "Take time to process", "Ask questions", "Depends on the topic"] },
+  { c: "Prediction", q: "How much do past experiences shape your expectations?", o: ["A lot", "Somewhat", "Focus on present", "Depends entirely"] },
+  { c: "Decisions", q: "When making a big decision, what do you rely on?", o: ["Gut feeling", "Careful reasoning", "Intuition then logic", "Trusted advice"] },
+  { c: "Metacognition", q: "How often do you examine your own thinking?", o: ["Often", "After big decisions", "When things go wrong", "Rarely, I just act"] },
+  { c: "Perspective", q: "When someone disagrees, what do you try to understand?", o: ["Their past", "Their evidence", "Their feelings", "I explain myself first"] },
+  { c: "Priorities", q: "In a difficult situation, what matters most?", o: ["Feeling safe", "Maintaining relationships", "Solving the problem", "Being treated fairly"] },
+  { c: "Emotion", q: "How does stress affect your thinking?", o: ["Become cautious", "Act quickly", "Thoughts scramble", "Pause until calm"] },
+  { c: "Influence", q: "How do surroundings influence your choices?", o: ["Shape my values", "Influence but I question", "I pick and choose", "Still figuring it out"] }
+];
+let quizState = { name: "", vibe: "", answers: [], index: 0 };
 
-      function get(key, fallback) {
-        const match = document.cookie.match(new RegExp("(?:^|; )" + key + "=([^;]*)"));
-        if (match) {
-          try { return JSON.parse(decodeURIComponent(match[1])); } catch (e) {}
-        }
-        if (!nativeSupported) {
-          const raw = localStorage.getItem(PREFIX + key);
-          if (raw) {
-            try { return JSON.parse(raw); } catch (e) {}
-          }
-        }
-        return fallback;
-      }
+/* STORY DECK STATE */
+let activeDeck = [];
+let deckIndex = 0;
+let storyOwner = "";
 
-      function remove(key) {
-        document.cookie = `${key}=; max-age=0; path=/; SameSite=Lax`;
-        localStorage.removeItem(PREFIX + key);
-      }
+/* INIT */
+document.addEventListener("DOMContentLoaded", () => {
+  setGreeting();
+  loadVault();
+  checkAutoSave();
+});
 
-      function inspectAll() {
-        const keys = ["mx_user", "mx_circles", "mx_whispers", "mx_polls", "mx_capsule", "mx_chapter", "mx_dms", "mx_prefs"];
-        return keys.map(k => {
-          const val = get(k, null);
-          const bytes = val ? encodeURIComponent(JSON.stringify(val)).length : 0;
-          return { key: k, val, bytes };
-        }).filter(x => x.val !== null);
-      }
+/* FEATURE 5: Time Greeting */
+function setGreeting() {
+  const hr = new Date().getHours();
+  let greet = "Good evening";
+  if(hr < 12) greet = "Good morning";
+  else if(hr < 18) greet = "Good afternoon";
+  document.getElementById("greetingTime").innerText = greet + ", Explorer";
+}
 
-      return { set, get, remove, inspectAll, isNative: () => nativeSupported };
-    })();
+/* FEATURE 11: Easter Egg */
+function triggerEasterEgg() {
+  eggCount++;
+  if(eggCount > 4) {
+    showToast("Developer Mode Unlocked: Analytics Active");
+    document.documentElement.setAttribute('data-theme', 'dark');
+    eggCount = 0;
+  }
+}
 
-    /* ============================================================
-       DEFAULT STATE (ZERO HOSTEL MESS REFERENCES)
-       ============================================================ */
-    const DEFAULT_STATE = {
-      user: { name: "Aarav", accent: "#ff6b2b", beat: "🎵", onboarded: false },
-      circles: { active: "CSE Squad", list: ["CSE Squad", "Last Bench", "Weekend Crew"] },
-      whispers: [
-        { id: 1, author: "Riya", layer: "Emotional", text: "Need evening chai rn", circle: "CSE Squad", beats: 3 },
-        { id: 2, author: "Kabir", layer: "Activity", text: "Library 3rd floor", circle: "CSE Squad", beats: 2 },
-        { id: 3, author: "Ananya", layer: "Event", text: "Quad chill @ 6 PM?", circle: "CSE Squad", beats: 4 },
-        { id: 4, author: "Dev", layer: "Activity", text: "Fixing JS bugs lol", circle: "Last Bench", beats: 1 }
-      ],
-      polls: {
-        idx: 0,
-        quota: 12,
-        warmth: ["Someone in CSE Squad picked you for: Best notes before internals 🧡"]
-      },
-      capsule: {
-        open: false,
-        notes: [
-          { author: "Riya", text: "Lab sir let us leave 20 mins early today!" },
-          { author: "Kabir", text: "Golden hour view from block C steps was insane" }
-        ]
-      },
-      chapter: { num: 14, moments: 48, paused: false },
-      dms: [
-        { id: 101, from: "Riya", text: "Saved a seat near the window for tomorrow's lecture", status: "Unlocks 8:30 PM", unlocked: false },
-        { id: 102, from: "Kabir", text: "Send me that playlist link whenever you're free", status: "Delivered", unlocked: true }
-      ],
-      prefs: {
-        quiet: false,
-        digestSeen: false,
-        takes: [
-          "Riya: Main steps near the auditorium at sunset.",
-          "Kabir: Corner bench outside the library.",
-          "Ananya: Rooftop cafeteria breeze after 5:30 PM."
-        ],
-        stack: [
-          { layer: "Emotional", text: "Lowkey hyped for weekend break", time: "Yesterday · Archived" }
-        ]
-      }
-    };
+/* VIEW ROUTING */
+function openView(id) {
+  document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  currentView = id;
+}
 
-    const POLL_BANK = [
-      { q: "Who makes boring 9 AM lectures survivable?", friends: ["Riya", "Kabir", "Ananya", "Dev"] },
-      { q: "Most likely to plan an impromptu evening chai run?", friends: ["Kabir", "Zoya", "Riya", "Arjun"] },
-      { q: "Who always has the best playlist on aux?", friends: ["Ananya", "Dev", "Zoya", "Riya"] }
-    ];
+function switchNav(id, el) {
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  el.classList.add('active');
+  openView(id);
+  if(id === 'view-vault') renderVault();
+}
 
-    let state = {
-      user: CookieStore.get("mx_user", DEFAULT_STATE.user),
-      circles: CookieStore.get("mx_circles", DEFAULT_STATE.circles),
-      whispers: CookieStore.get("mx_whispers", DEFAULT_STATE.whispers),
-      polls: CookieStore.get("mx_polls", DEFAULT_STATE.polls),
-      capsule: CookieStore.get("mx_capsule", DEFAULT_STATE.capsule),
-      chapter: CookieStore.get("mx_chapter", DEFAULT_STATE.chapter),
-      dms: CookieStore.get("mx_dms", DEFAULT_STATE.dms),
-      prefs: CookieStore.get("mx_prefs", DEFAULT_STATE.prefs)
-    };
+/* FEATURE 10 & 6: Vibe Check & Dynamic Aurora */
+function startQuiz(vibe) {
+  quizState.vibe = vibe;
+  const aurora = document.getElementById("auroraBg");
+  if(vibe === 'calm') aurora.style.background = "radial-gradient(circle at 40% 40%, rgba(94,157,219,0.2) 0%, transparent 50%)";
+  if(vibe === 'racing') aurora.style.background = "radial-gradient(circle at 60% 60%, rgba(219,94,139,0.15) 0%, transparent 50%)";
+  
+  const savedName = localStorage.getItem('alw_name') || "";
+  quizState.name = savedName || prompt("What is your name?") || "Explorer";
+  localStorage.setItem('alw_name', quizState.name);
+  
+  quizState.index = 0;
+  quizState.answers = [];
+  renderQ();
+  openView('view-quiz');
+}
 
-    let activeWhisperId = null;
-    let draftAccent = state.user.accent;
-    let draftBeat = state.user.beat;
+/* FEATURE 13: Auto-Save */
+function checkAutoSave() {
+  const saved = localStorage.getItem('alw_quiz');
+  if(saved) {
+    quizState = JSON.parse(saved);
+    // Silent background load logic can go here
+  }
+}
 
-    function esc(str) {
-      return String(str).replace(/[&<>"']/g, m => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[m]));
-    }
+/* QUIZ ENGINE */
+function renderQ() {
+  const q = questions[quizState.index];
+  document.getElementById("qCategory").innerText = q.c;
+  document.getElementById("qTitle").innerText = q.q;
+  
+  let html = "";
+  q.o.forEach((opt, i) => {
+    const sel = quizState.answers[quizState.index] === i ? "selected" : "";
+    html += `<button class="opt-btn ${sel}" onclick="selectOpt(${i})">${opt}</button>`;
+  });
+  document.getElementById("qOptions").innerHTML = html;
+  
+  // Constellation Map
+  let stars = "";
+  for(let i=0; i<10; i++) {
+    stars += `<div class="star ${i <= quizState.index ? 'lit' : ''}"></div>`;
+  }
+  document.getElementById("quizStars").innerHTML = stars;
+  localStorage.setItem('alw_quiz', JSON.stringify(quizState));
+}
 
-    function toast(msg) {
-      const el = document.getElementById("toast");
-      el.textContent = msg;
-      el.classList.add("show");
-      setTimeout(() => el.classList.remove("show"), 2000);
-    }
+function selectOpt(i) {
+  quizState.answers[quizState.index] = i;
+  renderQ();
+  setTimeout(quizNext, 300);
+}
 
-    function applyOrangeAccent() {
-      document.documentElement.style.setProperty("--orange", state.user.accent);
-      document.documentElement.style.setProperty("--orange-soft", state.user.accent + "28");
-      document.documentElement.style.setProperty("--orange-glow", state.user.accent + "55");
-    }
-
-    /* ============================================================
-       RENDER FUNCTIONS
-       ============================================================ */
-    function renderAll() {
-      applyOrangeAccent();
-      const initial = (state.user.name || "A")[0].toUpperCase();
-      document.getElementById("activeCircleHeader").textContent = state.circles.active;
-      document.querySelectorAll(".circleNameInline").forEach(el => el.textContent = state.circles.active);
-      document.getElementById("navInitial").textContent = initial;
-      document.getElementById("profileInitial").textContent = initial;
-      document.getElementById("profileNameDisplay").textContent = state.user.name;
-      document.getElementById("profileBeatDisplay").textContent = state.user.beat;
-
-      document.getElementById("quietStrip").classList.toggle("show", state.prefs.quiet);
-      document.getElementById("quietBtn").style.color = state.prefs.quiet ? "var(--orange)" : "var(--text-primary)";
-      document.getElementById("digestDot").style.display = (state.prefs.quiet || state.prefs.digestSeen) ? "none" : "block";
-
-      const lockedCount = state.dms.filter(d => !d.unlocked).length;
-      const badge = document.getElementById("lockedCountBadge");
-      badge.textContent = lockedCount;
-      badge.style.display = lockedCount > 0 ? "inline-block" : "none";
-
-      renderWhispers();
-      renderTeaser();
-      renderPolls();
-      renderCapsule();
-      renderChapter();
-      renderCircles();
-      renderInbox();
-      renderProfileAndCookies();
-    }
-
-    function renderWhispers() {
-      const tray = document.getElementById("whispersTray");
-      const list = state.whispers.filter(w => w.circle === state.circles.active || w.author === state.user.name);
-      let html = `
-        <div class="note-item" onclick="openOverlay('createWhisperSheet')">
-          <div class="note-bubble new-note">+ Your mood</div>
-          <div class="ig-ring">
-            <div class="ig-avatar">${esc((state.user.name || "A")[0].toUpperCase())}</div>
-          </div>
-          <div class="note-username">Your note</div>
-        </div>
-      `;
-      list.forEach(w => {
-        const cls = "l-" + w.layer.toLowerCase();
-        html += `
-          <div class="note-item" onclick="openWhisper(${w.id})">
-            <div class="note-bubble">
-              <span class="layer-pill ${cls}">${esc(w.layer)}</span>
-              <span>${esc(w.text)}</span>
-            </div>
-            <div class="ig-ring active-ring">
-              <div class="ig-avatar">${esc(w.author[0].toUpperCase())}</div>
-              <span class="beat-pill">${esc(state.user.beat)} ${w.beats}</span>
-            </div>
-            <div class="note-username">${esc(w.author)}</div>
-          </div>
-        `;
+function quizPrev() { if(quizState.index > 0) { quizState.index--; renderQ(); } }
+async function quizNext() {
+  if(quizState.answers[quizState.index] === undefined) return showToast("Select an option");
+  if(quizState.index < 9) { quizState.index++; renderQ(); }
+  else {
+    document.getElementById("qTitle").innerText = "Generating your universe...";
+    document.getElementById("qOptions").innerHTML = "<p>Connecting to AI...</p>";
+    try {
+      const r = await fetch(WORKER_URL, {
+        method: "POST", headers: {"Content-Type":"application/json"},
+        body: JSON.stringify({ name: quizState.name, answers: quizState.answers.map((a,i) => ({ question: questions[i].q, choice: questions[i].o[a] })) })
       });
-      tray.innerHTML = html;
-    }
+      const d = await r.json();
+      if(d.story) buildDeck(d.story, quizState.name);
+    } catch(e) { showToast("Connection failed."); }
+  }
+}
 
-    function renderTeaser() {
-      document.getElementById("teaserCount").textContent = `${state.prefs.takes.length} friends weighed in`;
-      document.getElementById("peekDrawer").innerHTML = state.prefs.takes
-        .map(t => `<div class="peek-row">${esc(t)}</div>`)
-        .join("");
-    }
-
-    function renderPolls() {
-      const p = POLL_BANK[state.polls.idx % POLL_BANK.length];
-      document.getElementById("pollPromptText").textContent = p.q;
-      document.getElementById("pollQuotaBadge").textContent = `${state.polls.quota}/12 left`;
-      document.getElementById("pollGrid").innerHTML = p.friends.map(f => `
-        <button class="poll-choice" onclick="votePoll('${esc(f)}')">
-          <span class="poll-dot">${esc(f[0])}</span>
-          <span>${esc(f)}</span>
-        </button>
-      `).join("");
-    }
-
-    function renderCapsule() {
-      const area = document.getElementById("capsuleArea");
-      const tag = document.getElementById("capsuleStatusTag");
-      if (!state.capsule.open) {
-        tag.textContent = "8:30 PM";
-        area.innerHTML = `
-          <div style="font-size:13px; color:var(--text-secondary); margin-bottom:10px;">
-            🧡 <strong>${state.capsule.notes.length} candid notes</strong> waiting for tonight's collective unwrap.
-          </div>
-          <button class="btn btn-outline btn-sm" onclick="toggleCapsule()">Preview Unwrap Now</button>
-        `;
-      } else {
-        tag.textContent = "Unwrapped ✨";
-        area.innerHTML = `
-          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
-            <span style="font-size:12px; font-weight:700; color:var(--orange-light);">Tonight's Capsule</span>
-            <button class="btn btn-sm" onclick="toggleCapsule()">Re-veil</button>
-          </div>
-          ${state.capsule.notes.map(n => `
-            <div class="capsule-note"><strong>${esc(n.author)}:</strong> ${esc(n.text)}</div>
-          `).join("")}
-        `;
+/* PREDEFINED SEARCH */
+document.getElementById("searchInput").addEventListener("keydown", (e) => {
+  if(e.key === "Enter") {
+    const q = e.target.value.toLowerCase().trim();
+    if(!q) return;
+    const profiles = window.originalProfiles || {};
+    let html = "";
+    Object.entries(profiles).forEach(([k, p]) => {
+      if(k.toLowerCase().includes(q) || (p.displayName && p.displayName.toLowerCase().includes(q))) {
+        html += `<div class="glass-card action-card" onclick="loadProfile('${k}')"><h3>${p.displayName || k}</h3><p>Read story ↗</p></div>`;
       }
-    }
+    });
+    document.getElementById("searchResults").innerHTML = html || "<p>No world found.</p>";
+  }
+});
 
-    function renderChapter() {
-      document.getElementById("chapterTitle").textContent = `Chapter ${state.chapter.num} · ${state.chapter.moments} shared moments`;
-      document.getElementById("chapterDesc").textContent = state.chapter.paused
-        ? "Paused peacefully — all 48 moments stay safe."
-        : "Step away anytime — your chapter never resets to zero.";
-      document.getElementById("chapterPauseBtn").textContent = state.chapter.paused ? "Resume" : "Pause";
-    }
+function loadProfile(key) {
+  const p = window.originalProfiles[key];
+  if(p) buildDeck(p, p.displayName || key);
+}
 
-    function renderCircles() {
-      document.getElementById("circlesContainer").innerHTML = state.circles.list.map(c => {
-        const active = c === state.circles.active;
-        return `
-          <div class="panel-card" style="display:flex; justify-content:space-between; align-items:center; border-color:${active ? 'var(--orange)' : 'var(--border)'}">
-            <div>
-              <div style="font-weight:700; font-size:15px;">${esc(c)}</div>
-              <div style="font-size:11.5px; color:var(--text-muted);">Invite-only · Private context</div>
-            </div>
-            <button class="btn btn-sm ${active ? 'btn-orange' : 'btn-outline'}" onclick="setCircle('${esc(c)}')">
-              ${active ? 'Active' : 'Switch'}
-            </button>
-          </div>
-        `;
-      }).join("");
-    }
+/* PRIVATE UNLOCK */
+async function unlockPrivate() {
+  const pwd = document.getElementById("pwdInput").value;
+  try {
+    const r = await fetch(WORKER_URL, { method: "POST", headers: {"Content-Type":"application/json"}, body: JSON.stringify({ action: "private-profile", password: pwd }) });
+    const d = await r.json();
+    if(r.ok && d.story) buildDeck(d.story, "Harsha");
+    else showToast("Incorrect access code.");
+  } catch(e) { showToast("Connection offline."); }
+}
 
-    function renderInbox() {
-      document.getElementById("dmListContainer").innerHTML = state.dms.map(d => `
-        <div class="dm-row">
-          <div style="flex:1; padding-right:10px;">
-            <div style="display:flex; align-items:center; gap:8px; margin-bottom:4px;">
-              <strong style="font-size:14px;">${esc(d.from)}</strong>
-              <span class="locked-pill">${esc(d.status)}</span>
-            </div>
-            <div style="font-size:13px; color:${d.unlocked ? 'var(--text-primary)' : 'var(--text-muted)'};">
-              ${d.unlocked ? esc(d.text) : '🔒 Locked until delivery window — tap to preview unlock'}
-            </div>
-          </div>
-          ${!d.unlocked ? `<button class="btn btn-outline btn-sm" onclick="unlockDM(${d.id})">Unlock</button>` : ''}
-        </div>
-      `).join("");
-    }
+/* STORY DECK ENGINE */
+function buildDeck(story, name) {
+  storyOwner = name;
+  activeDeck = [];
+  const traits = Array.isArray(story.traits) ? story.traits : [];
+  traits.forEach(t => activeDeck.push({ k: "Trait", t: t.title, b: t.description }));
+  if(story.cons) story.cons.forEach(c => activeDeck.push({ k: "Working On", t: c.title, b: c.description }));
+  if(story.personalMessage) activeDeck.push({ k: "Message", t: "A Personal Note", b: story.personalMessage });
+  
+  deckIndex = 0;
+  renderDeck();
+  openView('view-story');
+}
 
-    function renderProfileAndCookies() {
-      document.getElementById("statMoments").textContent = state.chapter.moments;
-      document.getElementById("statStack").textContent = state.prefs.stack.length + state.polls.warmth.length;
-      document.getElementById("statCircles").textContent = state.circles.list.length;
+function renderDeck() {
+  const c = activeDeck[deckIndex];
+  if(!c) return;
+  document.getElementById("flipCard").classList.remove("flipped");
+  document.getElementById("cardKicker").innerText = c.k;
+  document.getElementById("cardTitle").innerText = c.t;
+  document.getElementById("cardBody").innerText = c.b;
+  document.getElementById("storyProgress").innerText = `${deckIndex + 1} / ${activeDeck.length}`;
+  
+  // Feature 6: Social Proof FOMO
+  document.getElementById("socialProof").innerText = `👁 ${Math.floor(Math.random()*150)+20} people felt this`;
+}
 
-      const stackHtml = [
-        ...state.polls.warmth.map(w => `<div class="panel-card" style="border-color:rgba(255,107,43,0.35);">🧡 ${esc(w)}</div>`),
-        ...state.prefs.stack.map(s => `
-          <div class="panel-card">
-            <span class="layer-pill l-${s.layer.toLowerCase()}">${esc(s.layer)}</span>
-            <div style="font-size:14px; margin-top:3px;">${esc(s.text)}</div>
-            <div style="font-size:11px; color:var(--text-muted); margin-top:4px;">${esc(s.time)}</div>
-          </div>
-        `)
-      ].join("");
-      document.getElementById("moodStackContainer").innerHTML = stackHtml;
+function moveDeck(dir) {
+  deckIndex += dir;
+  if(deckIndex < 0) deckIndex = 0;
+  if(deckIndex >= activeDeck.length) deckIndex = activeDeck.length - 1;
+  renderDeck();
+}
 
-      const status = document.getElementById("cookieEngineStatus");
-      const note = document.getElementById("cookieNoteText");
-      if (CookieStore.isNative()) {
-        status.textContent = "Native HTTP Cookies";
-        note.innerHTML = "Persisted via <code>document.cookie</code> with <code>SameSite=Lax</code> (4 KB limit per cookie).";
-      } else {
-        status.textContent = "file:// Mirror Active";
-        note.innerHTML = "Opened via <code>file://</code> — browsers block <code>document.cookie</code> on local files. Run via <code>http://localhost</code> for native cookies.";
-      }
+/* FEATURE 9: Card Flip Translation */
+function flipCard() {
+  const card = document.getElementById("flipCard");
+  const isFlipped = card.classList.toggle("flipped");
+  if(isFlipped) {
+    const t = document.getElementById("cardTitle").innerText;
+    document.getElementById("insightTitle").innerText = t;
+    document.getElementById("insightBody").innerText = `In psychological terms, "${t}" indicates a mechanism for maintaining internal stability. This trait usually develops to protect energy and ensure authentic interactions rather than surface-level conformity.`;
+  }
+}
 
-      const list = CookieStore.inspectAll();
-      document.getElementById("cookieRows").innerHTML = list.map(item => `
-        <div class="cookie-card">
-          <div style="display:flex; justify-content:space-between;">
-            <strong>${esc(item.key)}</strong>
-            <span style="color:var(--text-muted);">${item.bytes} / 4096 B</span>
-          </div>
-          <div class="cookie-code">${esc(JSON.stringify(item.val))}</div>
-        </div>
-      `).join("");
-    }
+/* FEATURE 2 & 7: Vault Save & Haptic Particles */
+function saveToVault(e) {
+  createParticles(e.clientX, e.clientY);
+  const c = activeDeck[deckIndex];
+  let vault = JSON.parse(localStorage.getItem('alw_vault') || "[]");
+  vault.push({ ...c, owner: storyOwner });
+  localStorage.setItem('alw_vault', JSON.stringify(vault));
+  showToast("Added to Vault ♡");
+}
 
-    /* ============================================================
-       USER ACTIONS & COOKIE UPDATES
-       ============================================================ */
-    function switchTab(tab) {
-      document.querySelectorAll(".screen").forEach(s => s.classList.remove("active"));
-      document.getElementById("screen-" + tab).classList.add("active");
-      document.querySelectorAll(".ig-tab").forEach(b => b.classList.toggle("active", b.dataset.tab === tab));
-      if (tab === "profile") renderProfileAndCookies();
-    }
+function createParticles(x, y) {
+  for(let i=0; i<5; i++) {
+    const p = document.createElement("div");
+    p.className = "particle";
+    p.innerText = "♡";
+    p.style.left = (x + (Math.random()*40 - 20)) + "px";
+    p.style.top = (y + (Math.random()*20 - 10)) + "px";
+    document.body.appendChild(p);
+    setTimeout(() => p.remove(), 1000);
+  }
+}
 
-    function openOverlay(id) { document.getElementById(id).classList.add("open"); }
-    function closeOverlay(id) { document.getElementById(id).classList.remove("open"); }
-    function closeOnBg(e, id) { if (e.target.id === id) closeOverlay(id); }
+function renderVault() {
+  const vault = JSON.parse(localStorage.getItem('alw_vault') || "[]");
+  let html = "";
+  vault.reverse().forEach(v => {
+    html += `<div class="glass-card">
+      <div class="eyebrow">${v.owner} · ${v.k}</div>
+      <h3 style="font-family:var(--serif); font-weight:400; font-size:24px; margin:10px 0;">${v.t}</h3>
+      <p style="color:var(--muted); font-size:14px; margin:0;">${v.b}</p>
+    </div>`;
+  });
+  document.getElementById("vaultList").innerHTML = html || "<p style='color:var(--muted)'>Your library is empty. Save traits you resonate with.</p>";
+}
 
-    function createWhisper() {
-      const layer = document.getElementById("newWhisperLayer").value;
-      const text = document.getElementById("newWhisperText").value.trim();
-      if (!text) return;
-      state.whispers.unshift({ id: Date.now(), author: state.user.name, layer, text, circle: state.circles.active, beats: 0 });
-      state.whispers = state.whispers.slice(0, 12);
-      state.prefs.stack.unshift({ layer, text, time: `Today · ${state.circles.active}` });
-      state.prefs.stack = state.prefs.stack.slice(0, 10);
-      state.chapter.moments += 1;
+/* FEATURE 20: Share Generator */
+function shareApp() {
+  navigator.clipboard.writeText("https://meonix.in - Explore your little world of personalities.");
+  showToast("Link copied to clipboard");
+}
 
-      CookieStore.set("mx_whispers", state.whispers);
-      CookieStore.set("mx_prefs", state.prefs);
-      CookieStore.set("mx_chapter", state.chapter);
+/* AI CHATBOT DRAWER */
+function openChat() { document.getElementById("chatDrawer").classList.add("open"); }
+function closeChat() { document.getElementById("chatDrawer").classList.remove("open"); }
 
-      document.getElementById("newWhisperText").value = "";
-      closeOverlay("createWhisperSheet");
-      renderAll();
-      toast("Whisper posted + archived to Stack");
-    }
+async function sendChat() {
+  const input = document.getElementById("chatInput");
+  const text = input.value.trim();
+  if(!text) return;
+  input.value = "";
+  
+  const log = document.getElementById("chatLog");
+  log.innerHTML += `<div class="msg user">${escapeHtml(text)}</div>`;
+  log.innerHTML += `<div class="msg bot" id="typingIndicator">...</div>`;
+  log.scrollTop = log.scrollHeight;
 
-    function openWhisper(id) {
-      const w = state.whispers.find(x => x.id === id);
-      if (!w) return;
-      activeWhisperId = id;
-      document.getElementById("wmLayer").textContent = w.layer + " Layer";
-      document.getElementById("wmAuthor").textContent = w.author;
-      document.getElementById("wmText").textContent = `"${w.text}"`;
-      document.getElementById("wmBeatBtn").textContent = `${state.user.beat} Send Beat (${w.beats})`;
-      openOverlay("whisperModal");
-    }
+  try {
+    const r = await fetch(WORKER_URL, {
+      method: "POST", headers: {"Content-Type":"application/json"},
+      body: JSON.stringify({ action: "chat", name: storyOwner, messages: [{role:"user", text}] })
+    });
+    const d = await r.json();
+    document.getElementById("typingIndicator").remove();
+    log.innerHTML += `<div class="msg bot">${escapeHtml(d.reply || "Thinking deeply...")}</div>`;
+  } catch(e) {
+    document.getElementById("typingIndicator").remove();
+    log.innerHTML += `<div class="msg bot">Connection offline.</div>`;
+  }
+  log.scrollTop = log.scrollHeight;
+}
 
-    function reactBeat() {
-      const w = state.whispers.find(x => x.id === activeWhisperId);
-      if (!w) return;
-      w.beats += 1;
-      CookieStore.set("mx_whispers", state.whispers);
-      document.getElementById("wmBeatBtn").textContent = `${state.user.beat} Sent (${w.beats})`;
-      renderWhispers();
-      toast(`${state.user.beat} Beat sent to ${w.author}`);
-    }
-
-    function togglePeek() {
-      document.getElementById("peekDrawer").classList.toggle("open");
-    }
-
-    function addQuickTake() {
-      const val = prompt("Drop a quick 1-line take:");
-      if (val && val.trim()) {
-        state.prefs.takes.unshift(`${state.user.name}: ${val.trim()}`);
-        state.prefs.takes = state.prefs.takes.slice(0, 6);
-        CookieStore.set("mx_prefs", state.prefs);
-        document.getElementById("peekDrawer").classList.add("open");
-        renderTeaser();
-      }
-    }
-
-    function votePoll(friend) {
-      if (state.polls.quota <= 0) {
-        toast("Hourly cap reached — take a breather!");
-        return;
-      }
-      const q = POLL_BANK[state.polls.idx % POLL_BANK.length].q;
-      state.polls.quota -= 1;
-      state.polls.idx += 1;
-      state.polls.warmth.unshift(`You cheered ${friend} on: "${q}"`);
-      state.polls.warmth = state.polls.warmth.slice(0, 6);
-      state.chapter.moments += 1;
-
-      CookieStore.set("mx_polls", state.polls, 1);
-      CookieStore.set("mx_chapter", state.chapter);
-
-      const box = document.getElementById("pollToastBox");
-      box.style.display = "block";
-      box.innerHTML = `🧡 Anonymous warmth ping sent to <strong>${esc(friend)}</strong>`;
-      renderAll();
-    }
-
-    function skipPoll() {
-      state.polls.idx += 1;
-      CookieStore.set("mx_polls", state.polls, 1);
-      renderPolls();
-    }
-
-    function dropCapsuleNote() {
-      const inp = document.getElementById("capsuleNoteInput");
-      const text = inp.value.trim();
-      if (!text) return;
-      state.capsule.notes.push({ author: state.user.name, text });
-      state.capsule.notes = state.capsule.notes.slice(-6);
-      state.chapter.moments += 1;
-      CookieStore.set("mx_capsule", state.capsule, 1);
-      CookieStore.set("mx_chapter", state.chapter);
-      inp.value = "";
-      renderAll();
-      toast("Dropped into tonight's capsule");
-    }
-
-    function toggleCapsule() {
-      state.capsule.open = !state.capsule.open;
-      CookieStore.set("mx_capsule", state.capsule, 1);
-      renderCapsule();
-    }
-
-    function toggleChapterPause() {
-      state.chapter.paused = !state.chapter.paused;
-      CookieStore.set("mx_chapter", state.chapter);
-      renderChapter();
-      toast(state.chapter.paused ? "Chapter paused safely" : "Chapter resumed");
-    }
-
-    function openCircleSheet() {
-      document.getElementById("circleSheetList").innerHTML = state.circles.list.map(c => `
-        <button class="btn ${c === state.circles.active ? 'btn-orange' : ''}" style="width:100%; margin-bottom:8px;" onclick="setCircle('${esc(c)}'); closeOverlay('circleSheet');">
-          ${esc(c)}
-        </button>
-      `).join("");
-      openOverlay("circleSheet");
-    }
-
-    function setCircle(name) {
-      state.circles.active = name;
-      CookieStore.set("mx_circles", state.circles);
-      renderAll();
-      toast(`Switched to ${name}`);
-    }
-
-    function addCircle() {
-      const inp = document.getElementById("newCircleName");
-      const name = inp.value.trim();
-      if (!name || state.circles.list.includes(name)) return;
-      state.circles.list.push(name);
-      state.circles.active = name;
-      CookieStore.set("mx_circles", state.circles);
-      inp.value = "";
-      renderAll();
-      toast(`Created "${name}"`);
-    }
-
-    function sendLockedDM() {
-      const to = document.getElementById("dmRecipient").value;
-      const win = document.getElementById("dmUnlockTime").value;
-      const inp = document.getElementById("dmInput");
-      const text = inp.value.trim();
-      if (!text) return;
-      const instant = win === "Instant DM";
-      state.dms.unshift({ id: Date.now(), from: `You → ${to}`, text, status: instant ? "Delivered" : win, unlocked: instant });
-      state.dms = state.dms.slice(0, 8);
-      CookieStore.set("mx_dms", state.dms);
-      inp.value = "";
-      renderAll();
-      toast(instant ? "Sent DM" : `Queued (${win})`);
-    }
-
-    function unlockDM(id) {
-      const item = state.dms.find(d => d.id === id);
-      if (!item) return;
-      item.unlocked = true;
-      item.status = "Unlocked";
-      CookieStore.set("mx_dms", state.dms);
-      renderAll();
-      toast("Message unlocked");
-    }
-
-    function toggleQuietMode() {
-      state.prefs.quiet = !state.prefs.quiet;
-      CookieStore.set("mx_prefs", state.prefs);
-      renderAll();
-      toast(state.prefs.quiet ? "Quiet Mode enabled" : "Quiet Mode off");
-    }
-
-    function markDigestSeen() {
-      state.prefs.digestSeen = true;
-      CookieStore.set("mx_prefs", state.prefs);
-      closeOverlay("digestSheet");
-      renderAll();
-    }
-
-    function toggleCookieDrawer() {
-      const d = document.getElementById("cookieDrawer");
-      d.style.display = d.style.display === "none" ? "block" : "none";
-      renderProfileAndCookies();
-    }
-
-    function openOnboarding(force = false) {
-      if (state.user.onboarded && !force) return;
-      document.getElementById("obName").value = state.user.name;
-      document.getElementById("obCircle").value = state.circles.active;
-      goObStep(1);
-      openOverlay("onboardingOverlay");
-    }
-
-    function goObStep(n) {
-      [1, 2, 3].forEach(i => document.getElementById("obStep" + i).style.display = i === n ? "block" : "none");
-      document.getElementById("obProgress").style.width = (n * 33.33) + "%";
-    }
-
-    function pickShade(el) {
-      document.querySelectorAll(".swatch").forEach(s => s.classList.remove("selected"));
-      el.classList.add("selected");
-      draftAccent = el.dataset.c;
-      document.documentElement.style.setProperty("--orange", draftAccent);
-    }
-
-    function pickBeat(b, btn) {
-      draftBeat = b;
-      document.querySelectorAll("#obBeats .btn").forEach(x => x.classList.remove("btn-orange"));
-      btn.classList.add("btn-orange");
-    }
-
-    function saveOnboarding() {
-      const name = document.getElementById("obName").value.trim() || "Aarav";
-      const circle = document.getElementById("obCircle").value.trim() || "CSE Squad";
-      state.user = { name, accent: draftAccent, beat: draftBeat, onboarded: true };
-      if (!state.circles.list.includes(circle)) state.circles.list.unshift(circle);
-      state.circles.active = circle;
-      CookieStore.set("mx_user", state.user);
-      CookieStore.set("mx_circles", state.circles);
-      closeOverlay("onboardingOverlay");
-      renderAll();
-      toast(`Welcome to Meonix, ${name}`);
-    }
-
-    function clearAllCookies() {
-      ["mx_user", "mx_circles", "mx_whispers", "mx_polls", "mx_capsule", "mx_chapter", "mx_dms", "mx_prefs"].forEach(CookieStore.remove);
-      location.reload();
-    }
-
-    renderAll();
-    if (!state.user.onboarded) openOnboarding(true);
-  </script>
+/* UTILS */
+function showToast(msg) {
+  const t = document.getElementById("toast");
+  t.innerText = msg; t.classList.add("show");
+  setTimeout(() => t.classList.remove("show"), 2500);
+}
+function escapeHtml(s) { return String(s ?? "").replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c])); }
+</script>
 </body>
 </html>
