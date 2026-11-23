@@ -1,1403 +1,618 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>Meonix — Beta Phase 1 & 2</title>
-  <style>
-    :root {
-      --bg-outer: #080504;
-      --bg-app: #0f0a08;
-      --surface: #19120e;
-      --surface-elevated: #231913;
-      --border: rgba(255, 170, 115, 0.13);
-      --text-primary: #fff8f3;
-      --text-secondary: #cbb4a4;
-      --text-muted: #8a7364;
-      --orange: #ff6b2b;
-      --orange-bright: #ff944d;
-      --orange-soft: rgba(255, 107, 43, 0.16);
-      --orange-glow: rgba(255, 107, 43, 0.35);
-      --grad-orange: linear-gradient(135deg, #ff9248 0%, #ff5e24 55%, #e03e1a 100%);
-      --layer-activity: #ffb703;
-      --layer-emotional: #ff758f;
-      --layer-event: #fb8500;
-      --mint: #34d399;
-    }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="theme-color" content="#0a0f16" id="themeMeta">
+<title>A Little World</title>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,wght@0,400;0,500;1,400&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="profiles.js"></script>
+<style>
+/* DEEP SPACE / MIND PALETTE (Dark by default for maximum immersion) */
+:root {
+  --ink: #eaf0f6;
+  --ink-soft: #aab8c7;
+  --muted: #6e849c;
+  --paper: #0a0f16;
+  --card: #131b26;
+  --card-glass: rgba(19, 27, 38, 0.7);
+  --line: #223042;
+  --line-strong: #334863;
+  --accent: #5e9ddb;
+  --accent-bg: #142840;
+  --aurora-1: rgba(94, 157, 219, 0.15);
+  --aurora-2: rgba(139, 94, 219, 0.15);
+  --shadow: 0 24px 64px rgba(0, 0, 0, 0.6);
+  --serif: "Newsreader", Georgia, serif;
+  --sans: "Plus Jakarta Sans", sans-serif;
+  --spring: cubic-bezier(0.175, 0.885, 0.32, 1.15);
+}
 
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      -webkit-tap-highlight-color: transparent;
-    }
+* { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 
-    body {
-      font-family: -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", Roboto, sans-serif;
-      background: radial-gradient(circle at top, #28160c 0%, var(--bg-outer) 70%);
-      color: var(--text-primary);
-      min-height: 100vh;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-    }
+body {
+  margin: 0; background: var(--paper); color: var(--ink);
+  font-family: var(--sans); overflow: hidden; overscroll-behavior-y: none;
+}
 
-    .app-shell {
-      width: 100%;
-      max-width: 430px;
-      height: 100vh;
-      max-height: 890px;
-      background: var(--bg-app);
-      position: relative;
-      display: flex;
-      flex-direction: column;
-      overflow: hidden;
-      border-left: 1px solid var(--border);
-      border-right: 1px solid var(--border);
-    }
+button, input, textarea { font: inherit; outline: none; border: none; }
+button { cursor: pointer; }
 
-    @media (min-width: 500px) {
-      .app-shell {
-        height: 92vh;
-        border-radius: 38px;
-        border: 1px solid rgba(255, 148, 77, 0.2);
-        box-shadow: 0 32px 90px rgba(0, 0, 0, 0.88);
-      }
-    }
+/* AMBIENT BACKGROUND */
+.aurora {
+  position: fixed; inset: -50%; z-index: 0; pointer-events: none;
+  background: radial-gradient(circle at 40% 40%, var(--aurora-1) 0%, transparent 40%),
+              radial-gradient(circle at 60% 60%, var(--aurora-2) 0%, transparent 40%);
+  animation: breathe 20s ease-in-out infinite alternate; transition: background 1s ease;
+}
+@keyframes breathe { 0% { transform: scale(1) rotate(0deg); } 100% { transform: scale(1.2) rotate(10deg); } }
+body::after { content: ""; position: fixed; inset: 0; pointer-events: none; opacity: 0.1; background-image: radial-gradient(#6e849c 0.5px, transparent 0.5px); background-size: 24px 24px; z-index: 0; }
 
-    /* Instagram-Style Top Bar */
-    .ig-topbar {
-      height: 56px;
-      padding: 0 16px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      background: rgba(15, 10, 8, 0.94);
-      backdrop-filter: blur(18px);
-      border-bottom: 1px solid var(--border);
-      z-index: 20;
-      flex-shrink: 0;
-    }
+/* APP LAYOUT */
+.app-container { height: 100vh; display: flex; flex-direction: column; position: relative; z-index: 1; }
+.topbar { padding: 20px 24px; display: flex; justify-content: space-between; align-items: center; z-index: 10; }
+.brand { font-size: 13px; letter-spacing: 0.2em; font-weight: 700; text-transform: uppercase; user-select: none; }
+.brand span { color: var(--accent); }
+.top-tools { display: flex; gap: 12px; }
 
-    .ig-wordmark {
-      font-size: 22px;
-      font-weight: 800;
-      letter-spacing: -0.03em;
-      background: var(--grad-orange);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      cursor: pointer;
-    }
+/* VIEW MANAGER (Tabs) */
+.view-area { flex: 1; overflow-y: auto; overflow-x: hidden; position: relative; padding-bottom: 90px; }
+.view { position: absolute; inset: 0; padding: 0 24px; opacity: 0; pointer-events: none; transform: translateX(20px); transition: opacity 0.4s ease, transform 0.4s var(--spring); overflow-y: auto; padding-bottom: 100px; }
+.view.active { opacity: 1; pointer-events: auto; transform: translateX(0); }
 
-    .topbar-right {
-      display: flex;
-      align-items: center;
-      gap: 14px;
-    }
+/* BOTTOM NAVIGATION */
+.bottom-nav {
+  position: fixed; bottom: 0; left: 0; right: 0; height: 84px;
+  background: rgba(10, 15, 22, 0.85); backdrop-filter: blur(20px);
+  border-top: 1px solid var(--line); display: flex; justify-content: space-around; align-items: center; padding-bottom: 15px; z-index: 50;
+}
+.nav-item {
+  display: flex; flex-direction: column; align-items: center; gap: 4px; color: var(--muted);
+  font-size: 10px; font-weight: 600; letter-spacing: 0.05em; transition: color 0.3s ease, transform 0.2s var(--spring);
+}
+.nav-item i { font-size: 22px; font-style: normal; margin-bottom: 2px; }
+.nav-item.active { color: var(--accent); transform: translateY(-3px); }
+.nav-item:active { transform: scale(0.9); }
 
-    .top-icon-btn {
-      background: none;
-      border: none;
-      color: var(--text-primary);
-      position: relative;
-      cursor: pointer;
-      display: grid;
-      place-items: center;
-      padding: 4px;
-    }
-    .top-icon-btn:active { transform: scale(0.9); }
+/* UI COMPONENTS */
+.eyebrow { font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--accent); font-weight: 700; }
+h1.title { font-family: var(--serif); font-size: clamp(36px, 6vw, 54px); font-weight: 400; line-height: 1.1; margin: 12px 0 16px; letter-spacing: -0.03em; }
+p.sub { color: var(--muted); font-size: 15px; line-height: 1.7; margin: 0 0 24px; }
 
-    .badge-pill {
-      position: absolute;
-      top: -2px;
-      right: -5px;
-      background: var(--orange);
-      color: #fff;
-      font-size: 10px;
-      font-weight: 800;
-      padding: 1px 5px;
-      border-radius: 999px;
-    }
+/* CARDS */
+.glass-card {
+  background: var(--card-glass); backdrop-filter: blur(16px); border: 1px solid var(--line);
+  border-radius: 28px; padding: 28px; transition: transform 0.3s var(--spring), border-color 0.3s ease; position: relative; overflow: hidden;
+}
+.glass-card:active { transform: scale(0.98); }
+.action-card { display: flex; flex-direction: column; gap: 8px; margin-bottom: 16px; cursor: pointer; }
+.action-card .icon { width: 44px; height: 44px; border-radius: 14px; background: var(--accent-bg); color: var(--accent); display: grid; place-items: center; font-size: 20px; margin-bottom: 8px; }
+.action-card h3 { font-family: var(--serif); font-size: 22px; margin: 0; font-weight: 400; }
+.action-card p { font-size: 13px; color: var(--muted); margin: 0; line-height: 1.5; }
+.time-pill { position: absolute; top: 20px; right: 20px; background: rgba(0,0,0,0.3); border: 1px solid var(--line); border-radius: 99px; padding: 4px 10px; font-size: 10px; font-weight: 600; color: var(--muted); }
 
-    /* Layer Filter Bar (Activity / Emotional / Event) */
-    .layer-filter-bar {
-      display: flex;
-      gap: 8px;
-      padding: 10px 14px;
-      border-bottom: 1px solid var(--border);
-      overflow-x: auto;
-      scrollbar-width: none;
-      flex-shrink: 0;
-    }
-    .layer-filter-bar::-webkit-scrollbar { display: none; }
+/* MONETIZATION: AD SLOTS */
+.ad-slot {
+  margin: 24px 0; border: 1px dashed var(--line-strong); border-radius: 20px; background: rgba(0,0,0,0.2);
+  display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 30px 20px; text-align: center;
+}
+.ad-slot span { font-size: 10px; text-transform: uppercase; letter-spacing: 0.1em; color: var(--muted); margin-bottom: 8px; }
+.ad-slot div { font-size: 14px; color: var(--ink-soft); }
 
-    .filter-pill {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      color: var(--text-secondary);
-      font-size: 12px;
-      font-weight: 600;
-      padding: 5px 12px;
-      border-radius: 999px;
-      cursor: pointer;
-      white-space: nowrap;
-    }
-    .filter-pill.active {
-      background: var(--orange-soft);
-      border-color: var(--orange);
-      color: var(--orange-bright);
-    }
+/* BUTTONS & FORMS */
+.btn {
+  background: var(--ink); color: var(--paper); border-radius: 99px; padding: 16px 26px; font-size: 14px; font-weight: 600;
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px; transition: transform 0.2s var(--spring), opacity 0.2s;
+}
+.btn:active { transform: scale(0.95); }
+.btn-secondary { background: transparent; color: var(--ink); border: 1px solid var(--line); }
+.field { width: 100%; background: var(--card); border: 1px solid var(--line); border-radius: 16px; padding: 18px 20px; color: var(--ink); font-size: 16px; transition: border-color 0.3s; margin-bottom: 16px; }
+.field:focus { border-color: var(--accent); }
 
-    /* Main Scroll */
-    .main-scroll {
-      flex: 1;
-      overflow-y: auto;
-      padding-bottom: 76px;
-      scrollbar-width: none;
-    }
-    .main-scroll::-webkit-scrollbar { display: none; }
+/* QUIZ UI */
+.options-grid { display: grid; gap: 12px; margin-top: 24px; }
+.opt-btn { background: var(--card); border: 1px solid var(--line); border-radius: 18px; padding: 18px; text-align: left; color: var(--ink); font-size: 15px; line-height: 1.5; transition: all 0.2s; display: flex; align-items: center; gap: 14px; }
+.opt-btn::before { content: ""; width: 20px; height: 20px; border-radius: 50%; border: 2px solid var(--line-strong); flex-shrink: 0; transition: all 0.2s; }
+.opt-btn.selected { background: var(--accent-bg); border-color: var(--accent); }
+.opt-btn.selected::before { border-color: var(--accent); background: var(--accent); box-shadow: inset 0 0 0 4px var(--accent-bg); }
+.constellation { display: flex; align-items: center; justify-content: space-between; margin: 20px 0 30px; position: relative; }
+.constellation::before { content: ""; position: absolute; left: 0; right: 0; top: 50%; height: 2px; background: var(--line); z-index: 0; }
+.star { width: 10px; height: 10px; border-radius: 50%; background: var(--line-strong); position: relative; z-index: 1; transition: all 0.4s ease; }
+.star.lit { background: var(--accent); box-shadow: 0 0 10px var(--accent); transform: scale(1.3); }
 
-    .screen { display: none; animation: fadeIn 0.18s ease; }
-    .screen.active { display: block; }
+/* STORY DECK (3D Flipping) */
+.story-wrapper { max-width: 600px; margin: 0 auto; perspective: 1200px; }
+.story-card-container { position: relative; width: 100%; min-height: 480px; transform-style: preserve-3d; transition: transform 0.6s var(--spring); }
+.story-card-container.flipped { transform: rotateY(180deg); }
+.card-face { position: absolute; inset: 0; backface-visibility: hidden; background: var(--card); border: 1px solid var(--line); border-radius: 32px; padding: 34px; box-shadow: var(--shadow); display: flex; flex-direction: column; justify-content: space-between; }
+.card-back { transform: rotateY(180deg); background: var(--accent-bg); border-color: var(--accent); }
+.social-proof { display: flex; align-items: center; gap: 6px; font-size: 11px; color: var(--muted); margin-top: auto; padding-top: 16px; }
 
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(4px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
+/* PARTICLES */
+.particle { position: absolute; pointer-events: none; animation: floatUp 1s ease-out forwards; font-size: 20px; z-index: 100; }
+@keyframes floatUp { 0% { opacity: 1; transform: translateY(0) scale(0.5); } 100% { opacity: 0; transform: translateY(-80px) scale(1.2); } }
 
-    /* Instagram Notes / 24h Mood Bubbles */
-    .notes-tray {
-      display: flex;
-      gap: 14px;
-      overflow-x: auto;
-      padding: 16px 14px 12px;
-      border-bottom: 1px solid var(--border);
-      scrollbar-width: none;
-    }
-    .notes-tray::-webkit-scrollbar { display: none; }
+/* CHAT DRAWER */
+.drawer { position: fixed; inset: 0; z-index: 100; pointer-events: none; display: flex; flex-direction: column; justify-content: flex-end; }
+.drawer-bg { position: absolute; inset: 0; background: rgba(0,0,0,0.6); backdrop-filter: blur(4px); opacity: 0; transition: opacity 0.3s; }
+.drawer-content { position: relative; background: var(--card); border-radius: 32px 32px 0 0; height: 80vh; transform: translateY(100%); transition: transform 0.4s var(--spring); display: flex; flex-direction: column; }
+.drawer.open { pointer-events: auto; }
+.drawer.open .drawer-bg { opacity: 1; }
+.drawer.open .drawer-content { transform: translateY(0); }
+.chat-log { flex: 1; overflow-y: auto; padding: 24px; display: flex; flex-direction: column; gap: 16px; }
+.msg { max-width: 85%; padding: 14px 18px; border-radius: 20px; font-size: 15px; line-height: 1.5; }
+.msg.bot { align-self: flex-start; background: var(--paper); border: 1px solid var(--line); border-bottom-left-radius: 4px; font-family: var(--serif); }
+.msg.user { align-self: flex-end; background: var(--accent); color: #fff; border-bottom-right-radius: 4px; }
 
-    .note-item {
-      flex: 0 0 auto;
-      width: 78px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      cursor: pointer;
-    }
-
-    .note-bubble {
-      background: var(--surface-elevated);
-      border: 1px solid rgba(255, 148, 77, 0.24);
-      border-radius: 15px;
-      padding: 6px 8px;
-      font-size: 11px;
-      line-height: 1.25;
-      color: var(--text-primary);
-      text-align: center;
-      width: 82px;
-      min-height: 38px;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      margin-bottom: -10px;
-      z-index: 2;
-      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.45);
-      word-break: break-word;
-    }
-
-    .note-bubble.new-note {
-      border-style: dashed;
-      border-color: var(--orange);
-      background: var(--orange-soft);
-      color: var(--orange-bright);
-    }
-
-    .layer-tag {
-      font-size: 9px;
-      font-weight: 800;
-      text-transform: uppercase;
-      letter-spacing: 0.04em;
-      margin-bottom: 2px;
-    }
-    .l-activity { color: var(--layer-activity); }
-    .l-emotional { color: var(--layer-emotional); }
-    .l-event { color: var(--layer-event); }
-
-    .ig-ring {
-      width: 58px;
-      height: 58px;
-      border-radius: 50%;
-      padding: 2.5px;
-      background: var(--grad-orange);
-      display: grid;
-      place-items: center;
-      position: relative;
-    }
-    .ig-ring.muted-ring { background: var(--border); }
-
-    .ig-avatar {
-      width: 100%;
-      height: 100%;
-      border-radius: 50%;
-      background: var(--surface);
-      border: 2px solid var(--bg-app);
-      display: grid;
-      place-items: center;
-      font-weight: 700;
-      font-size: 18px;
-    }
-
-    .note-username {
-      margin-top: 5px;
-      font-size: 11px;
-      color: var(--text-secondary);
-      max-width: 74px;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-    }
-
-    /* Instagram-Style Mood Feed Cards */
-    .mood-post {
-      border-bottom: 1px solid var(--border);
-      padding: 14px 16px;
-    }
-
-    .post-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 10px;
-    }
-
-    .post-user {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-
-    .mini-avatar {
-      width: 34px;
-      height: 34px;
-      border-radius: 50%;
-      background: var(--grad-orange);
-      display: grid;
-      place-items: center;
-      font-size: 14px;
-      font-weight: 800;
-      color: #fff;
-    }
-
-    .post-name {
-      font-size: 13.5px;
-      font-weight: 700;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
-
-    .post-meta {
-      font-size: 11px;
-      color: var(--text-muted);
-    }
-
-    .layer-badge {
-      font-size: 10px;
-      font-weight: 700;
-      padding: 3px 9px;
-      border-radius: 999px;
-      background: var(--orange-soft);
-      color: var(--orange-bright);
-      border: 1px solid rgba(255, 107, 43, 0.25);
-    }
-
-    .mood-card-body {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 18px;
-      padding: 16px;
-      margin-bottom: 10px;
-      font-size: 15.5px;
-      line-height: 1.45;
-      color: var(--text-primary);
-    }
-
-    .ig-actions {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-
-    .ig-actions-left {
-      display: flex;
-      align-items: center;
-      gap: 16px;
-    }
-
-    .beat-btn {
-      background: var(--surface-elevated);
-      border: 1px solid var(--border);
-      color: var(--text-primary);
-      padding: 6px 12px;
-      border-radius: 999px;
-      font-size: 13px;
-      font-weight: 700;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      cursor: pointer;
-    }
-    .beat-btn.beated {
-      background: var(--orange-soft);
-      border-color: var(--orange);
-      color: var(--orange-bright);
-    }
-    .beat-btn:active { transform: scale(0.92); }
-
-    .text-action-btn {
-      background: none;
-      border: none;
-      color: var(--text-secondary);
-      font-size: 12.5px;
-      font-weight: 600;
-      cursor: pointer;
-    }
-
-    /* Buttons & Inputs */
-    .btn-row { display: flex; gap: 9px; }
-
-    .btn {
-      flex: 1;
-      padding: 10px 14px;
-      border-radius: 12px;
-      border: 1px solid var(--border);
-      background: var(--surface-elevated);
-      color: var(--text-primary);
-      font-size: 13px;
-      font-weight: 600;
-      cursor: pointer;
-    }
-    .btn:active { transform: scale(0.96); }
-
-    .btn-orange {
-      background: var(--grad-orange);
-      border: none;
-      color: #fff;
-      box-shadow: 0 8px 20px var(--orange-glow);
-    }
-
-    .btn-outline {
-      background: transparent;
-      border-color: rgba(255, 148, 77, 0.32);
-      color: var(--orange-bright);
-    }
-
-    .btn-sm {
-      flex: 0 0 auto;
-      padding: 6px 12px;
-      font-size: 12px;
-    }
-
-    input[type="text"], input[type="password"], select {
-      width: 100%;
-      background: var(--bg-app);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 11px 13px;
-      color: var(--text-primary);
-      font-size: 13px;
-      font-family: inherit;
-      outline: none;
-    }
-    input:focus, select:focus { border-color: var(--orange); }
-
-    /* Screen Padding & Cards */
-    .screen-pad { padding: 16px; }
-
-    .card-box {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 18px;
-      padding: 15px;
-      margin-bottom: 12px;
-    }
-
-    /* Follow System Row */
-    .user-row {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 12px;
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 16px;
-      margin-bottom: 10px;
-    }
-
-    /* Inbox / Locked-Message Delivery Queue */
-    .msg-card {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 16px;
-      padding: 13px;
-      margin-bottom: 10px;
-    }
-    .msg-card.locked {
-      border-color: rgba(255, 183, 3, 0.35);
-      background: linear-gradient(135deg, rgba(255, 183, 3, 0.08), var(--surface));
-    }
-
-    .lock-pill {
-      font-size: 10px;
-      font-weight: 800;
-      padding: 3px 8px;
-      border-radius: 999px;
-      background: rgba(255, 183, 3, 0.16);
-      color: var(--layer-activity);
-    }
-    .unlock-pill {
-      font-size: 10px;
-      font-weight: 800;
-      padding: 3px 8px;
-      border-radius: 999px;
-      background: rgba(52, 211, 153, 0.15);
-      color: var(--mint);
-    }
-
-    /* Instagram-Style Profile Header */
-    .ig-profile-top {
-      display: flex;
-      align-items: center;
-      gap: 18px;
-      margin-bottom: 14px;
-    }
-    .ig-profile-pic {
-      width: 74px;
-      height: 74px;
-      border-radius: 50%;
-      padding: 3px;
-      background: var(--grad-orange);
-    }
-    .ig-profile-pic-inner {
-      width: 100%;
-      height: 100%;
-      border-radius: 50%;
-      background: var(--surface);
-      border: 3px solid var(--bg-app);
-      display: grid;
-      place-items: center;
-      font-size: 28px;
-      font-weight: 800;
-    }
-    .ig-stats {
-      flex: 1;
-      display: flex;
-      justify-content: space-around;
-      text-align: center;
-    }
-    .ig-stat-num { font-size: 17px; font-weight: 800; }
-    .ig-stat-lbl { font-size: 11px; color: var(--text-secondary); }
-
-    /* Instagram-Style Bottom Navigation Bar */
-    .ig-bottom-nav {
-      position: absolute;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      height: 62px;
-      background: rgba(15, 10, 8, 0.96);
-      backdrop-filter: blur(20px);
-      border-top: 1px solid var(--border);
-      display: flex;
-      align-items: center;
-      justify-content: space-around;
-      z-index: 30;
-      padding-bottom: 4px;
-    }
-
-    .ig-tab {
-      background: none;
-      border: none;
-      color: var(--text-muted);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      gap: 3px;
-      font-size: 10px;
-      font-weight: 600;
-      cursor: pointer;
-      width: 60px;
-      height: 100%;
-    }
-    .ig-tab.active { color: var(--orange-bright); }
-    .ig-tab svg { width: 22px; height: 22px; stroke-width: 2; }
-
-    .ig-create-pill {
-      width: 40px;
-      height: 32px;
-      border-radius: 11px;
-      background: var(--grad-orange);
-      color: #fff;
-      display: grid;
-      place-items: center;
-      box-shadow: 0 6px 16px var(--orange-glow);
-    }
-
-    .nav-profile-dot {
-      width: 24px;
-      height: 24px;
-      border-radius: 50%;
-      background: var(--surface-elevated);
-      border: 1.5px solid var(--text-muted);
-      display: grid;
-      place-items: center;
-      font-size: 11px;
-      font-weight: 800;
-      color: var(--text-primary);
-    }
-    .ig-tab.active .nav-profile-dot {
-      border-color: var(--orange);
-      box-shadow: 0 0 0 2px var(--orange-soft);
-    }
-
-    /* Overlays, Auth Modal & Sheets */
-    .overlay {
-      position: absolute;
-      inset: 0;
-      background: rgba(6, 4, 3, 0.85);
-      backdrop-filter: blur(8px);
-      display: none;
-      align-items: flex-end;
-      justify-content: center;
-      z-index: 50;
-    }
-    .overlay.open { display: flex; }
-    .overlay.center { align-items: center; padding: 18px; }
-
-    .sheet {
-      width: 100%;
-      background: var(--surface);
-      border-top: 1px solid var(--border);
-      border-radius: 26px 26px 0 0;
-      padding: 20px 18px 26px;
-      animation: slideUp 0.2s ease;
-    }
-
-    .modal-box {
-      width: 100%;
-      background: var(--surface);
-      border: 1px solid rgba(255, 148, 77, 0.25);
-      border-radius: 26px;
-      padding: 22px 20px;
-    }
-
-    @keyframes slideUp {
-      from { transform: translateY(100%); }
-      to { transform: translateY(0); }
-    }
-
-    .cookie-code {
-      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
-      font-size: 10.5px;
-      color: var(--text-secondary);
-      background: var(--bg-app);
-      padding: 7px;
-      border-radius: 8px;
-      margin-top: 6px;
-      word-break: break-all;
-    }
-
-    .toast {
-      position: absolute;
-      top: 66px;
-      left: 50%;
-      transform: translateX(-50%);
-      background: var(--surface-elevated);
-      border: 1px solid var(--orange);
-      color: var(--text-primary);
-      padding: 8px 16px;
-      border-radius: 999px;
-      font-size: 12px;
-      font-weight: 600;
-      z-index: 80;
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity 0.2s;
-      white-space: nowrap;
-      box-shadow: 0 10px 28px rgba(0, 0, 0, 0.65);
-    }
-    .toast.show { opacity: 1; }
-  </style>
+.toast { position: fixed; top: 20px; left: 50%; transform: translateX(-50%) translateY(-20px); background: var(--card); border: 1px solid var(--accent); color: var(--ink); padding: 12px 24px; border-radius: 99px; font-size: 13px; font-weight: 600; opacity: 0; transition: all 0.3s; z-index: 200; box-shadow: var(--shadow); pointer-events: none; }
+.toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+</style>
 </head>
 <body>
-  <div class="app-shell">
-    <div id="toast" class="toast">Saved</div>
 
-    <!-- Instagram-Style Top Navigation Bar -->
-    <header class="ig-topbar">
-      <div class="ig-wordmark" onclick="switchTab('feed')">Meonix</div>
-      <div class="topbar-right">
-        <!-- Security & Cookie Lab -->
-        <button class="top-icon-btn" title="Security & Cookie Testing" onclick="switchTab('security')">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
-          </svg>
-        </button>
-        <!-- Direct Messages + Locked-Message Delivery Queue -->
-        <button class="top-icon-btn" title="1-on-1 & Locked Queue" onclick="switchTab('inbox')">
-          <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <line x1="22" y1="2" x2="11" y2="13"/>
-            <polygon points="22 2 15 22 11 13 2 9 22 2"/>
-          </svg>
-          <span class="badge-pill" id="lockedBadge">2</span>
-        </button>
+<div class="aurora" id="auroraBg"></div>
+<div class="toast" id="toast">Saved to Vault</div>
+
+<div class="app-container">
+
+  <header class="topbar">
+    <div class="brand" onclick="triggerEasterEgg()">A LITTLE <span>WORLD</span></div>
+    <div class="top-tools">
+      <button class="btn btn-secondary" style="padding:8px 16px; font-size:12px;" onclick="shareApp()">⎘ Share</button>
+    </div>
+  </header>
+
+  <div class="view-area">
+    <!-- HOME VIEW -->
+    <div class="view active" id="view-home">
+      <div class="eyebrow" id="greetingTime">Good evening</div>
+      <h1 class="title">Every mind has<br>its own <em>little world.</em></h1>
+
+      <div class="glass-card action-card" onclick="openView('view-vibe')">
+        <span class="time-pill">3 min</span>
+        <div class="icon">✳</div>
+        <h3>Discover yourself</h3>
+        <p>Answer thoughtful questions to unlock a story mapped to your psychology.</p>
       </div>
-    </header>
 
-    <!-- Main Scrollable Viewport -->
-    <main class="main-scroll">
-      <!-- ==================== TAB 1: HOME FEED (PHASE 1 MOODS + PHASE 2 BEATS) ==================== -->
-      <section id="screen-feed" class="screen active">
-        <!-- Mood Layer Filter Pills -->
-        <div class="layer-filter-bar">
-          <button class="filter-pill active" onclick="setLayerFilter('All', this)">All Layers</button>
-          <button class="filter-pill" onclick="setLayerFilter('Activity', this)">⚡ Activity</button>
-          <button class="filter-pill" onclick="setLayerFilter('Emotional', this)">🧡 Emotional</button>
-          <button class="filter-pill" onclick="setLayerFilter('Event', this)">📍 Event</button>
-        </div>
+      <div class="glass-card action-card" onclick="openView('view-search')">
+        <span class="time-pill">Instant</span>
+        <div class="icon">❀</div>
+        <h3>Explore others</h3>
+        <p>Search for a specific name and uncover their written story.</p>
+      </div>
 
-        <!-- Instagram-Notes-Style 24h Layered Mood Whispers -->
-        <div class="notes-tray" id="whispersTray"></div>
+      <div class="ad-slot">
+        <span>Sponsored Discovery</span>
+        <div>Your AdMob / AdSense Space Here</div>
+      </div>
 
-        <!-- Text-Based Layered Mood Feed -->
-        <div id="moodFeedList"></div>
-      </section>
-
-      <!-- ==================== TAB 2: FOLLOW SYSTEM (PHASE 2) ==================== -->
-      <section id="screen-follow" class="screen screen-pad">
-        <div style="font-size:18px; font-weight:800; margin-bottom:4px;">Campus Follow System</div>
-        <div style="font-size:12.5px; color:var(--text-secondary); margin-bottom:12px;">
-          Follow classmates to see their Activity, Emotional, and Event moods in your feed.
-        </div>
-        <input type="text" id="searchPeerInput" placeholder="Search campus peers by name or branch..." oninput="renderFollowList()" style="margin-bottom:12px;" />
-        <div id="followListContainer"></div>
-      </section>
-
-      <!-- ==================== TAB 3: 1-ON-1 MESSAGING & LOCKED QUEUE (PHASE 2) ==================== -->
-      <section id="screen-inbox" class="screen screen-pad">
-        <div style="font-size:18px; font-weight:800; margin-bottom:4px;">1-on-1 & Locked Delivery Queue</div>
-        <div style="font-size:12.5px; color:var(--text-secondary); margin-bottom:12px;">
-          Send an instant DM or lock a message until a scheduled delivery time or secret question.
-        </div>
-
-        <div class="card-box">
-          <div style="font-size:11px; font-weight:800; color:var(--orange-bright); margin-bottom:8px;">COMPOSE MESSAGE</div>
-          <div style="display:flex; gap:8px; margin-bottom:8px;">
-            <select id="dmToSelect" style="flex:1;"></select>
-            <select id="dmLockType" style="flex:1;" onchange="togglePasscodeField()">
-              <option value="instant">Instant 1-on-1 DM</option>
-              <option value="time">Time-Locked (8:30 PM)</option>
-              <option value="question">Question-Locked (Passcode)</option>
-            </select>
-          </div>
-          <input type="text" id="dmSecretHint" placeholder="Secret unlock word (e.g., library)" style="display:none; margin-bottom:8px;" />
-          <div style="display:flex; gap:8px;">
-            <input type="text" id="dmBodyInput" placeholder="Write your message..." maxlength="140" />
-            <button class="btn btn-orange btn-sm" onclick="sendMessage()">Send</button>
-          </div>
-        </div>
-
-        <div style="font-size:11px; font-weight:800; color:var(--text-secondary); margin:12px 0 8px;">DELIVERY QUEUE & THREADS</div>
-        <div id="messagesContainer"></div>
-      </section>
-
-      <!-- ==================== TAB 4: USER PROFILE & MOOD STACK (PHASE 1) ==================== -->
-      <section id="screen-profile" class="screen screen-pad">
-        <div class="ig-profile-top">
-          <div class="ig-profile-pic">
-            <div class="ig-profile-pic-inner" id="profAvatar">H</div>
-          </div>
-          <div class="ig-stats">
-            <div>
-              <div class="ig-stat-num" id="statStackCount">0</div>
-              <div class="ig-stat-lbl">Mood Stack</div>
-            </div>
-            <div>
-              <div class="ig-stat-num" id="statFollowers">24</div>
-              <div class="ig-stat-lbl">Followers</div>
-            </div>
-            <div>
-              <div class="ig-stat-num" id="statFollowing">0</div>
-              <div class="ig-stat-lbl">Following</div>
-            </div>
-          </div>
-        </div>
-
-        <div style="margin-bottom:14px;">
-          <div style="font-size:16px; font-weight:800;" id="profFullName">Harshith</div>
-          <div style="font-size:12.5px; color:var(--orange-bright); font-weight:600;" id="profHandle">@harshith4412x</div>
-          <div style="font-size:12.5px; color:var(--text-secondary); margin-top:3px;" id="profBio">Building Meonix · CSE Campus Beta</div>
-        </div>
-
-        <div class="btn-row" style="margin-bottom:16px;">
-          <button class="btn btn-outline btn-sm" style="flex:1;" onclick="openAuthModal(true)">Edit Profile / Account</button>
-          <button class="btn btn-sm" style="flex:1;" onclick="switchTab('security')">Security & Cookies</button>
-        </div>
-
-        <div style="font-size:12px; font-weight:800; letter-spacing:0.06em; color:var(--orange-bright); margin-bottom:8px;">
-          MOOD STACK — PERMANENT PERSONAL HISTORY
-        </div>
-        <div id="moodStackContainer"></div>
-      </section>
-
-      <!-- ==================== TAB 5: SECURITY, PRIVACY & COOKIE TESTING (PHASE 2) ==================== -->
-      <section id="screen-security" class="screen screen-pad">
-        <div style="font-size:18px; font-weight:800; margin-bottom:4px;">Security, Privacy & Cookies</div>
-        <div style="font-size:12.5px; color:var(--text-secondary); margin-bottom:12px;">
-          Phase 2 verification for client cookies, 4 KB limits, XSS escaping, and locked-message filtering.
-        </div>
-
-        <div class="card-box">
-          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
-            <strong style="font-size:13.5px;">Cookie Storage Diagnostics</strong>
-            <span id="cookieModeTag" style="font-size:11px; font-weight:700; color:var(--mint);">Checking...</span>
-          </div>
-          <div id="cookieProtocolHint" style="font-size:12px; color:var(--text-secondary); margin-bottom:10px;"></div>
-          <div id="cookieInspectorList"></div>
-          <button class="btn btn-outline btn-sm" style="width:100%; margin-top:6px; color:#ff758f;" onclick="wipeAllCookies()">
-            Log Out & Clear All Cookies (max-age=0)
-          </button>
-        </div>
-
-        <div class="card-box">
-          <strong style="font-size:13.5px;">Beta Privacy & Security Checklist</strong>
-          <div style="font-size:12px; color:var(--text-secondary); margin-top:8px; line-height:1.55;">
-            ✓ <strong>XSS Sanitization:</strong> All mood texts, bios, and DMs pass through HTML entity escaping.<br/>
-            ✓ <strong>4 KB Cookie Ceiling:</strong> State is partitioned into 5 small cookies (<code>mx_auth</code>, <code>mx_moods</code>, <code>mx_stack</code>, <code>mx_follows</code>, <code>mx_dms</code>).<br/>
-            ✓ <strong>Locked Queue Guard:</strong> Locked messages remain masked until unlock condition is met.
-          </div>
-        </div>
-      </section>
-    </main>
-
-    <!-- Instagram-Style 5-Tab Bottom Navigation Bar -->
-    <nav class="ig-bottom-nav">
-      <button class="ig-tab active" data-tab="feed" onclick="switchTab('feed')">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-          <path d="M3 9.5L12 3l9 6.5V20a1 1 0 0 1-1 1h-5v-6h-6v6H4a1 1 0 0 1-1-1V9.5z"/>
-        </svg>
-        <span>Feed</span>
-      </button>
-
-      <button class="ig-tab" data-tab="follow" onclick="switchTab('follow')">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-          <circle cx="11" cy="11" r="7"/>
-          <line x1="21" y1="21" x2="16.65" y2="16.65"/>
-        </svg>
-        <span>Follow</span>
-      </button>
-
-      <button class="ig-tab" onclick="openOverlay('postMoodSheet')" aria-label="Post Text Mood">
-        <div class="ig-create-pill">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-            <line x1="12" y1="5" x2="12" y2="19"/>
-            <line x1="5" y1="12" x2="19" y2="12"/>
-          </svg>
-        </div>
-      </button>
-
-      <button class="ig-tab" data-tab="inbox" onclick="switchTab('inbox')">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-          <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/>
-        </svg>
-        <span>Messages</span>
-      </button>
-
-      <button class="ig-tab" data-tab="profile" onclick="switchTab('profile')">
-        <div class="nav-profile-dot" id="navAvatarInitial">H</div>
-        <span>Stack</span>
-      </button>
-    </nav>
-
-    <!-- PHASE 1: Sign-Up / Login & Profile Setup Modal -->
-    <div id="authOverlay" class="overlay center">
-      <div class="modal-box">
-        <span class="layer-badge" style="display:inline-block; margin-bottom:10px;">Meonix Beta · Sign Up / Profile</span>
-        <div style="font-size:18px; font-weight:800; margin-bottom:4px;">Create your campus profile</div>
-        <div style="font-size:12.5px; color:var(--text-secondary); margin-bottom:14px;">
-          Stored in your session cookie so your Mood Stack, Follows, and DMs stay yours.
-        </div>
-        <input type="text" id="authName" placeholder="Display Name (e.g., Harshith)" maxlength="22" style="margin-bottom:9px;" />
-        <input type="text" id="authHandle" placeholder="Username (e.g., harshith4412x)" maxlength="20" style="margin-bottom:9px;" />
-        <input type="text" id="authBio" placeholder="Short Bio (e.g., CSE 2nd Year · Building Meonix)" maxlength="60" style="margin-bottom:14px;" />
-        <button class="btn btn-orange" style="width:100%;" onclick="saveAccount()">Save & Enter Meonix →</button>
+      <div class="glass-card action-card" onclick="openView('view-private')">
+        <span class="time-pill">Protected</span>
+        <div class="icon">♡</div>
+        <h3>Know me better</h3>
+        <p>A personal space. Password protected.</p>
       </div>
     </div>
 
-    <!-- PHASE 1: Post Text-Based Mood (Activity / Emotional / Event Layer) -->
-    <div id="postMoodSheet" class="overlay" onclick="closeOnBg(event, 'postMoodSheet')">
-      <div class="sheet">
-        <div style="font-size:17px; font-weight:800; margin-bottom:4px;">Post a Text Mood</div>
-        <div style="font-size:12.5px; color:var(--text-secondary); margin-bottom:12px;">
-          Choose a mood layer. Every post appears in the feed and saves permanently to your <strong>Mood Stack</strong>.
+    <!-- VIBE CHECK (Pre-Quiz) -->
+    <div class="view" id="view-vibe">
+      <button class="btn btn-secondary" style="margin-bottom:24px;" onclick="openView('view-home')">← Back</button>
+      <div class="eyebrow">Check in</div>
+      <h1 class="title">How is your mind right now?</h1>
+      <p class="sub">Your current state shapes your reflection.</p>
+      <div class="options-grid">
+        <button class="opt-btn" onclick="startQuiz('calm')">Calm & clear</button>
+        <button class="opt-btn" onclick="startQuiz('tired')">A bit tired</button>
+        <button class="opt-btn" onclick="startQuiz('racing')">Racing / Anxious</button>
+      </div>
+    </div>
+
+    <!-- QUIZ ENGINE -->
+    <div class="view" id="view-quiz">
+      <button class="btn btn-secondary" onclick="openView('view-home')">Pause & Save</button>
+      <div class="constellation" id="quizStars"></div>
+      <div class="eyebrow" id="qCategory">Category</div>
+      <h1 class="title" style="font-size:32px;" id="qTitle">Question?</h1>
+      <div class="options-grid" id="qOptions"></div>
+      <div style="display:flex; justify-content:space-between; margin-top:30px;">
+        <button class="btn btn-secondary" id="qPrev" onclick="quizPrev()">← Prev</button>
+        <button class="btn" id="qNext" onclick="quizNext()">Next →</button>
+      </div>
+    </div>
+
+    <!-- EXPLORE SEARCH -->
+    <div class="view" id="view-search">
+      <button class="btn btn-secondary" style="margin-bottom:24px;" onclick="openView('view-home')">← Back</button>
+      <div class="eyebrow">Explore</div>
+      <h1 class="title">Find a written world.</h1>
+      <input type="text" class="field" id="searchInput" placeholder="Enter a name and press Enter...">
+      <div id="searchResults" style="margin-top:20px; display:grid; gap:16px;"></div>
+    </div>
+
+    <!-- PRIVATE LOGIN -->
+    <div class="view" id="view-private">
+      <button class="btn btn-secondary" style="margin-bottom:24px;" onclick="openView('view-home')">← Back</button>
+      <div class="eyebrow">Protected</div>
+      <h1 class="title">Enter password.</h1>
+      <input type="password" class="field" id="pwdInput" placeholder="Password...">
+      <button class="btn" style="width:100%" onclick="unlockPrivate()">Unlock Story</button>
+    </div>
+
+    <!-- STORY DECK -->
+    <div class="view" id="view-story">
+      <div style="display:flex; justify-content:space-between; margin-bottom:24px; align-items:center;">
+        <button class="btn btn-secondary" style="padding:10px 16px;" onclick="openView('view-home')">← Exit</button>
+        <div class="eyebrow" id="storyProgress">1 / 8</div>
+      </div>
+
+      <div class="story-wrapper">
+        <div class="story-card-container" id="flipCard">
+          <div class="card-face">
+            <div class="eyebrow" id="cardKicker">Trait</div>
+            <h1 class="title" style="font-size:36px; margin:16px 0;" id="cardTitle">Title</h1>
+            <p class="sub" style="font-family:var(--serif); font-size:18px; color:var(--ink);" id="cardBody">Body</p>
+            <div class="social-proof" id="socialProof">👁 142 people felt this</div>
+            <div style="display:flex; gap:8px; margin-top:16px; flex-wrap:wrap;">
+              <button class="btn btn-secondary" style="padding:10px 16px; font-size:12px;" onclick="flipCard()">✧ Translate</button>
+              <button class="btn btn-secondary" style="padding:10px 16px; font-size:12px;" onclick="saveToVault(event)">♡ Save to Vault</button>
+            </div>
+          </div>
+          <div class="card-face card-back">
+            <div class="eyebrow">Psychological Insight</div>
+            <h1 class="title" style="font-size:24px; margin:16px 0;" id="insightTitle">Insight</h1>
+            <p class="sub" style="color:var(--ink);" id="insightBody">Breakdown</p>
+            <button class="btn" style="margin-top:auto;" onclick="flipCard()">Close</button>
+          </div>
         </div>
-        <select id="moodLayerInput" style="margin-bottom:10px;">
-          <option value="Activity">⚡ Activity Layer — What you're doing right now</option>
-          <option value="Emotional">🧡 Emotional Layer — How you're feeling</option>
-          <option value="Event">📍 Event Layer — Campus plan or meetup</option>
-        </select>
-        <input type="text" id="moodTextInput" placeholder="Write your mood (max 140 chars)..." maxlength="140" style="margin-bottom:14px;" />
-        <div class="btn-row">
-          <button class="btn" onclick="closeOverlay('postMoodSheet')">Cancel</button>
-          <button class="btn btn-orange" onclick="publishMood()">Post Mood</button>
-        </div>
+      </div>
+
+      <div style="display:flex; justify-content:space-between; margin-top:30px; align-items:center;">
+        <button class="btn btn-secondary" style="border-radius:50%; width:54px; height:54px; padding:0;" onclick="moveDeck(-1)">←</button>
+        <button class="btn" style="background:var(--accent);" onclick="openChat()">✦ Deep Explore</button>
+        <button class="btn btn-secondary" style="border-radius:50%; width:54px; height:54px; padding:0;" onclick="moveDeck(1)">→</button>
+      </div>
+    </div>
+
+    <!-- VAULT VIEW (Personal Library) -->
+    <div class="view" id="view-vault">
+      <div class="eyebrow">Your Library</div>
+      <h1 class="title">My Vault</h1>
+      <p class="sub">Traits and insights you saved along the way.</p>
+      <div id="vaultList" style="display:grid; gap:16px;"></div>
+
+      <div class="ad-slot" style="margin-top:40px;">
+        <span>Sponsored</span>
+        <div>Ad Space</div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- BOTTOM NAVIGATION -->
+  <nav class="bottom-nav">
+    <div class="nav-item active" onclick="switchNav('view-home', this)">
+      <i>✧</i><span>Home</span>
+    </div>
+    <div class="nav-item" onclick="switchNav('view-search', this)">
+      <i>⌕</i><span>Explore</span>
+    </div>
+    <div class="nav-item" onclick="switchNav('view-vault', this)">
+      <i>♡</i><span>Vault</span>
+    </div>
+  </nav>
+
+  <!-- CHAT DRAWER -->
+  <div class="drawer" id="chatDrawer">
+    <div class="drawer-bg" onclick="closeChat()"></div>
+    <div class="drawer-content">
+      <div style="padding:20px; border-bottom:1px solid var(--line); display:flex; justify-content:space-between;">
+        <div><div class="eyebrow">Reflection Guide</div><h3 style="margin:4px 0 0; font-weight:500;">Deeper Explore</h3></div>
+        <button class="btn btn-secondary" style="border-radius:50%; width:40px; height:40px; padding:0;" onclick="closeChat()">✕</button>
+      </div>
+      <div class="chat-log" id="chatLog"></div>
+      <div style="padding:16px; border-top:1px solid var(--line); display:flex; gap:8px;">
+        <input type="text" class="field" style="margin:0; border-radius:99px;" id="chatInput" placeholder="Ask about this trait...">
+        <button class="btn" style="padding:0 24px;" onclick="sendChat()">Send</button>
       </div>
     </div>
   </div>
 
-  <script>
-    /* ============================================================
-       COOKIE ENGINE (Partitioned <4KB cookies + file:// fallback)
-       ============================================================ */
-    const CookieDB = (() => {
-      let nativeCookiesWork = false;
-      try {
-        document.cookie = "mx_check=1; max-age=60; path=/; SameSite=Lax";
-        nativeCookiesWork = document.cookie.indexOf("mx_check=1") !== -1;
-        document.cookie = "mx_check=; max-age=0; path=/; SameSite=Lax";
-      } catch (e) {
-        nativeCookiesWork = false;
-      }
+</div>
 
-      const FALLBACK_PREFIX = "meonix_beta_";
+<script>
+/* CORE STATE */
+const WORKER_URL = "https://gentle-wood-0b71.harshith4412x.workers.dev/";
+let currentView = 'view-home';
+let eggCount = 0;
 
-      function set(key, value, days = 30) {
-        const serialized = encodeURIComponent(JSON.stringify(value));
-        document.cookie = `${key}=${serialized}; max-age=${days * 86400}; path=/; SameSite=Lax`;
-        if (!nativeCookiesWork) {
-          localStorage.setItem(FALLBACK_PREFIX + key, JSON.stringify(value));
-        }
-      }
+/* QUIZ DATA */
+const questions = [
+  { c: "Perception", q: "When something unexpected happens, what do you usually do first?", o: ["Consider explanations", "Focus on details", "Trust immediate impression", "Pause and gather info"] },
+  { c: "Belief systems", q: "When forming an opinion, what influences you most?", o: ["Past experiences", "Core principles", "Verifiable evidence", "A mix of perspectives"] },
+  { c: "Belief updating", q: "If strong evidence contradicts you, what do you do?", o: ["Look closer", "Take time to process", "Ask questions", "Depends on the topic"] },
+  { c: "Prediction", q: "How much do past experiences shape your expectations?", o: ["A lot", "Somewhat", "Focus on present", "Depends entirely"] },
+  { c: "Decisions", q: "When making a big decision, what do you rely on?", o: ["Gut feeling", "Careful reasoning", "Intuition then logic", "Trusted advice"] },
+  { c: "Metacognition", q: "How often do you examine your own thinking?", o: ["Often", "After big decisions", "When things go wrong", "Rarely, I just act"] },
+  { c: "Perspective", q: "When someone disagrees, what do you try to understand?", o: ["Their past", "Their evidence", "Their feelings", "I explain myself first"] },
+  { c: "Priorities", q: "In a difficult situation, what matters most?", o: ["Feeling safe", "Maintaining relationships", "Solving the problem", "Being treated fairly"] },
+  { c: "Emotion", q: "How does stress affect your thinking?", o: ["Become cautious", "Act quickly", "Thoughts scramble", "Pause until calm"] },
+  { c: "Influence", q: "How do surroundings influence your choices?", o: ["Shape my values", "Influence but I question", "I pick and choose", "Still figuring it out"] }
+];
+let quizState = { name: "", vibe: "", answers: [], index: 0 };
 
-      function get(key, fallback) {
-        const match = document.cookie.match(new RegExp("(?:^|; )" + key + "=([^;]*)"));
-        if (match) {
-          try { return JSON.parse(decodeURIComponent(match[1])); } catch (e) {}
-        }
-        if (!nativeCookiesWork) {
-          const raw = localStorage.getItem(FALLBACK_PREFIX + key);
-          if (raw) {
-            try { return JSON.parse(raw); } catch (e) {}
-          }
-        }
-        return fallback;
-      }
+/* STORY DECK STATE */
+let activeDeck = [];
+let deckIndex = 0;
+let storyOwner = "";
 
-      function remove(key) {
-        document.cookie = `${key}=; max-age=0; path=/; SameSite=Lax`;
-        localStorage.removeItem(FALLBACK_PREFIX + key);
-      }
+/* INIT */
+document.addEventListener("DOMContentLoaded", () => {
+  setGreeting();
+  loadVault();
+  checkAutoSave();
+});
 
-      function inspect() {
-        const keys = ["mx_auth", "mx_moods", "mx_stack", "mx_follows", "mx_dms"];
-        return keys.map(k => {
-          const val = get(k, null);
-          const bytes = val ? encodeURIComponent(JSON.stringify(val)).length : 0;
-          return { key: k, val, bytes };
-        }).filter(x => x.val !== null);
-      }
+/* FEATURE 5: Time Greeting */
+function setGreeting() {
+  const hr = new Date().getHours();
+  let greet = "Good evening";
+  if(hr < 12) greet = "Good morning";
+  else if(hr < 18) greet = "Good afternoon";
+  document.getElementById("greetingTime").innerText = greet + ", Explorer";
+}
 
-      return { set, get, remove, inspect, isNative: () => nativeCookiesWork };
-    })();
+/* FEATURE 11: Easter Egg */
+function triggerEasterEgg() {
+  eggCount++;
+  if(eggCount > 4) {
+    showToast("Developer Mode Unlocked: Analytics Active");
+    document.documentElement.setAttribute('data-theme', 'dark');
+    eggCount = 0;
+  }
+}
 
-    /* ============================================================
-       DEFAULT MEONIX BETA DATA
-       ============================================================ */
-    const PEERS = [
-      { handle: "riya_cse", name: "Riya", branch: "CSE · 2nd Yr" },
-      { handle: "kabir_ece", name: "Kabir", branch: "ECE · 2nd Yr" },
-      { handle: "ananya_it", name: "Ananya", branch: "IT · 3rd Yr" },
-      { handle: "dev_aiml", name: "Dev", branch: "AIML · 2nd Yr" },
-      { handle: "zoya_ds", name: "Zoya", branch: "Data Sci · 1st Yr" }
-    ];
+/* VIEW ROUTING */
+function openView(id) {
+  document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  currentView = id;
+}
 
-    const DEFAULT_AUTH = {
-      name: "Harshith",
-      handle: "harshith4412x",
-      bio: "Building Meonix · CSE Campus Beta",
-      signedUp: false
-    };
+function switchNav(id, el) {
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  el.classList.add('active');
+  openView(id);
+  if(id === 'view-vault') renderVault();
+}
 
-    const DEFAULT_FOLLOWS = ["riya_cse", "kabir_ece", "ananya_it"];
+/* FEATURE 10 & 6: Vibe Check & Dynamic Aurora */
+function startQuiz(vibe) {
+  quizState.vibe = vibe;
+  const aurora = document.getElementById("auroraBg");
+  if(vibe === 'calm') aurora.style.background = "radial-gradient(circle at 40% 40%, rgba(94,157,219,0.2) 0%, transparent 50%)";
+  if(vibe === 'racing') aurora.style.background = "radial-gradient(circle at 60% 60%, rgba(219,94,139,0.15) 0%, transparent 50%)";
 
-    const DEFAULT_MOODS = [
-      {
-        id: 1,
-        handle: "riya_cse",
-        author: "Riya",
-        layer: "Emotional",
-        text: "Honestly surviving on evening chai after 4 hours of back-to-back labs.",
-        time: "12m ago",
-        beats: 5,
-        beated: false
-      },
-      {
-        id: 2,
-        handle: "kabir_ece",
-        author: "Kabir",
-        layer: "Activity",
-        text: "Sitting on the 3rd floor library steps finishing internal records.",
-        time: "34m ago",
-        beats: 3,
-        beated: true
-      },
-      {
-        id: 3,
-        handle: "ananya_it",
-        author: "Ananya",
-        layer: "Event",
-        text: "Anyone up for a quick campus quad walk at 6:15 PM right after classes?",
-        time: "1h ago",
-        beats: 7,
-        beated: false
-      },
-      {
-        id: 4,
-        handle: "dev_aiml",
-        author: "Dev",
-        layer: "Activity",
-        text: "Testing dark-mode shaders for the hackathon demo tonight.",
-        time: "2h ago",
-        beats: 4,
-        beated: false
-      }
-    ];
+  const savedName = localStorage.getItem('alw_name') || "";
+  quizState.name = savedName || prompt("What is your name?") || "Explorer";
+  localStorage.setItem('alw_name', quizState.name);
 
-    const DEFAULT_STACK = [
-      {
-        id: 901,
-        layer: "Activity",
-        text: "Shipping Meonix Beta Phase 1 & 2 before December exams kick in.",
-        time: "Saved in Stack · Today"
-      }
-    ];
+  quizState.index = 0;
+  quizState.answers = [];
+  renderQ();
+  openView('view-quiz');
+}
 
-    const DEFAULT_DMS = [
-      {
-        id: 501,
-        peer: "Riya",
-        direction: "From Riya",
-        text: "Hey! Saved you a spot near the auditorium steps at 6 PM.",
-        lockType: "time",
-        lockLabel: "Time-Locked · 8:30 PM",
-        secret: "",
-        unlocked: false
-      },
-      {
-        id: 502,
-        peer: "Kabir",
-        direction: "From Kabir",
-        text: "Password to the shared notes folder is meonix2026!",
-        lockType: "question",
-        lockLabel: "Question-Locked (Hint: app name)",
-        secret: "meonix",
-        unlocked: false
-      },
-      {
-        id: 503,
-        peer: "Ananya",
-        direction: "From Ananya",
-        text: "Did you finish the record diagram for tomorrow?",
-        lockType: "instant",
-        lockLabel: "1-on-1 DM · Delivered",
-        secret: "",
-        unlocked: true
-      }
-    ];
+/* FEATURE 13: Auto-Save */
+function checkAutoSave() {
+  const saved = localStorage.getItem('alw_quiz');
+  if(saved) {
+    quizState = JSON.parse(saved);
+    // Silent background load logic can go here
+  }
+}
 
-    let state = {
-      auth: CookieDB.get("mx_auth", DEFAULT_AUTH),
-      follows: CookieDB.get("mx_follows", DEFAULT_FOLLOWS),
-      moods: CookieDB.get("mx_moods", DEFAULT_MOODS),
-      stack: CookieDB.get("mx_stack", DEFAULT_STACK),
-      dms: CookieDB.get("mx_dms", DEFAULT_DMS)
-    };
+/* QUIZ ENGINE */
+function renderQ() {
+  const q = questions[quizState.index];
+  document.getElementById("qCategory").innerText = q.c;
+  document.getElementById("qTitle").innerText = q.q;
 
-    let activeLayerFilter = "All";
+  let html = "";
+  q.o.forEach((opt, i) => {
+    const sel = quizState.answers[quizState.index] === i ? "selected" : "";
+    html += `<button class="opt-btn ${sel}" onclick="selectOpt(${i})">${opt}</button>`;
+  });
+  document.getElementById("qOptions").innerHTML = html;
 
-    function esc(str) {
-      return String(str).replace(/[&<>"']/g, m => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[m]));
-    }
+  // Constellation Map
+  let stars = "";
+  for(let i=0; i<10; i++) {
+    stars += `<div class="star ${i <= quizState.index ? 'lit' : ''}"></div>`;
+  }
+  document.getElementById("quizStars").innerHTML = stars;
+  localStorage.setItem('alw_quiz', JSON.stringify(quizState));
+}
 
-    function showToast(msg) {
-      const t = document.getElementById("toast");
-      t.textContent = msg;
-      t.classList.add("show");
-      setTimeout(() => t.classList.remove("show"), 2000);
-    }
+function selectOpt(i) {
+  quizState.answers[quizState.index] = i;
+  renderQ();
+  setTimeout(quizNext, 300);
+}
 
-    /* ============================================================
-       RENDERING
-       ============================================================ */
-    function renderAll() {
-      const initial = (state.auth.name || "H")[0].toUpperCase();
-      document.getElementById("navAvatarInitial").textContent = initial;
-      document.getElementById("profAvatar").textContent = initial;
-      document.getElementById("profFullName").textContent = state.auth.name;
-      document.getElementById("profHandle").textContent = "@" + state.auth.handle;
-      document.getElementById("profBio").textContent = state.auth.bio;
-
-      document.getElementById("statStackCount").textContent = state.stack.length;
-      document.getElementById("statFollowing").textContent = state.follows.length;
-
-      const lockedTotal = state.dms.filter(m => !m.unlocked).length;
-      const badge = document.getElementById("lockedBadge");
-      badge.textContent = lockedTotal;
-      badge.style.display = lockedTotal > 0 ? "inline-block" : "none";
-
-      renderWhispers();
-      renderFeed();
-      renderFollowList();
-      renderInbox();
-      renderMoodStack();
-      renderSecurityCookies();
-    }
-
-    function renderWhispers() {
-      const tray = document.getElementById("whispersTray");
-      const visible = state.moods.filter(m => m.handle === state.auth.handle || state.follows.includes(m.handle));
-      let html = `
-        <div class="note-item" onclick="openOverlay('postMoodSheet')">
-          <div class="note-bubble new-note">+ Post mood</div>
-          <div class="ig-ring muted-ring">
-            <div class="ig-avatar">${esc((state.auth.name || "H")[0].toUpperCase())}</div>
-          </div>
-          <div class="note-username">You</div>
-        </div>
-      `;
-      visible.slice(0, 6).forEach(m => {
-        const cls = "l-" + m.layer.toLowerCase();
-        html += `
-          <div class="note-item" onclick="toggleBeat(${m.id})">
-            <div class="note-bubble">
-              <span class="layer-tag ${cls}">${esc(m.layer)}</span>
-              <span>${esc(m.text.slice(0, 26))}${m.text.length > 26 ? '…' : ''}</span>
-            </div>
-            <div class="ig-ring">
-              <div class="ig-avatar">${esc(m.author[0].toUpperCase())}</div>
-            </div>
-            <div class="note-username">${esc(m.author)} · 🎵${m.beats}</div>
-          </div>
-        `;
+function quizPrev() { if(quizState.index > 0) { quizState.index--; renderQ(); } }
+async function quizNext() {
+  if(quizState.answers[quizState.index] === undefined) return showToast("Select an option");
+  if(quizState.index < 9) { quizState.index++; renderQ(); }
+  else {
+    document.getElementById("qTitle").innerText = "Generating your universe...";
+    document.getElementById("qOptions").innerHTML = "<p>Connecting to AI...</p>";
+    try {
+      const r = await fetch(WORKER_URL, {
+        method: "POST", headers: {"Content-Type":"application/json"},
+        body: JSON.stringify({ name: quizState.name, answers: quizState.answers.map((a,i) => ({ question: questions[i].q, choice: questions[i].o[a] })) })
       });
-      tray.innerHTML = html;
-    }
+      const d = await r.json();
+      if(d.story) buildDeck(d.story, quizState.name);
+    } catch(e) { showToast("Connection failed."); }
+  }
+}
 
-    function renderFeed() {
-      const list = document.getElementById("moodFeedList");
-      const filtered = state.moods.filter(m => {
-        const isFollowedOrSelf = m.handle === state.auth.handle || state.follows.includes(m.handle);
-        const matchesLayer = activeLayerFilter === "All" || m.layer === activeLayerFilter;
-        return isFollowedOrSelf && matchesLayer;
-      });
-
-      if (!filtered.length) {
-        list.innerHTML = `
-          <div style="padding:28px 16px; text-align:center; color:var(--text-secondary); font-size:13px;">
-            No moods in this filter yet. Follow more campus peers or tap <strong>+</strong> below to post yours!
-          </div>
-        `;
-        return;
+/* PREDEFINED SEARCH */
+document.getElementById("searchInput").addEventListener("keydown", (e) => {
+  if(e.key === "Enter") {
+    const q = e.target.value.toLowerCase().trim();
+    if(!q) return;
+    const profiles = window.originalProfiles || {};
+    let html = "";
+    Object.entries(profiles).forEach(([k, p]) => {
+      if(k.toLowerCase().includes(q) || (p.displayName && p.displayName.toLowerCase().includes(q))) {
+        html += `<div class="glass-card action-card" onclick="loadProfile('${k}')"><h3>${p.displayName || k}</h3><p>Read story ↗</p></div>`;
       }
+    });
+    document.getElementById("searchResults").innerHTML = html || "<p>No world found.</p>";
+  }
+});
 
-      list.innerHTML = filtered.map(m => `
-        <article class="mood-post">
-          <div class="post-header">
-            <div class="post-user">
-              <div class="mini-avatar">${esc(m.author[0].toUpperCase())}</div>
-              <div>
-                <div class="post-name">${esc(m.author)} <span style="font-weight:400; color:var(--text-muted); font-size:12px;">@${esc(m.handle)}</span></div>
-                <div class="post-meta">${esc(m.time)}</div>
-              </div>
-            </div>
-            <span class="layer-badge">${esc(m.layer)} Layer</span>
-          </div>
+function loadProfile(key) {
+  const p = window.originalProfiles[key];
+  if(p) buildDeck(p, p.displayName || key);
+}
 
-          <div class="mood-card-body">${esc(m.text)}</div>
+/* PRIVATE UNLOCK */
+async function unlockPrivate() {
+  const pwd = document.getElementById("pwdInput").value;
+  try {
+    const r = await fetch(WORKER_URL, { method: "POST", headers: {"Content-Type":"application/json"}, body: JSON.stringify({ action: "private-profile", password: pwd }) });
+    const d = await r.json();
+    if(r.ok && d.story) buildDeck(d.story, "Harsha");
+    else showToast("Incorrect access code.");
+  } catch(e) { showToast("Connection offline."); }
+}
 
-          <div class="ig-actions">
-            <div class="ig-actions-left">
-              <button class="beat-btn ${m.beated ? 'beated' : ''}" onclick="toggleBeat(${m.id})">
-                <span>🎵</span>
-                <span>${m.beats} Beats</span>
-              </button>
-              <button class="text-action-btn" onclick="quickDMTo('${esc(m.author)}')">Reply in 1-on-1 DM →</button>
-            </div>
-          </div>
-        </article>
-      `).join("");
-    }
+/* STORY DECK ENGINE */
+function buildDeck(story, name) {
+  storyOwner = name;
+  activeDeck = [];
+  const traits = Array.isArray(story.traits) ? story.traits : [];
+  traits.forEach(t => activeDeck.push({ k: "Trait", t: t.title, b: t.description }));
+  if(story.cons) story.cons.forEach(c => activeDeck.push({ k: "Working On", t: c.title, b: c.description }));
+  if(story.personalMessage) activeDeck.push({ k: "Message", t: "A Personal Note", b: story.personalMessage });
 
-    function renderFollowList() {
-      const query = (document.getElementById("searchPeerInput").value || "").toLowerCase();
-      const matches = PEERS.filter(p => p.name.toLowerCase().includes(query) || p.branch.toLowerCase().includes(query));
-      document.getElementById("followListContainer").innerHTML = matches.map(p => {
-        const isFollowing = state.follows.includes(p.handle);
-        return `
-          <div class="user-row">
-            <div style="display:flex; align-items:center; gap:10px;">
-              <div class="mini-avatar">${esc(p.name[0])}</div>
-              <div>
-                <div style="font-weight:700; font-size:14px;">${esc(p.name)} <span style="color:var(--text-muted); font-weight:400; font-size:12px;">@${esc(p.handle)}</span></div>
-                <div style="font-size:11.5px; color:var(--text-secondary);">${esc(p.branch)}</div>
-              </div>
-            </div>
-            <button class="btn btn-sm ${isFollowing ? 'btn-outline' : 'btn-orange'}" onclick="toggleFollow('${esc(p.handle)}', '${esc(p.name)}')">
-              ${isFollowing ? 'Following ✓' : 'Follow'}
-            </button>
-          </div>
-        `;
-      }).join("");
+  deckIndex = 0;
+  renderDeck();
+  openView('view-story');
+}
 
-      // Populate DM recipient dropdown
-      const sel = document.getElementById("dmToSelect");
-      const currentVal = sel.value;
-      sel.innerHTML = PEERS.map(p => `<option value="${esc(p.name)}">To: ${esc(p.name)}</option>`).join("");
-      if (currentVal) sel.value = currentVal;
-    }
+function renderDeck() {
+  const c = activeDeck[deckIndex];
+  if(!c) return;
+  document.getElementById("flipCard").classList.remove("flipped");
+  document.getElementById("cardKicker").innerText = c.k;
+  document.getElementById("cardTitle").innerText = c.t;
+  document.getElementById("cardBody").innerText = c.b;
+  document.getElementById("storyProgress").innerText = `${deckIndex + 1} / ${activeDeck.length}`;
 
-    function renderInbox() {
-      document.getElementById("messagesContainer").innerHTML = state.dms.map(m => `
-        <div class="msg-card ${m.unlocked ? '' : 'locked'}">
-          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
-            <strong style="font-size:13.5px;">${esc(m.direction)}</strong>
-            <span class="${m.unlocked ? 'unlock-pill' : 'lock-pill'}">${esc(m.lockLabel)}</span>
-          </div>
-          <div style="font-size:13.5px; color:${m.unlocked ? 'var(--text-primary)' : 'var(--text-secondary)'}; margin-bottom:${m.unlocked ? '0' : '10px'};">
-            ${m.unlocked ? esc(m.text) : '🔒 Message held in Locked Delivery Queue until condition is met.'}
-          </div>
-          ${!m.unlocked ? `
-            <button class="btn btn-outline btn-sm" onclick="attemptUnlock(${m.id})">
-              ${m.lockType === 'question' ? 'Enter Passcode to Unlock' : 'Simulate Delivery Time Unlock'}
-            </button>
-          ` : ''}
-        </div>
-      `).join("");
-    }
+  // Feature 6: Social Proof FOMO
+  document.getElementById("socialProof").innerText = `👁 ${Math.floor(Math.random()*150)+20} people felt this`;
+}
 
-    function renderMoodStack() {
-      document.getElementById("moodStackContainer").innerHTML = state.stack.map(s => `
-        <div class="card-box">
-          <span class="layer-tag l-${s.layer.toLowerCase()}">${esc(s.layer)} Layer</span>
-          <div style="font-size:14px; margin-top:4px; line-height:1.4;">${esc(s.text)}</div>
-          <div style="font-size:11px; color:var(--text-muted); margin-top:6px;">${esc(s.time)}</div>
-        </div>
-      `).join("");
-    }
+function moveDeck(dir) {
+  deckIndex += dir;
+  if(deckIndex < 0) deckIndex = 0;
+  if(deckIndex >= activeDeck.length) deckIndex = activeDeck.length - 1;
+  renderDeck();
+}
 
-    function renderSecurityCookies() {
-      const tag = document.getElementById("cookieModeTag");
-      const hint = document.getElementById("cookieProtocolHint");
-      if (CookieDB.isNative()) {
-        tag.textContent = "Native HTTP Cookies Active";
-        hint.innerHTML = "Persisted via <code>document.cookie</code> with <code>SameSite=Lax</code> and <code>Path=/</code>.";
-      } else {
-        tag.textContent = "file:// Fallback Active";
-        hint.innerHTML = "Opened via <code>file://</code> — browsers block <code>document.cookie</code> on local files. Run via <code>http://localhost</code> for native HTTP cookies.";
-      }
+/* FEATURE 9: Card Flip Translation */
+function flipCard() {
+  const card = document.getElementById("flipCard");
+  const isFlipped = card.classList.toggle("flipped");
+  if(isFlipped) {
+    const t = document.getElementById("cardTitle").innerText;
+    document.getElementById("insightTitle").innerText = t;
+    document.getElementById("insightBody").innerText = `In psychological terms, "${t}" indicates a mechanism for maintaining internal stability. This trait usually develops to protect energy and ensure authentic interactions rather than surface-level conformity.`;
+  }
+}
 
-      const rows = CookieDB.inspect();
-      document.getElementById("cookieInspectorList").innerHTML = rows.map(r => `
-        <div style="background:var(--bg-app); border:1px solid var(--border); border-radius:12px; padding:10px; margin-bottom:8px;">
-          <div style="display:flex; justify-content:space-between; font-size:12px;">
-            <strong>${esc(r.key)}</strong>
-            <span style="color:var(--text-muted);">${r.bytes} / 4096 bytes</span>
-          </div>
-          <div class="cookie-code">${esc(JSON.stringify(r.val))}</div>
-        </div>
-      `).join("");
-    }
+/* FEATURE 2 & 7: Vault Save & Haptic Particles */
+function saveToVault(e) {
+  createParticles(e.clientX, e.clientY);
+  const c = activeDeck[deckIndex];
+  let vault = JSON.parse(localStorage.getItem('alw_vault') || "[]");
+  vault.push({ ...c, owner: storyOwner });
+  localStorage.setItem('alw_vault', JSON.stringify(vault));
+  showToast("Added to Vault ♡");
+}
 
-    /* ============================================================
-       USER ACTIONS & STATE PERSISTENCE
-       ============================================================ */
-    function switchTab(tab) {
-      document.querySelectorAll(".screen").forEach(s => s.classList.remove("active"));
-      document.getElementById("screen-" + tab).classList.add("active");
-      document.querySelectorAll(".ig-tab").forEach(b => b.classList.toggle("active", b.dataset.tab === tab));
-      if (tab === "security") renderSecurityCookies();
-    }
+function createParticles(x, y) {
+  for(let i=0; i<5; i++) {
+    const p = document.createElement("div");
+    p.className = "particle";
+    p.innerText = "♡";
+    p.style.left = (x + (Math.random()*40 - 20)) + "px";
+    p.style.top = (y + (Math.random()*20 - 10)) + "px";
+    document.body.appendChild(p);
+    setTimeout(() => p.remove(), 1000);
+  }
+}
 
-    function openOverlay(id) { document.getElementById(id).classList.add("open"); }
-    function closeOverlay(id) { document.getElementById(id).classList.remove("open"); }
-    function closeOnBg(e, id) { if (e.target.id === id) closeOverlay(id); }
+function renderVault() {
+  const vault = JSON.parse(localStorage.getItem('alw_vault') || "[]");
+  let html = "";
+  vault.reverse().forEach(v => {
+    html += `<div class="glass-card">
+      <div class="eyebrow">${v.owner} · ${v.k}</div>
+      <h3 style="font-family:var(--serif); font-weight:400; font-size:24px; margin:10px 0;">${v.t}</h3>
+      <p style="color:var(--muted); font-size:14px; margin:0;">${v.b}</p>
+    </div>`;
+  });
+  document.getElementById("vaultList").innerHTML = html || "<p style='color:var(--muted)'>Your library is empty. Save traits you resonate with.</p>";
+}
 
-    function setLayerFilter(layer, btn) {
-      activeLayerFilter = layer;
-      document.querySelectorAll(".filter-pill").forEach(p => p.classList.remove("active"));
-      btn.classList.add("active");
-      renderFeed();
-    }
+/* FEATURE 20: Share Generator */
+function shareApp() {
+  navigator.clipboard.writeText("https://meonix.in - Explore your little world of personalities.");
+  showToast("Link copied to clipboard");
+}
 
-    // Phase 1: Sign-up & Profile
-    function openAuthModal(force = false) {
-      if (state.auth.signedUp && !force) return;
-      document.getElementById("authName").value = state.auth.name;
-      document.getElementById("authHandle").value = state.auth.handle;
-      document.getElementById("authBio").value = state.auth.bio;
-      openOverlay("authOverlay");
-    }
+/* AI CHATBOT DRAWER */
+function openChat() { document.getElementById("chatDrawer").classList.add("open"); }
+function closeChat() { document.getElementById("chatDrawer").classList.remove("open"); }
 
-    function saveAccount() {
-      const name = document.getElementById("authName").value.trim() || "Harshith";
-      const handle = (document.getElementById("authHandle").value.trim() || "harshith4412x").replace(/^@/, "");
-      const bio = document.getElementById("authBio").value.trim() || "Building Meonix · Campus Beta";
-      state.auth = { name, handle, bio, signedUp: true };
-      CookieDB.set("mx_auth", state.auth);
-      closeOverlay("authOverlay");
-      renderAll();
-      showToast(`Signed in as @${handle}`);
-    }
+async function sendChat() {
+  const input = document.getElementById("chatInput");
+  const text = input.value.trim();
+  if(!text) return;
+  input.value = "";
 
-    // Phase 1: Post Layered Text Mood + Permanent Mood Stack
-    function publishMood() {
-      const layer = document.getElementById("moodLayerInput").value;
-      const text = document.getElementById("moodTextInput").value.trim();
-      if (!text) return;
+  const log = document.getElementById("chatLog");
+  log.innerHTML += `<div class="msg user">${escapeHtml(text)}</div>`;
+  log.innerHTML += `<div class="msg bot" id="typingIndicator">...</div>`;
+  log.scrollTop = log.scrollHeight;
 
-      const moodObj = {
-        id: Date.now(),
-        handle: state.auth.handle,
-        author: state.auth.name,
-        layer,
-        text,
-        time: "Just now",
-        beats: 0,
-        beated: false
-      };
+  try {
+    const r = await fetch(WORKER_URL, {
+      method: "POST", headers: {"Content-Type":"application/json"},
+      body: JSON.stringify({ action: "chat", name: storyOwner, messages: [{role:"user", text}] })
+    });
+    const d = await r.json();
+    document.getElementById("typingIndicator").remove();
+    log.innerHTML += `<div class="msg bot">${escapeHtml(d.reply || "Thinking deeply...")}</div>`;
+  } catch(e) {
+    document.getElementById("typingIndicator").remove();
+    log.innerHTML += `<div class="msg bot">Connection offline.</div>`;
+  }
+  log.scrollTop = log.scrollHeight;
+}
 
-      state.moods.unshift(moodObj);
-      state.moods = state.moods.slice(0, 8);
-
-      state.stack.unshift({
-        id: moodObj.id,
-        layer,
-        text,
-        time: `Saved in Stack · ${new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`
-      });
-      state.stack = state.stack.slice(0, 10);
-
-      CookieDB.set("mx_moods", state.moods);
-      CookieDB.set("mx_stack", state.stack);
-
-      document.getElementById("moodTextInput").value = "";
-      closeOverlay("postMoodSheet");
-      renderAll();
-      showToast("Mood posted & archived to Mood Stack");
-    }
-
-    // Phase 2: Beats (🎵 Reactions)
-    function toggleBeat(moodId) {
-      const m = state.moods.find(x => x.id === moodId);
-      if (!m) return;
-      m.beated = !m.beated;
-      m.beats += m.beated ? 1 : -1;
-      CookieDB.set("mx_moods", state.moods);
-      renderWhispers();
-      renderFeed();
-      if (m.beated) showToast(`🎵 Sent a Beat to ${m.author}`);
-    }
-
-    // Phase 2: Follow System
-    function toggleFollow(handle, name) {
-      const idx = state.follows.indexOf(handle);
-      if (idx === -1) {
-        state.follows.push(handle);
-        showToast(`Following ${name}`);
-      } else {
-        state.follows.splice(idx, 1);
-        showToast(`Unfollowed ${name}`);
-      }
-      CookieDB.set("mx_follows", state.follows);
-      renderAll();
-    }
-
-    // Phase 2: 1-on-1 Messaging & Locked-Message Delivery Queue
-    function quickDMTo(peerName) {
-      switchTab("inbox");
-      const sel = document.getElementById("dmToSelect");
-      if ([...sel.options].some(o => o.value === peerName)) sel.value = peerName;
-      document.getElementById("dmBodyInput").focus();
-    }
-
-    function togglePasscodeField() {
-      const type = document.getElementById("dmLockType").value;
-      document.getElementById("dmSecretHint").style.display = type === "question" ? "block" : "none";
-    }
-
-    function sendMessage() {
-      const to = document.getElementById("dmToSelect").value;
-      const lockType = document.getElementById("dmLockType").value;
-      const secret = document.getElementById("dmSecretHint").value.trim().toLowerCase();
-      const text = document.getElementById("dmBodyInput").value.trim();
-      if (!text) return;
-
-      let lockLabel = "1-on-1 DM · Delivered";
-      let unlocked = true;
-      if (lockType === "time") {
-        lockLabel = "Time-Locked · 8:30 PM";
-        unlocked = false;
-      } else if (lockType === "question") {
-        lockLabel = `Question-Locked (Hint: ${secret || "meonix"})`;
-        unlocked = false;
-      }
-
-      state.dms.unshift({
-        id: Date.now(),
-        peer: to,
-        direction: `You → ${to}`,
-        text,
-        lockType,
-        lockLabel,
-        secret: secret || "meonix",
-        unlocked
-      });
-      state.dms = state.dms.slice(0, 8);
-      CookieDB.set("mx_dms", state.dms);
-
-      document.getElementById("dmBodyInput").value = "";
-      document.getElementById("dmSecretHint").value = "";
-      renderAll();
-      showToast(unlocked ? `DM sent to ${to}` : `Queued in Locked Delivery for ${to}`);
-    }
-
-    function attemptUnlock(msgId) {
-      const m = state.dms.find(x => x.id === msgId);
-      if (!m) return;
-      if (m.lockType === "question") {
-        const guess = prompt(`Enter passcode to unlock (${m.lockLabel}):`);
-        if (!guess) return;
-        if (guess.trim().toLowerCase() !== m.secret) {
-          showToast("Wrong passcode — message stays locked");
-          return;
-        }
-      }
-      m.unlocked = true;
-      m.lockLabel = "Unlocked ✓";
-      CookieDB.set("mx_dms", state.dms);
-      renderAll();
-      showToast("Message unlocked!");
-    }
-
-    // Phase 2: Security & Cookie Wipe
-    function wipeAllCookies() {
-      ["mx_auth", "mx_moods", "mx_stack", "mx_follows", "mx_dms"].forEach(CookieDB.remove);
-      location.reload();
-    }
-
-    renderAll();
-    if (!state.auth.signedUp) openAuthModal(true);
-  </script>
+/* UTILS */
+function showToast(msg) {
+  const t = document.getElementById("toast");
+  t.innerText = msg; t.classList.add("show");
+  setTimeout(() => t.classList.remove("show"), 2500);
+}
+function escapeHtml(s) { return String(s ?? "").replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c])); }
+</script>
 </body>
 </html>
