@@ -1,665 +1,2808 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>A Little World of Personalities</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="theme-color" content="#0B0E17" />
+  <title>MEONIX — Moods, Friendships & Campus Circles</title>
+  <style>
+    :root {
+      --bg-deep: #090C14;
+      --bg-card: #121726;
+      --bg-elevated: #1A2136;
+      --bg-glass: rgba(18, 23, 38, 0.84);
+      --border: rgba(255, 255, 255, 0.08);
+      --border-accent: rgba(255, 107, 44, 0.45);
+      --accent: #FF6B2C;
+      --accent-glow: rgba(255, 107, 44, 0.28);
+      --accent-soft: rgba(255, 107, 44, 0.14);
+      --gold: #FBBF24;
+      --gold-soft: rgba(251, 191, 36, 0.15);
+      --teal: #2DD4BF;
+      --purple: #A78BFA;
+      --danger: #F43F5E;
+      --text-main: #F8FAFC;
+      --text-dim: #94A3B8;
+      --text-muted: #64748B;
+      --radius-lg: 20px;
+      --radius-md: 14px;
+      --radius-sm: 10px;
+      --font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Inter, sans-serif;
+    }
 
-<link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap" rel="stylesheet">
+    * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+    html, body {
+      height: 100%;
+      background: #05070C;
+      color: var(--text-main);
+      font-family: var(--font);
+      overflow: hidden;
+    }
 
-<style>
-:root {
-  --pink: #f8dce8;
-  --deep: #ad668d;
-  --ink: #594653;
-  --muted: #927e8a;
-}
+    /* Mobile-First App Shell */
+    #app-shell {
+      max-width: 480px;
+      height: 100dvh;
+      margin: 0 auto;
+      background: var(--bg-deep);
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      border-left: 1px solid var(--border);
+      border-right: 1px solid var(--border);
+      overflow: hidden;
+    }
 
-* { box-sizing: border-box; }
+    /* Buttons & Inputs */
+    button {
+      font-family: inherit;
+      cursor: pointer;
+      border: none;
+      background: none;
+      color: inherit;
+      transition: transform 0.12s ease, opacity 0.15s ease, background 0.15s ease;
+    }
+    button:active { transform: scale(0.96); }
+    input, textarea, select {
+      font-family: inherit;
+      background: var(--bg-elevated);
+      border: 1px solid var(--border);
+      color: var(--text-main);
+      border-radius: var(--radius-sm);
+      padding: 10px 12px;
+      font-size: 14px;
+      outline: none;
+      width: 100%;
+    }
+    input:focus, textarea:focus, select:focus { border-color: var(--accent); }
 
+    .btn-primary {
+      background: linear-gradient(135deg, #FF6B2C, #FF8E3C);
+      color: #fff;
+      font-weight: 700;
+      padding: 12px 18px;
+      border-radius: var(--radius-md);
+      box-shadow: 0 6px 20px var(--accent-glow);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      font-size: 14px;
+    }
+    .btn-secondary {
+      background: var(--bg-elevated);
+      border: 1px solid var(--border);
+      color: var(--text-main);
+      font-weight: 600;
+      padding: 9px 14px;
+      border-radius: var(--radius-sm);
+      font-size: 13px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+    }
+    .btn-ghost {
+      color: var(--text-dim);
+      font-size: 12px;
+      padding: 6px 10px;
+      border-radius: 8px;
+    }
+    .btn-ghost:hover { background: rgba(255,255,255,0.06); color: var(--text-main); }
 
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 4px 10px;
+      border-radius: 999px;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.2px;
+    }
+    .pill-orange { background: var(--accent-soft); color: var(--accent); border: 1px solid var(--border-accent); }
+    .pill-gold { background: var(--gold-soft); color: var(--gold); border: 1px solid rgba(251,191,36,0.35); }
+    .pill-teal { background: rgba(45,212,191,0.14); color: var(--teal); border: 1px solid rgba(45,212,191,0.3); }
+    .pill-purple { background: rgba(167,139,250,0.14); color: var(--purple); border: 1px solid rgba(167,139,250,0.3); }
+    .pill-muted { background: rgba(255,255,255,0.06); color: var(--text-dim); }
 
-body {
-  margin: 0;
-  min-height: 100vh;
-  font-family: 'Quicksand', sans-serif;
-  color: var(--ink);
-  background:
-    radial-gradient(circle at 10% 10%, #ffe4ef, transparent 35%),
-    radial-gradient(circle at 90% 90%, #e9e1ff, transparent 35%),
-    linear-gradient(135deg, #fffaf6, #fff1f6);
-}
+    /* ================= 1. DOORWAY (AUTH & FOUNDER TAGS) ================= */
+    #doorway-screen {
+      position: absolute;
+      inset: 0;
+      z-index: 90;
+      background: radial-gradient(circle at 50% 15%, rgba(255,107,44,0.18), transparent 55%), var(--bg-deep);
+      padding: 24px 20px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 18px;
+    }
+    .brand-logo {
+      font-size: 28px;
+      font-weight: 900;
+      letter-spacing: -0.8px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .brand-dot {
+      width: 11px; height: 11px; border-radius: 50%;
+      background: var(--accent);
+      box-shadow: 0 0 14px var(--accent);
+    }
+    .scarcity-banner {
+      background: linear-gradient(135deg, rgba(255,107,44,0.16), rgba(251,191,36,0.12));
+      border: 1px solid var(--border-accent);
+      border-radius: var(--radius-md);
+      padding: 12px 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+    .pose-grid {
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      gap: 8px;
+      margin-top: 8px;
+    }
+    .pose-item {
+      aspect-ratio: 1;
+      background: var(--bg-elevated);
+      border: 2px solid transparent;
+      border-radius: 12px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+    }
+    .pose-item.selected {
+      border-color: var(--accent);
+      background: var(--accent-soft);
+    }
 
-main {
-  width: min(650px, 92%);
-  margin: auto;
-  padding: 45px 0 35px;
-}
+    /* ================= TOP HEADER ================= */
+    .top-bar {
+      height: 56px;
+      padding: 0 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid var(--border);
+      background: var(--bg-glass);
+      backdrop-filter: blur(12px);
+      z-index: 20;
+      flex-shrink: 0;
+    }
+    .egg-chip {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--bg-elevated);
+      border: 1px solid var(--border);
+      padding: 5px 10px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 700;
+    }
+    .icon-btn {
+      width: 36px; height: 36px;
+      border-radius: 11px;
+      background: var(--bg-elevated);
+      border: 1px solid var(--border);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      font-size: 16px;
+    }
+    .badge-dot {
+      position: absolute;
+      top: -3px; right: -3px;
+      min-width: 16px; height: 16px;
+      padding: 0 4px;
+      border-radius: 999px;
+      background: var(--accent);
+      color: #fff;
+      font-size: 10px;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
 
-header {
-  text-align: center;
-  margin-bottom: 30px;
-}
+    /* ================= MAIN TAB PANELS ================= */
+    .main-viewport {
+      flex: 1;
+      overflow-y: auto;
+      position: relative;
+    }
+    .tab-view { display: none; min-height: 100%; padding-bottom: 24px; }
+    .tab-view.active { display: block; }
 
-.logo { font-size: 35px; }
+    /* ================= 2. MOOD SKY ================= */
+    #view-mood {
+      padding-bottom: 0;
+      height: 100%;
+      display: none;
+      flex-direction: column;
+      background:
+        radial-gradient(circle at 20% 20%, rgba(255,107,44,0.14), transparent 45%),
+        radial-gradient(circle at 80% 70%, rgba(56,189,248,0.11), transparent 50%),
+        linear-gradient(180deg, #090D1A 0%, #0F172A 100%);
+    }
+    #view-mood.active { display: flex; }
 
-h1, h2, h3 {
-  font-family: 'Playfair Display', serif;
-  color: var(--deep);
-}
+    .sky-toolbar {
+      padding: 10px 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      z-index: 5;
+    }
+    .sky-arena {
+      flex: 1;
+      position: relative;
+      overflow: hidden;
+      min-height: 360px;
+    }
+    .sky-star {
+      position: absolute;
+      width: 2px; height: 2px;
+      background: rgba(255,255,255,0.35);
+      border-radius: 50%;
+      pointer-events: none;
+    }
 
-h1 { font-size: clamp(30px, 7vw, 44px); }
+    /* Floating Mood Bubbles */
+    @keyframes floatSlow {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-9px); }
+    }
+    .mood-bubble {
+      position: absolute;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      animation: floatSlow 4.5s ease-in-out infinite;
+      cursor: pointer;
+      user-select: none;
+      transition: transform 0.2s ease, opacity 0.3s ease;
+    }
+    .mood-bubble:hover { z-index: 15; transform: scale(1.06); }
 
-.subtitle, .entry-description {
-  color: var(--muted);
-  font-size: 14px;
-  line-height: 1.8;
-}
+    /* Small Emoji Bubble (Ordinary Mood) */
+    .bubble-small .bubble-orb {
+      width: 64px; height: 64px;
+      border-radius: 50%;
+      background: rgba(26, 33, 54, 0.88);
+      border: 1.5px solid rgba(255, 255, 255, 0.16);
+      box-shadow: 0 8px 20px rgba(0,0,0,0.35);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 28px;
+      position: relative;
+    }
 
-.panel {
-  padding: 28px;
-  border-radius: 25px;
-  background: rgba(255,255,255,.85);
-  border: 1px solid white;
-  box-shadow: 0 12px 40px rgba(170,112,145,.12);
-}
+    /* Big Tappable Media Bubble */
+    .bubble-big .bubble-orb {
+      width: 116px; height: 116px;
+      border-radius: 50%;
+      border: 2.5px solid var(--accent);
+      box-shadow: 0 0 26px var(--accent-glow), 0 10px 25px rgba(0,0,0,0.5);
+      overflow: hidden;
+      position: relative;
+      background: #1E293B;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .bubble-big .bubble-orb img {
+      width: 100%; height: 100%; object-fit: cover;
+    }
+    .bubble-media-badge {
+      position: absolute;
+      bottom: 6px; right: 6px;
+      background: rgba(9, 12, 20, 0.85);
+      border: 1px solid var(--border-accent);
+      border-radius: 999px;
+      padding: 2px 7px;
+      font-size: 12px;
+    }
+    .bubble-meta {
+      margin-top: 5px;
+      max-width: 125px;
+    }
+    .bubble-handle {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--text-main);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 3px;
+    }
+    .bubble-caption {
+      font-size: 10px;
+      color: var(--text-dim);
+      background: rgba(9,12,20,0.75);
+      padding: 2px 7px;
+      border-radius: 8px;
+      margin-top: 2px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
 
-.hidden { display: none !important; }
+    .sky-bottom-bar {
+      padding: 12px 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      background: linear-gradient(0deg, rgba(9,12,20,0.95), transparent);
+      z-index: 6;
+    }
 
-.entry-title {
-  text-align: center;
-  font-size: 25px;
-}
+    /* ================= 3. HOME & 4. MICRO FEEDS ================= */
+    .segment-tabs {
+      display: flex;
+      background: var(--bg-card);
+      padding: 4px;
+      border-radius: var(--radius-md);
+      border: 1px solid var(--border);
+      margin: 12px 14px;
+    }
+    .segment-btn {
+      flex: 1;
+      padding: 8px;
+      border-radius: 10px;
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--text-dim);
+    }
+    .segment-btn.active {
+      background: var(--accent);
+      color: #fff;
+    }
 
-.entry-description { text-align: center; }
+    .card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 14px;
+      margin: 0 14px 12px;
+    }
+    .post-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 10px;
+    }
+    .avatar-circle {
+      width: 38px; height: 38px;
+      border-radius: 12px;
+      background: var(--bg-elevated);
+      border: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      flex-shrink: 0;
+    }
+    .post-media {
+      width: 100%;
+      border-radius: var(--radius-md);
+      max-height: 310px;
+      object-fit: cover;
+      margin-top: 10px;
+      border: 1px solid var(--border);
+    }
 
-label {
-  display: block;
-  font-weight: 700;
-  margin-bottom: 9px;
-}
+    /* Private Beat Button */
+    @keyframes beatPop {
+      0% { transform: scale(1); }
+      45% { transform: scale(1.32); }
+      100% { transform: scale(1); }
+    }
+    .beat-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 7px 12px;
+      border-radius: 999px;
+      background: var(--bg-elevated);
+      border: 1px solid var(--border);
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--text-dim);
+    }
+    .beat-btn.beated {
+      background: var(--accent-soft);
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+    .beat-btn.popping span:first-child { animation: beatPop 0.3s ease; }
 
-input {
-  width: 100%;
-  padding: 15px;
-  border: 1.5px solid #efd7e4;
-  border-radius: 14px;
-  background: #fffafd;
-  font: inherit;
-  outline: none;
-}
+    /* Micro Carousel */
+    .micro-carousel {
+      position: relative;
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      margin-top: 10px;
+      background: #05070C;
+      aspect-ratio: 4 / 5;
+      max-height: 380px;
+    }
+    .micro-carousel img {
+      width: 100%; height: 100%; object-fit: cover;
+    }
+    .micro-counter {
+      position: absolute;
+      top: 10px; right: 10px;
+      background: rgba(9,12,20,0.8);
+      padding: 4px 10px;
+      border-radius: 999px;
+      font-size: 11px;
+      font-weight: 700;
+    }
+    .micro-nav {
+      position: absolute;
+      top: 50%; transform: translateY(-50%);
+      width: 32px; height: 32px;
+      border-radius: 50%;
+      background: rgba(9,12,20,0.75);
+      color: #fff;
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 800;
+    }
 
-input:focus { border-color: var(--deep); }
+    /* ================= 6. CHAT & 7. CIRCLES ================= */
+    .quick-away-row {
+      display: flex;
+      gap: 6px;
+      overflow-x: auto;
+      padding: 8px 14px;
+      scrollbar-width: none;
+    }
+    .quick-away-row::-webkit-scrollbar { display: none; }
+    .away-chip {
+      white-space: nowrap;
+      padding: 6px 11px;
+      border-radius: 999px;
+      background: var(--bg-elevated);
+      border: 1px solid var(--border);
+      font-size: 12px;
+      font-weight: 600;
+    }
+    .away-chip.active {
+      background: var(--accent-soft);
+      border-color: var(--accent);
+      color: var(--accent);
+    }
 
-button {
-  border: none;
-  border-radius: 14px;
-  padding: 13px 19px;
-  background: linear-gradient(120deg, #df8caf, #b993d5);
-  color: white;
-  font: inherit;
-  font-weight: 700;
-  cursor: pointer;
-}
+    .chat-list-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 14px;
+      border-bottom: 1px solid var(--border);
+      cursor: pointer;
+    }
+    .chat-list-item:hover { background: rgba(255,255,255,0.02); }
 
-.submit {
-  width: 100%;
-  margin-top: 15px;
-}
+    /* Locked Thread Overlay */
+    .locked-shield {
+      background: rgba(18, 23, 38, 0.94);
+      backdrop-filter: blur(14px);
+      border: 1px solid var(--border-accent);
+      border-radius: var(--radius-lg);
+      padding: 22px 18px;
+      text-align: center;
+      margin: 20px 14px;
+    }
 
-button:disabled {
-  opacity: .4;
-  cursor: default;
-}
+    .msg-bubble {
+      max-width: 78%;
+      padding: 10px 13px;
+      border-radius: 16px;
+      font-size: 13.5px;
+      line-height: 1.4;
+      margin-bottom: 8px;
+      position: relative;
+      word-wrap: break-word;
+    }
+    .msg-me {
+      background: linear-gradient(135deg, #FF6B2C, #E85A1E);
+      color: #fff;
+      margin-left: auto;
+      border-bottom-right-radius: 4px;
+    }
+    .msg-them {
+      background: var(--bg-elevated);
+      border: 1px solid var(--border);
+      color: var(--text-main);
+      margin-right: auto;
+      border-bottom-left-radius: 4px;
+    }
 
-.small-note {
-  text-align: center;
-  color: #aa96a3;
-  font-size: 11px;
-  margin-top: 20px;
-}
+    /* ================= 5. BIRDS & 8. PROFILE ================= */
+    .bird-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 8px;
+    }
+    .bird-card {
+      background: var(--bg-elevated);
+      border: 1.5px solid var(--border);
+      border-radius: 12px;
+      padding: 8px 4px;
+      text-align: center;
+      font-size: 11px;
+    }
+    .bird-card.locked { opacity: 0.38; filter: grayscale(1); }
+    .bird-card.equipped { border-color: var(--accent); background: var(--accent-soft); }
 
-.back {
-  background: #f5e8f0;
-  color: var(--deep);
-  margin-bottom: 15px;
-}
+    .stack-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+    }
+    .stack-thumb {
+      aspect-ratio: 1;
+      border-radius: 12px;
+      overflow: hidden;
+      position: relative;
+      border: 1px solid var(--border);
+      background: var(--bg-elevated);
+    }
+    .stack-thumb img { width: 100%; height: 100%; object-fit: cover; }
 
-.profile-heading {
-  text-align: center;
-  padding: 10px 0 22px;
-}
+    /* ================= BOTTOM NAVIGATION ================= */
+    .bottom-nav {
+      height: 64px;
+      background: var(--bg-glass);
+      backdrop-filter: blur(16px);
+      border-top: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-around;
+      padding: 0 6px;
+      flex-shrink: 0;
+      z-index: 25;
+    }
+    .nav-btn {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 3px;
+      color: var(--text-muted);
+      font-size: 10.5px;
+      font-weight: 700;
+      padding: 6px 0;
+    }
+    .nav-btn.active { color: var(--accent); }
+    .nav-btn .nav-icon { font-size: 20px; line-height: 1; }
+    .nav-btn.mood-center .nav-icon {
+      width: 42px; height: 42px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #FF6B2C, #FF8E3C);
+      color: #fff;
+      display: flex; align-items: center; justify-content: center;
+      margin-top: -14px;
+      box-shadow: 0 4px 16px var(--accent-glow);
+      font-size: 20px;
+    }
 
-.profile-heading .flower { font-size: 35px; }
+    /* ================= MODALS & TOASTS ================= */
+    .modal-backdrop {
+      position: absolute;
+      inset: 0;
+      background: rgba(5, 7, 12, 0.82);
+      backdrop-filter: blur(8px);
+      z-index: 60;
+      display: none;
+      align-items: flex-end;
+      justify-content: center;
+    }
+    .modal-backdrop.open { display: flex; }
+    .modal-sheet {
+      width: 100%;
+      max-height: 88%;
+      background: var(--bg-card);
+      border-top: 1px solid var(--border);
+      border-radius: 24px 24px 0 0;
+      padding: 18px 16px 26px;
+      overflow-y: auto;
+    }
+    .modal-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 14px;
+    }
 
-.profile-heading p {
-  color: var(--muted);
-  font-size: 13px;
-  line-height: 1.8;
-}
+    #toast {
+      position: absolute;
+      top: 66px;
+      left: 50%;
+      transform: translateX(-50%) translateY(-16px);
+      background: #1E293B;
+      border: 1px solid var(--border-accent);
+      color: #fff;
+      padding: 9px 16px;
+      border-radius: 999px;
+      font-size: 12.5px;
+      font-weight: 700;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.45);
+      opacity: 0;
+      pointer-events: none;
+      transition: all 0.22s ease;
+      z-index: 100;
+      white-space: nowrap;
+      max-width: 92%;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    #toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
 
-.trait-track {
-  display: flex;
-  overflow-x: auto;
-  scroll-snap-type: x mandatory;
-  scroll-behavior: smooth;
-  scrollbar-width: none;
-  gap: 12px;
-  touch-action: pan-x;
-  border-radius: 20px;
-}
-
-.trait-track::-webkit-scrollbar { display: none; }
-
-.trait {
-  flex: 0 0 100%;
-  min-width: 100%;
-  min-height: 300px;
-  padding: 25px 21px;
-  border-radius: 20px;
-  background: linear-gradient(140deg, #fff5f8, #f5f0ff);
-  border: 1px solid #f1e1ec;
-  scroll-snap-align: start;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-}
-
-.card-count {
-  color: #a88b9c;
-  font-size: 12px;
-  font-weight: 700;
-}
-
-.trait h3 { font-size: 23px; }
-
-.trait p {
-  font-size: 14px;
-  line-height: 1.9;
-  color: #725f6d;
-}
-
-.trait .thought {
-  color: #b16e94;
-  font-style: italic;
-  font-weight: 600;
-}
-
-.card-controls {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 10px;
-  margin-top: 18px;
-}
-
-.card-controls button {
-  background: #f5e7f0;
-  color: var(--deep);
-}
-
-.end-card {
-  text-align: center;
-  padding: 27px 20px;
-  margin-top: 27px;
-  border-radius: 22px;
-  background: linear-gradient(145deg, #fff2f6, #f0ebff);
-  border: 1px solid #f0e1ed;
-}
-
-.end-flower { font-size: 32px; }
-
-.end-card p {
-  font-size: 14px;
-  line-height: 1.9;
-  color: #725f6d;
-}
-
-.signature {
-  color: var(--deep);
-  font-family: 'Playfair Display', serif;
-  font-size: 20px;
-  margin-top: 22px;
-}
-
-.not-ready {
-  text-align: center;
-  padding: 25px 5px;
-}
-
-.not-ready .emoji { font-size: 45px; }
-
-.not-ready p {
-  color: var(--muted);
-  font-size: 14px;
-  line-height: 1.9;
-}
-
-footer {
-  text-align: center;
-  padding-top: 28px;
-  color: #aa96a3;
-  font-size: 12px;
-}
-
-@media(max-width:450px) {
-  .panel { padding: 20px; }
-  .trait { padding: 21px 17px; }
-}
-
-/* Minimal Instagram-style story viewer */
-.story-viewer {
-  width: 100%;
-  height: min(72vh, 680px);
-  min-height: 460px;
-  box-sizing: border-box;
-  padding: 15px;
-  display: flex;
-  flex-direction: column;
-  background: #f5f4ef;
-  border: 1px solid #e5e3da;
-  border-radius: 20px;
-  overflow: hidden;
-  color: #353b35;
-}
-
-.story-progress {
-  display: flex;
-  gap: 4px;
-  width: 100%;
-}
-
-.story-progress span {
-  flex: 1;
-  height: 3px;
-  border-radius: 10px;
-  background: #dedfd7;
-  overflow: hidden;
-}
-
-.story-progress i {
-  display: block;
-  height: 100%;
-  background: #879486;
-}
-
-.story-top {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 14px 2px;
-  color: #777e73;
-  font-size: 11px;
-  letter-spacing: 1px;
-}
-
-.story-stage {
-  flex: 1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 18px;
-  touch-action: pan-y;
-  text-align: left;
-}
-
-.story-copy {
-  width: 100%;
-  max-width: 450px;
-}
-
-.story-copy .story-number {
-  color: #879486;
-  font-size: 12px;
-  letter-spacing: 1px;
-}
-
-.story-copy h2 {
-  font-size: clamp(25px, 7vw, 34px);
-  line-height: 1.25;
-  color: #354137;
-  margin: 17px 0;
-}
-
-.story-copy p {
-  font-size: 15px;
-  line-height: 1.85;
-  color: #626a60;
-}
-
-.story-copy .story-thought {
-  border-top: 1px solid #dedfd7;
-  padding-top: 15px;
-  margin-top: 25px;
-  color: #7c8979;
-}
-
-.story-hint {
-  text-align: center;
-  color: #92968c;
-  font-size: 11px;
-  padding: 10px 0 2px;
-}
-
-.story-ending {
-  text-align: left;
-}
-
-.story-ending h2 {
-  font-size: 25px;
-}
-
-.story-ending p {
-  font-size: 13px;
-  line-height: 1.7;
-}
-
-@media(max-width:450px) {
-  .story-viewer {
-    min-height: 460px;
-    padding: 12px;
-  }
-  .story-stage {
-    padding: 12px;
-  }
-}
-
-</style>
+    .row-between { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+    .row-gap { display: flex; align-items: center; gap: 8px; }
+    .text-xs { font-size: 11px; }
+    .text-sm { font-size: 13px; }
+    .text-dim { color: var(--text-dim); }
+    .mt-2 { margin-top: 8px; }
+    .mt-3 { margin-top: 12px; }
+    .mb-2 { margin-bottom: 8px; }
+    .mb-3 { margin-bottom: 12px; }
+  </style>
 </head>
-
 <body>
-<main>
-<header>
-  <div class="logo">🌷</div>
-  <h1>A Little World of Personalities</h1>
-  <p class="subtitle">
-    Every person has a story beyond what we see.<br>
-    Let's discover a little about it.
-  </p>
-</header>
+<div id="app-shell">
+  <div id="toast"></div>
 
-<section class="panel" id="entry">
-  <h2 class="entry-title">A little curiosity begins here</h2>
-  <p class="entry-description">
-    Everyone has their own way of thinking, feeling
-    and experiencing life.<br>
-    Whose personality would you like to explore?
-  </p>
+  <!-- =====================================================================
+       1. DOORWAY — ENTRY, STARTER POSES & EARLY FOUNDER TAGS (#002-#100)
+       ===================================================================== -->
+  <div id="doorway-screen">
+    <div>
+      <div class="row-between mb-3">
+        <div class="brand-logo"><span class="brand-dot"></span>meonix</div>
+        <span class="pill pill-muted">Campus Beta • PWA</span>
+      </div>
+      <p class="text-sm text-dim">A low-pressure campus space built around floating moods, real friendships, and study/gossip circles.</p>
 
-  <form id="nameForm">
-    <label for="personName">Enter your name</label>
-    <input id="personName" type="text"
-      placeholder="Your name..."
-      maxlength="40" autocomplete="off" required>
-    <button class="submit" type="submit">
-      Discover Personality ♡
+      <!-- Live Scarcity Counter (#001 @meonix reserved, #008 quietly reserved, #002-#100 public) -->
+      <div class="scarcity-banner mt-3">
+        <div>
+          <div class="text-xs" style="color:var(--gold); font-weight:800;">EARLY FOUNDER TAGS (#002–#100)</div>
+          <div style="font-size:15px; font-weight:800; margin-top:2px;">
+            Next Spot: <span id="doorway-next-tag" style="color:var(--accent);">#014</span>
+          </div>
+          <div class="text-xs text-dim mt-2">Post 1 mood or add 1 friend within 24h to seal your tag & unlock Solar Phoenix.</div>
+        </div>
+        <div style="text-align:right;">
+          <div id="doorway-spots-left" style="font-size:22px; font-weight:900; color:var(--gold);">86</div>
+          <div class="text-xs text-dim">spots left</div>
+        </div>
+      </div>
+
+      <div class="mt-3">
+        <label class="text-xs text-dim" style="font-weight:700;">CHOOSE UNIQUE HANDLE</label>
+        <input id="signup-handle" type="text" maxlength="20" placeholder="e.g. aarav_cse" class="mt-2" />
+      </div>
+
+      <div class="mt-3">
+        <label class="text-xs text-dim" style="font-weight:700;">PICK STARTER POSE (2D AVATAR SEED)</label>
+        <div id="pose-selector" class="pose-grid"></div>
+      </div>
+
+      <div class="mt-3">
+        <label class="text-xs text-dim" style="font-weight:700;">DEFAULT MOOD PRIVACY</label>
+        <select id="signup-privacy" class="mt-2">
+          <option value="Friends">Friends Only</option>
+          <option value="Public">Public (Campus Sky)</option>
+          <option value="Close Friends">Close Friends</option>
+          <option value="BFFs">BFFs Only</option>
+        </select>
+      </div>
+    </div>
+
+    <div>
+      <button class="btn-primary" style="width:100%;" onclick="completeDoorwaySignup()">
+        🚪 Enter Meonix & Claim Founder Tag
+      </button>
+      <div class="text-xs text-dim mt-2" style="text-align:center;">
+        Zero last-seen • Zero read-receipts • Creator stays behind the curtain
+      </div>
+    </div>
+  </div>
+
+  <!-- =====================================================================
+       TOP BAR (BRAND, FOUNDER TAG STATUS, 7-DAY STREAK EGG, NOTIFICATIONS)
+       ===================================================================== -->
+  <header class="top-bar">
+    <div class="row-gap">
+      <div class="brand-logo" style="font-size:20px;"><span class="brand-dot"></span>meonix</div>
+      <span id="header-founder-pill" class="pill pill-gold" title="Founder Tag Status">#014</span>
+    </div>
+
+    <div class="row-gap">
+      <button class="egg-chip" onclick="openModal('modal-birds')" title="7-Day Mood Streak & 19 Birds">
+        <span id="header-egg-icon">🥚</span>
+        <span id="header-streak-text">Day 1/7</span>
+      </button>
+      <button class="icon-btn" onclick="openModal('modal-notifications')" title="Notifications & 2h Digest">
+        🔔
+        <span id="notif-badge" class="badge-dot" style="display:none;">0</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- =====================================================================
+       MAIN VIEWPORT (5 CORE TABS)
+       ===================================================================== -->
+  <main class="main-viewport">
+
+    <!-- ==================== 2. MOOD SKY (SIGNATURE FEATURE) ==================== -->
+    <section id="view-mood" class="tab-view active">
+      <div class="sky-toolbar">
+        <div class="row-gap">
+          <span class="pill pill-orange" id="sky-active-count">🌤️ 0 Floating</span>
+          <span class="pill pill-muted" id="sky-guide-status">4 Guides</span>
+        </div>
+        <div class="row-gap">
+          <button class="btn-ghost" onclick="simulateExpireMoods()" title="Expire active moods to test Mood Stack archiving">
+            ⏩ Expire
+          </button>
+          <button class="btn-ghost" onclick="openModal('modal-mood-stack')">
+            🗂️ Stack (<span id="stack-count-top">0</span>)
+          </button>
+        </div>
+      </div>
+
+      <div id="sky-arena" class="sky-arena">
+        <!-- Floating Small Emoji Bubbles & Big Media Bubbles rendered here -->
+      </div>
+
+      <div class="sky-bottom-bar">
+        <div class="text-xs text-dim">
+          Small = Emoji • <span style="color:var(--accent); font-weight:700;">Big = Tappable Media</span>
+        </div>
+        <button class="btn-primary" onclick="openModal('modal-new-mood')">
+          + Drop Mood
+        </button>
+      </div>
+    </section>
+
+    <!-- ==================== 3. HOME (CHRONOLOGICAL FEED & PRIVATE BEATS) ==================== -->
+    <section id="view-home" class="tab-view">
+      <div class="segment-tabs">
+        <button id="home-tab-friends" class="segment-btn active" onclick="setHomeFilter('friends')">Friends</button>
+        <button id="home-tab-public" class="segment-btn" onclick="setHomeFilter('public')">Public Campus</button>
+      </div>
+
+      <div class="card">
+        <div class="row-between mb-2">
+          <span class="text-xs text-dim" style="font-weight:700;">CHRONOLOGICAL • NEWEST FIRST (NO ALGO)</span>
+          <select id="home-post-vis" style="width:auto; padding:4px 8px; font-size:11px;">
+            <option value="Friends">Friends</option>
+            <option value="Public">Public</option>
+          </select>
+        </div>
+        <textarea id="home-post-text" rows="2" placeholder="What's happening on campus right now?"></textarea>
+        <div class="row-between mt-2">
+          <label class="btn-secondary" style="cursor:pointer;">
+            🖼️ Photo
+            <input id="home-post-file" type="file" accept="image/*" style="display:none;" onchange="previewHomeFile(this)" />
+          </label>
+          <span id="home-file-name" class="text-xs text-dim"></span>
+          <button class="btn-primary" style="padding:8px 16px;" onclick="createHomePost()">Post</button>
+        </div>
+      </div>
+
+      <div id="home-feed-list"></div>
+    </section>
+
+    <!-- ==================== 4. MICRO (MULTI-PHOTO / GIF CAROUSELS, MAX 5, MAX 5MB) ==================== -->
+    <section id="view-micro" class="tab-view">
+      <div class="card mt-3">
+        <div class="row-between mb-2">
+          <div>
+            <div style="font-weight:800; font-size:15px;">📸 Micro Moments</div>
+            <div class="text-xs text-dim">Photo/GIF stacks • Max 5 files • Max 5 MB each</div>
+          </div>
+          <span class="pill pill-purple">Phase 1 Photo/GIF</span>
+        </div>
+        <input id="micro-caption" type="text" placeholder="Short caption for your photo/GIF stack..." class="mb-2" />
+        <div class="row-between">
+          <label class="btn-secondary" style="cursor:pointer;">
+            ➕ Select Photos/GIFs (1–5)
+            <input id="micro-files" type="file" accept="image/jpeg,image/png,image/webp,image/gif" multiple style="display:none;" onchange="handleMicroFileSelect(this)" />
+          </label>
+          <button class="btn-primary" style="padding:8px 16px;" onclick="createMicroPost()">Share Micro</button>
+        </div>
+        <div id="micro-selected-info" class="text-xs text-dim mt-2"></div>
+      </div>
+
+      <div id="micro-feed-list"></div>
+    </section>
+
+    <!-- ==================== 6. CHAT & 7. CIRCLES ==================== -->
+    <section id="view-chat" class="tab-view">
+      <div class="segment-tabs">
+        <button id="comm-tab-dms" class="segment-btn active" onclick="setCommTab('dms')">💬 Direct Chat</button>
+        <button id="comm-tab-circles" class="segment-btn" onclick="setCommTab('circles')">🫂 Circles</button>
+      </div>
+
+      <!-- DIRECT CHAT LIST + QUICK AWAY -->
+      <div id="comm-dms-panel">
+        <div class="px-14" style="padding:0 14px;">
+          <div class="row-between">
+            <span class="text-xs text-dim" style="font-weight:700;">QUICK AWAY STATUS (ZERO GUILT)</span>
+            <span class="text-xs" style="color:var(--teal);">No Last-Seen • No Read Ticks</span>
+          </div>
+        </div>
+        <div class="quick-away-row" id="quick-away-bar"></div>
+        <div id="dm-thread-list" class="mt-2"></div>
+      </div>
+
+      <!-- CIRCLES PANEL (STUDY vs GOSSIP vs GENERAL) -->
+      <div id="comm-circles-panel" style="display:none;">
+        <div style="padding:0 14px 10px;" class="row-between">
+          <span class="text-xs text-dim">Campus Communities • 2h Batched Digest</span>
+          <button class="btn-secondary" style="padding:6px 10px; font-size:12px;" onclick="openModal('modal-new-circle')">+ Circle</button>
+        </div>
+        <div id="circle-list"></div>
+      </div>
+    </section>
+
+    <!-- ==================== 8. PROFILE, BIRDS, STACK & 10. PRIVACY/SAFETY ==================== -->
+    <section id="view-profile" class="tab-view">
+      <div class="card mt-3">
+        <div class="row-between">
+          <div class="row-gap">
+            <div id="profile-avatar" class="avatar-circle" style="width:54px; height:54px; font-size:28px;">🧑‍🚀</div>
+            <div>
+              <div class="row-gap">
+                <span id="profile-handle" style="font-size:17px; font-weight:800;">@student</span>
+                <span id="profile-tag-badge" class="pill pill-gold">#014</span>
+              </div>
+              <div class="text-xs text-dim mt-2" id="profile-seal-status">Tag Status: Sealed ✓</div>
+              <div class="text-xs mt-2" style="color:var(--accent); font-weight:700;" id="profile-bird-label">Companion: Ember Sparrow</div>
+            </div>
+          </div>
+          <button class="btn-secondary" onclick="openModal('modal-safety')">🔐 Safety</button>
+        </div>
+
+        <div class="row-between mt-3" style="padding-top:10px; border-top:1px solid var(--border);">
+          <div>
+            <div class="text-xs text-dim">Default Mood Visibility</div>
+            <select id="profile-default-vis" style="margin-top:4px; padding:6px 10px; font-size:12px;" onchange="updateDefaultVisibility(this.value)">
+              <option value="Friends">Friends</option>
+              <option value="Public">Public</option>
+              <option value="Close Friends">Close Friends</option>
+              <option value="BFFs">BFFs</option>
+            </select>
+          </div>
+          <div style="text-align:right;">
+            <div class="text-xs text-dim">Real Friends</div>
+            <div style="font-size:18px; font-weight:900;" id="profile-friend-count">0</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Collected Birds Showcase -->
+      <div class="card">
+        <div class="row-between mb-2">
+          <div style="font-weight:800; font-size:14px;">🐣 Collected Birds (<span id="profile-bird-count">1</span>/19)</div>
+          <button class="btn-ghost" onclick="openModal('modal-birds')">View All & Hatch</button>
+        </div>
+        <div id="profile-birds-preview" class="bird-grid"></div>
+      </div>
+
+      <!-- Private Mood Stack Archive -->
+      <div class="card">
+        <div class="row-between mb-2">
+          <div>
+            <div style="font-weight:800; font-size:14px;">🗂️ Private Mood Stack (<span id="profile-stack-count">0</span>)</div>
+            <div class="text-xs text-dim">Only expired media moods save here. Ordinary emoji moods vanish.</div>
+          </div>
+          <button class="btn-ghost" onclick="openModal('modal-mood-stack')">Open</button>
+        </div>
+        <div id="profile-stack-preview" class="stack-grid"></div>
+      </div>
+
+      <!-- Friend Connections & Campus Suggestions -->
+      <div class="card">
+        <div style="font-weight:800; font-size:14px;" class="mb-2">🤝 Friends & Campus Suggestions</div>
+        <div class="text-xs text-dim mb-2">Adding real friends gradually fades out the 4 starter Guide bubbles.</div>
+        <div id="friends-and-suggestions-list"></div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- =====================================================================
+       BOTTOM NAVIGATION BAR
+       ===================================================================== -->
+  <nav class="bottom-nav">
+    <button class="nav-btn" data-tab="home" onclick="switchTab('home')">
+      <span class="nav-icon">🏠</span>
+      <span>Home</span>
     </button>
-  </form>
+    <button class="nav-btn" data-tab="micro" onclick="switchTab('micro')">
+      <span class="nav-icon">📸</span>
+      <span>Micro</span>
+    </button>
+    <button class="nav-btn mood-center active" data-tab="mood" onclick="switchTab('mood')">
+      <span class="nav-icon">🌤️</span>
+      <span>Mood Sky</span>
+    </button>
+    <button class="nav-btn" data-tab="chat" onclick="switchTab('chat')">
+      <span class="nav-icon">💬</span>
+      <span>Chat</span>
+    </button>
+    <button class="nav-btn" data-tab="profile" onclick="switchTab('profile')">
+      <span class="nav-icon">👤</span>
+      <span>Profile</span>
+    </button>
+  </nav>
 
-  <p class="small-note">
-    Made with a little curiosity and kindness.
-  </p>
-</section>
+  <!-- =====================================================================
+       MODALS: DROP MOOD, VIEW MEDIA BUBBLE, MOOD STACK, BIRDS, CHAT THREAD,
+               CIRCLE ROOM, NOTIFICATIONS, SAFETY & PRIVACY
+       ===================================================================== -->
 
-<section class="panel hidden" id="result">
-  <button class="back" id="backButton">← Back</button>
-  <div id="resultContent"></div>
-</section>
+  <!-- Modal: Drop New Mood -->
+  <div id="modal-new-mood" class="modal-backdrop" onclick="closeModalOnBg(event, 'modal-new-mood')">
+    <div class="modal-sheet">
+      <div class="modal-header">
+        <div style="font-weight:800; font-size:16px;">🌤️ Drop a Mood into the Sky</div>
+        <button class="btn-ghost" onclick="closeModal('modal-new-mood')">✕</button>
+      </div>
 
-<footer>
-  Every person is more than a personality.
-</footer>
-</main>
+      <div class="text-xs text-dim mb-2">1. Pick Mood Emoji (Small Bubble)</div>
+      <div id="mood-emoji-picker" class="row-gap" style="flex-wrap:wrap; margin-bottom:12px;"></div>
+
+      <div class="text-xs text-dim mb-2">2. Optional Caption (Max 60 chars — not saved to Mood Stack)</div>
+      <input id="mood-caption-input" type="text" maxlength="60" placeholder="e.g. Surviving lab viva..." class="mb-3" />
+
+      <div class="text-xs text-dim mb-2">3. Optional Media (Turns into BIG Tappable Bubble & Saves to Mood Stack!)</div>
+      <div class="row-gap mb-3">
+        <label class="btn-secondary" style="flex:1; cursor:pointer;">
+          📷 Attach Photo/GIF
+          <input id="mood-media-file" type="file" accept="image/*" style="display:none;" onchange="handleMoodMediaSelect(this)" />
+        </label>
+        <button class="btn-secondary" onclick="attachSampleCampusSnap()">✨ Use Sample Snap</button>
+      </div>
+      <div id="mood-media-preview-box" style="display:none; margin-bottom:12px; position:relative;">
+        <img id="mood-media-preview-img" src="" style="width:100%; max-height:150px; object-fit:cover; border-radius:12px;" />
+        <button class="btn-secondary" style="position:absolute; top:6px; right:6px; padding:4px 8px;" onclick="clearMoodMedia()">Remove</button>
+      </div>
+
+      <div class="row-gap mb-3">
+        <div style="flex:1;">
+          <label class="text-xs text-dim">Duration</label>
+          <select id="mood-duration-select" class="mt-2">
+            <option value="1">1 Hour</option>
+            <option value="6">6 Hours</option>
+            <option value="12">12 Hours</option>
+            <option value="24" selected>24 Hours</option>
+          </select>
+        </div>
+        <div style="flex:1;">
+          <label class="text-xs text-dim">Privacy</label>
+          <select id="mood-privacy-select" class="mt-2">
+            <option value="Public">Public</option>
+            <option value="Friends">Friends</option>
+            <option value="Close Friends">Close Friends</option>
+            <option value="BFFs">BFFs</option>
+          </select>
+        </div>
+      </div>
+
+      <button class="btn-primary" style="width:100%;" onclick="publishMood()">🚀 Launch Bubble to Sky</button>
+    </div>
+  </div>
+
+  <!-- Modal: View Mood Bubble + Instant Quick Reply -->
+  <div id="modal-view-mood" class="modal-backdrop" onclick="closeModalOnBg(event, 'modal-view-mood')">
+    <div class="modal-sheet">
+      <div class="modal-header">
+        <div class="row-gap">
+          <span id="vm-handle" style="font-weight:800; font-size:15px;">@user</span>
+          <span id="vm-privacy-pill" class="pill pill-muted">Public</span>
+        </div>
+        <div class="row-gap">
+          <button id="vm-report-btn" class="btn-ghost" style="color:var(--danger);">🚩 Report</button>
+          <button class="btn-ghost" onclick="closeModal('modal-view-mood')">✕</button>
+        </div>
+      </div>
+
+      <div id="vm-media-wrap" style="text-align:center;"></div>
+      <p id="vm-caption" class="text-sm mt-2" style="text-align:center; font-weight:600;"></p>
+      <div id="vm-expiry" class="text-xs text-dim mt-2" style="text-align:center;"></div>
+
+      <div class="row-gap mt-3">
+        <input id="vm-reply-input" type="text" placeholder="Send a low-pressure reply straight to DM..." />
+        <button class="btn-primary" style="padding:10px 14px;" onclick="sendQuickMoodReply()">Send</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal: Private Mood Stack Archive -->
+  <div id="modal-mood-stack" class="modal-backdrop" onclick="closeModalOnBg(event, 'modal-mood-stack')">
+    <div class="modal-sheet">
+      <div class="modal-header">
+        <div>
+          <div style="font-weight:800; font-size:16px;">🗂️ Private Mood Stack</div>
+          <div class="text-xs text-dim">Only expired media bubbles are archived here. Visible only to you.</div>
+        </div>
+        <button class="btn-ghost" onclick="closeModal('modal-mood-stack')">✕</button>
+      </div>
+      <div id="full-mood-stack-grid" class="stack-grid"></div>
+    </div>
+  </div>
+
+  <!-- Modal: 7-Day Streak Egg Hatch & 19 Birds -->
+  <div id="modal-birds" class="modal-backdrop" onclick="closeModalOnBg(event, 'modal-birds')">
+    <div class="modal-sheet">
+      <div class="modal-header">
+        <div>
+          <div style="font-weight:800; font-size:16px;">🐣 7-Day Streak & 19 Birds</div>
+          <div class="text-xs text-dim">Drop 1 mood/day to crack your egg and hatch a companion bird.</div>
+        </div>
+        <button class="btn-ghost" onclick="closeModal('modal-birds')">✕</button>
+      </div>
+
+      <div class="card" style="margin:0 0 12px; text-align:center;">
+        <div id="egg-stage-visual" style="font-size:44px;">🥚</div>
+        <div style="font-weight:800; font-size:15px; margin-top:4px;" id="egg-stage-label">Day 1 of 7 — Warming Up</div>
+        <div style="height:8px; background:var(--bg-deep); border-radius:999px; overflow:hidden; margin:10px 0;">
+          <div id="egg-progress-bar" style="height:100%; width:14%; background:linear-gradient(90deg,#FF6B2C,#FBBF24);"></div>
+        </div>
+        <button class="btn-secondary" onclick="advanceStreakDemo()">⚡ Simulate +1 Streak Day (Test Hatch)</button>
+      </div>
+
+      <div class="text-xs text-dim mb-2" style="font-weight:700;">TAP AN UNLOCKED BIRD TO EQUIP</div>
+      <div id="full-bird-roster" class="bird-grid"></div>
+    </div>
+  </div>
+
+  <!-- Modal: 1-on-1 Private Chat Thread (E2EE, Lock Mode, Time-Bomb Messages) -->
+  <div id="modal-chat-thread" class="modal-backdrop" onclick="closeModalOnBg(event, 'modal-chat-thread')">
+    <div class="modal-sheet" style="height:86%; display:flex; flex-direction:column;">
+      <div class="modal-header" style="flex-shrink:0;">
+        <div>
+          <div class="row-gap">
+            <span id="ct-peer-name" style="font-weight:800; font-size:15px;">@peer</span>
+            <span class="pill pill-teal">🔐 E2EE</span>
+          </div>
+          <div class="text-xs text-dim" id="ct-peer-away">Status: Online • No read receipts</div>
+        </div>
+        <div class="row-gap">
+          <button class="btn-secondary" style="padding:5px 9px; font-size:12px;" onclick="toggleChatLockSetup()">🔒 Lock</button>
+          <button class="btn-ghost" style="color:var(--danger);" onclick="restrictCurrentChatPeer()">🚫</button>
+          <button class="btn-ghost" onclick="closeModal('modal-chat-thread')">✕</button>
+        </div>
+      </div>
+
+      <!-- Optional Security Question Lock Setup -->
+      <div id="ct-lock-setup" style="display:none; background:var(--bg-elevated); padding:10px; border-radius:12px; margin-bottom:10px;">
+        <div class="text-xs" style="font-weight:700; color:var(--gold);">🔒 Set Security-Question Thread Lock</div>
+        <input id="ct-lock-q" type="text" placeholder="Question (e.g. Canteen table number?)" class="mt-2" />
+        <input id="ct-lock-a" type="text" placeholder="Secret answer" class="mt-2" />
+        <div class="row-between mt-2">
+          <button class="btn-ghost" onclick="removeChatLock()">Disable Lock</button>
+          <button class="btn-primary" style="padding:6px 12px; font-size:12px;" onclick="saveChatLock()">Lock Thread</button>
+        </div>
+      </div>
+
+      <!-- Locked Shield if Thread is Locked -->
+      <div id="ct-locked-view" class="locked-shield" style="display:none;">
+        <div style="font-size:32px;">🔒</div>
+        <div style="font-weight:800; margin-top:6px;">Private Locked Conversation</div>
+        <div id="ct-unlock-question" class="text-sm text-dim mt-2">Question?</div>
+        <input id="ct-unlock-input" type="password" placeholder="Enter secret answer to decrypt..." class="mt-3" />
+        <button class="btn-primary mt-2" style="width:100%;" onclick="attemptUnlockThread()">Unlock Chat</button>
+      </div>
+
+      <!-- Unlocked Messages Feed -->
+      <div id="ct-messages-box" style="flex:1; overflow-y:auto; padding:6px 2px;"></div>
+
+      <!-- Composer with Time-Bomb Fuse -->
+      <div id="ct-composer" style="flex-shrink:0; padding-top:8px; border-top:1px solid var(--border);">
+        <div class="row-between mb-2">
+          <span class="text-xs text-dim">💣 Self-Destruct Fuse:</span>
+          <select id="ct-ttl-select" style="width:auto; padding:4px 8px; font-size:11px;">
+            <option value="0">Off (Keep)</option>
+            <option value="10">10 Seconds</option>
+            <option value="30">30 Seconds</option>
+            <option value="60">1 Minute</option>
+          </select>
+        </div>
+        <div class="row-gap">
+          <input id="ct-msg-input" type="text" placeholder="Write encrypted message..." onkeydown="if(event.key==='Enter') sendDirectMessage()" />
+          <button class="btn-primary" style="padding:10px 14px;" onclick="sendDirectMessage()">Send</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal: Circle Room (Study vs Gossip vs General + Pinned + @mentions) -->
+  <div id="modal-circle-room" class="modal-backdrop" onclick="closeModalOnBg(event, 'modal-circle-room')">
+    <div class="modal-sheet" style="height:86%; display:flex; flex-direction:column;">
+      <div class="modal-header" style="flex-shrink:0;">
+        <div>
+          <div style="font-weight:800; font-size:15px;" id="cr-title">CSE-B Official</div>
+          <div class="text-xs text-dim" id="cr-sub">Invite: CSE26 • @mentions notify instantly</div>
+        </div>
+        <button class="btn-ghost" onclick="closeModal('modal-circle-room')">✕</button>
+      </div>
+
+      <!-- Pinned Content Banner -->
+      <div id="cr-pinned-box" style="background:var(--gold-soft); border:1px solid rgba(251,191,36,0.35); padding:8px 12px; border-radius:12px; margin-bottom:8px; flex-shrink:0;">
+        <div class="text-xs" style="color:var(--gold); font-weight:800;">📌 PINNED NOTICE</div>
+        <div id="cr-pinned-text" class="text-xs mt-2"></div>
+      </div>
+
+      <!-- Tag Filter Pills -->
+      <div class="row-gap mb-2" style="flex-shrink:0;">
+        <button class="pill pill-orange" id="cr-filter-all" onclick="setCircleTagFilter('all')">All</button>
+        <button class="pill pill-muted" id="cr-filter-study" onclick="setCircleTagFilter('study')">📘 Study</button>
+        <button class="pill pill-muted" id="cr-filter-gossip" onclick="setCircleTagFilter('gossip')">🔥 Gossip</button>
+        <button class="pill pill-muted" id="cr-filter-general" onclick="setCircleTagFilter('general')">💬 General</button>
+      </div>
+
+      <div id="cr-messages-box" style="flex:1; overflow-y:auto; padding:4px 0;"></div>
+
+      <div style="flex-shrink:0; padding-top:8px; border-top:1px solid var(--border);">
+        <div class="row-gap mb-2">
+          <select id="cr-msg-tag" style="width:auto; padding:5px 8px; font-size:11px;">
+            <option value="study">📘 Study</option>
+            <option value="gossip">🔥 Gossip</option>
+            <option value="general">💬 General</option>
+          </select>
+          <label class="text-xs text-dim row-gap" style="cursor:pointer;">
+            <input id="cr-pin-check" type="checkbox" style="width:auto;" /> Pin to top
+          </label>
+        </div>
+        <div class="row-gap">
+          <input id="cr-msg-input" type="text" placeholder="Message circle (use @handle for instant ping)..." onkeydown="if(event.key==='Enter') sendCircleMessage()" />
+          <button class="btn-primary" style="padding:10px 14px;" onclick="sendCircleMessage()">Post</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal: Create / Join Circle -->
+  <div id="modal-new-circle" class="modal-backdrop" onclick="closeModalOnBg(event, 'modal-new-circle')">
+    <div class="modal-sheet">
+      <div class="modal-header">
+        <div style="font-weight:800; font-size:16px;">🫂 Create or Join a Campus Circle</div>
+        <button class="btn-ghost" onclick="closeModal('modal-new-circle')">✕</button>
+      </div>
+      <div class="text-xs text-dim mb-2">CREATE NEW CIRCLE</div>
+      <input id="new-circle-name" type="text" placeholder="Circle name (e.g. ECE Hostel Block 2)" class="mb-2" />
+      <select id="new-circle-type" class="mb-2">
+        <option value="Study">📘 Study Circle</option>
+        <option value="Gossip">🔥 Gossip Circle</option>
+        <option value="General">💬 General Circle</option>
+      </select>
+      <button class="btn-primary" style="width:100%;" onclick="createNewCircle()">Create Circle</button>
+
+      <div class="text-xs text-dim mt-3 mb-2">JOIN BY INVITE CODE (Try: LAB2026)</div>
+      <div class="row-gap">
+        <input id="join-circle-code" type="text" placeholder="Enter invite code..." />
+        <button class="btn-secondary" onclick="joinCircleByCode()">Join</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal: Notifications (Immediate @mentions + 2-Hour Circle Digest + Preferences) -->
+  <div id="modal-notifications" class="modal-backdrop" onclick="closeModalOnBg(event, 'modal-notifications')">
+    <div class="modal-sheet">
+      <div class="modal-header">
+        <div>
+          <div style="font-weight:800; font-size:16px;">🔔 Notifications & 2h Digest</div>
+          <div class="text-xs text-dim">Instant alerts for @mentions • Regular Circle chats batched every 2h</div>
+        </div>
+        <button class="btn-ghost" onclick="closeModal('modal-notifications')">✕</button>
+      </div>
+
+      <div class="card" style="margin:0 0 12px; padding:10px 12px;">
+        <div class="row-between">
+          <div>
+            <div class="text-xs" style="font-weight:800; color:var(--purple);">📦 2-HOUR CIRCLE DIGEST QUEUE</div>
+            <div class="text-xs text-dim mt-2" id="digest-queue-summary">2 batched circle updates waiting for next 2h summary.</div>
+          </div>
+          <button class="btn-secondary" style="font-size:11px; padding:6px 10px;" onclick="flushTwoHourDigest()">Deliver Digest Now</button>
+        </div>
+      </div>
+
+      <div id="notifications-list"></div>
+
+      <div class="card" style="margin:12px 0 0; padding:10px 12px;">
+        <div class="text-xs" style="font-weight:800;">NOTIFICATION PREFERENCES</div>
+        <label class="row-between text-xs mt-2">
+          <span>Immediate @mention alerts</span>
+          <input type="checkbox" checked style="width:auto;" onchange="showToast('Updated mention alert preference')" />
+        </label>
+        <label class="row-between text-xs mt-2">
+          <span>2-hour batched Circle digest</span>
+          <input type="checkbox" checked style="width:auto;" onchange="showToast('Updated 2h digest preference')" />
+        </label>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal: Privacy & Safety Center -->
+  <div id="modal-safety" class="modal-backdrop" onclick="closeModalOnBg(event, 'modal-safety')">
+    <div class="modal-sheet">
+      <div class="modal-header">
+        <div style="font-weight:800; font-size:16px;">🔐 Privacy & Safety Controls</div>
+        <button class="btn-ghost" onclick="closeModal('modal-safety')">✕</button>
+      </div>
+      <div class="text-xs text-dim mb-2">ACTIVE PROTECTIONS</div>
+      <div class="card" style="margin:0 0 12px; font-size:12px; line-height:1.6;">
+        • <strong>Low-Pressure Design:</strong> Last-seen & read-receipts disabled system-wide.<br/>
+        • <strong>Private Beats:</strong> Public like counts hidden; only creators see their own Beat totals.<br/>
+        • <strong>Private Mood Stack:</strong> Expired media bubbles visible strictly to you.<br/>
+        • <strong>Restricted Users:</strong> <span id="restricted-users-list">None</span>
+      </div>
+      <button class="btn-secondary" style="width:100%; color:var(--danger);" onclick="resetAllDemoData()">
+        ♻️ Reset All Meonix Demo Data
+      </button>
+    </div>
+  </div>
+</div>
+
 <script>
-const profiles = {
-  "srikruthi": {
-    displayName: "Srikruthi",
-ending: "I don't know every side of you, and I won't pretend that I do. These are simply a few things I've noticed and appreciated. Maybe some descriptions fit you, maybe some don't. You understand yourself better than I ever could. I appreciate the times you've helped me and the patience you've shown. Even the little things haven't gone unnoticed. I'm still learning to listen better, think before reacting and respect other people's feelings. I don't want to define you through these words. I just wanted you to know that some little things about you are noticed and appreciated.",    
-traits: [
-      {
-        title: "Quietly Disciplined",
-        description: "You seem like someone who doesn't need to announce every little thing you're doing. You have your own priorities, your own responsibilities and your own way of working towards what matters to you. Sometimes, the people who make the most consistent efforts are the ones who speak the least about them.",
-        thought: "Progress doesn't always need an audience."
-      },
-      {
-        title: "Realistic, Yet Thoughtful",
-        description: "You seem to value things that make sense in real life. Rather than getting carried away by words or unrealistic expectations, you appear to appreciate practical thinking, meaningful efforts and a stable future. Having dreams is beautiful, but knowing how to work towards them is something special.",
-        thought: "Dreams become meaningful when we take steps towards them."
-      },
-      {
-        title: "Kind in Your Own Way",
-        description: "I've noticed that you have helped me at times, even in simple situations. Maybe you don't consider those things particularly important, but I do notice them. Kindness doesn't always have to be expressed through big gestures. Sometimes, a small helpful action says enough.",
-        thought: "Small acts of kindness can mean more than we realise."
-      },
-      {
-        title: "Careful About Who You Let Close",
-        description: "You don't seem like someone who shares everything with everyone immediately. Perhaps you prefer to understand a person and feel comfortable before letting them see more of you. And that's okay. Trust doesn't have to be rushed, and personal space deserves respect.",
-        thought: "Trust doesn't have to be rushed."
-      },
-      {
-        title: "Thoughtful Before Reacting",
-        description: "You seem to have your own way of processing things. Sometimes, taking time before responding or making a decision can be more meaningful than reacting immediately. But being thoughtful doesn't mean you must always remain calm or have the perfect response. You're human, too.",
-        thought: "It's okay to take a moment before responding."
-      },
-      {
-        title: "Quietly Resilient",
-        description: "Maybe you have difficult days that other people don't always notice. You might prefer dealing with certain things in your own way rather than explaining everything to everyone. But I hope you know that you don't always have to be strong. It's okay to have difficult moments, too.",
-        thought: "You don't have to be strong every single day."
-      },
-      {
-        title: "Comfortable in Your Own Rhythm",
-        description: "You seem to appreciate having your own space, making your own choices and doing things at your own pace. You don't need to be constantly expressive or available to make your presence meaningful. You deserve to be comfortable being yourself.",
-        thought: "You don't have to follow someone else's rhythm."
-      }
-    ]
-  },
-  "bhavana": {
-    displayName: "Bhavana",
-    ending: "One thing I want to say ❤️\n\nYou've always been a humble and patient person, working hard for your goals and standing by the people you care about.\n\nThank you for being there for our family and for always supporting us. I hope you achieve everything you're working towards.\n\nKeep working hard, keep growing and never give up on your dreams.\n\nAnd no matter how much we tease or argue with each other, you're always my sister. 😊",
-    traits: [
-      {
-        title: "Humble by Nature",
-        description: "You have a humble way of treating people. You don't need to make a big show of what you do. Staying grounded and being kind are qualities that make a person special.",
-        thought: "True goodness doesn't need recognition."
-      },
-      {
-        title: "Patient Through Challenges",
-        description: "You try to handle situations with patience. Not everything happens quickly or exactly as planned, but patience helps us keep going without giving up.",
-        thought: "Some things are worth waiting and working for."
-      },
-      {
-        title: "Hardworking and Consistent",
-        description: "You put effort into the things that matter to you. Reaching goals takes commitment, and your willingness to keep working towards them is something I appreciate.",
-        thought: "Small efforts, repeated every day, create progress."
-      },
-      {
-        title: "Focused on Your Goals",
-        description: "You have things you want to achieve, and you keep moving towards them. I hope you continue believing in your abilities and give yourself the chance to reach everything you're aiming for.",
-        thought: "Keep your goals close and keep moving forward."
-      },
-      {
-        title: "Supportive by Heart",
-        description: "You stand beside the people you care about. Your support means a lot to our family, and even ordinary moments of being there for someone can make a real difference.",
-        thought: "Being there for someone is a gift."
-      },
-      {
-        title: "Strength in Your Values",
-        description: "You care about doing what is good for the people close to you. Holding on to good values and supporting what you believe is right are qualities worth keeping.",
-        thought: "Let your values guide the choices you make."
-      },
-      {
-        title: "A Caring Sister",
-        description: "You're not just someone in the family; you're my sister. Your support, patience and presence matter, even if I don't always say it.",
-        thought: "Family bonds are built through little things."
-      }
-    ]
-  }
-};
-const unfinishedNames = [];
-</script>
-<script>
-const entry = document.getElementById("entry");
-const result = document.getElementById("result");
-const content = document.getElementById("resultContent");
-const input = document.getElementById("personName");
+/* ============================================================================
+   MEONIX PHASE 1 — COMPLETE CLIENT ENGINE (ALL 10 BLUEPRINT MODULES)
+   ============================================================================ */
 
-function escapeHTML(value) {
-  return String(value).replace(/[&<>"']/g, c => ({
-    "&": "&amp;",
-    "<": "&lt;",
-    ">": "&gt;",
-    '"': "&quot;",
-    "'": "&#39;"
-  })[c]);
+const STARTER_POSES = ["🧑‍🚀", "🦊", "🎧", "🦉", "⚡", "🛹", "📚", "🌙", "☕", "🎨", "🐱", "🔥"];
+const MOOD_EMOJIS = ["😴", "📚", "☕", "🎧", "🔥", "😭", "🚌", "🍜", "⚡", "🌙", "😎", "🤯"];
+
+// 19 Collectible Birds (Solar Phoenix unlocked via Founder Tag #002-#100)
+const BIRDS_ROSTER = [
+  { id: 1, name: "Ember Sparrow", emoji: "🐤", rare: false },
+  { id: 2, name: "Solar Phoenix", emoji: "🦅", rare: true, founderOnly: true },
+  { id: 3, name: "Night Owl", emoji: "🦉", rare: false },
+  { id: 4, name: "Sky Kingfisher", emoji: "🐦", rare: false },
+  { id: 5, name: "Cloud Dove", emoji: "🕊️", rare: false },
+  { id: 6, name: "Campus Crow", emoji: "🐦‍⬛", rare: false },
+  { id: 7, name: "Sun Parrot", emoji: "🦜", rare: false },
+  { id: 8, name: "Dusk Flamingo", emoji: "🦩", rare: false },
+  { id: 9, name: "Frost Penguin", emoji: "🐧", rare: false },
+  { id: 10, name: "Mist Swan", emoji: "🦢", rare: false },
+  { id: 11, name: "Storm Falcon", emoji: "🪶", rare: false },
+  { id: 12, name: "Dawn Rooster", emoji: "🐓", rare: false },
+  { id: 13, name: "Golden Duck", emoji: "🦆", rare: false },
+  { id: 14, name: "Peacock Vibe", emoji: "🦚", rare: true },
+  { id: 15, name: "Crimson Robin", emoji: "🐤", rare: false },
+  { id: 16, name: "Zen Crane", emoji: "🦢", rare: false },
+  { id: 17, name: "Turbo Swift", emoji: "🐦", rare: false },
+  { id: 18, name: "Star Finch", emoji: "🐥", rare: false },
+  { id: 19, name: "Aurora Eagle", emoji: "🦅", rare: true }
+];
+
+// Generate crisp SVG Data URLs for built-in sample campus photos/GIFs (zero external network dependency)
+function makeSampleArt(title, subtitle, c1, c2) {
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="600" height="600" viewBox="0 0 600 600">
+    <defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="${c1}"/><stop offset="100%" stop-color="${c2}"/>
+    </linearGradient></defs>
+    <rect width="600" height="600" fill="url(#g)"/>
+    <circle cx="480" cy="130" r="95" fill="rgba(255,255,255,0.12)"/>
+    <circle cx="130" cy="470" r="130" fill="rgba(0,0,0,0.22)"/>
+    <text x="50%" y="48%" dominant-baseline="middle" text-anchor="middle" fill="#FFFFFF" font-family="sans-serif" font-weight="800" font-size="38">${title}</text>
+    <text x="50%" y="56%" dominant-baseline="middle" text-anchor="middle" fill="rgba(255,255,255,0.85)" font-family="sans-serif" font-weight="600" font-size="22">${subtitle}</text>
+  </svg>`;
+  return "data:image/svg+xml;utf8," + encodeURIComponent(svg);
 }
 
-function showProfile(profile) {
-  content.innerHTML = `
-    <section class="story-viewer">
-      <div class="story-progress" id="storyProgress">
-        ${profile.traits.map(() => "<span><i></i></span>").join("")}
-      </div>
-      <div class="story-top">
-        <span>A FEW THINGS I'VE NOTICED</span>
-        <span id="storyCounter">01 / 07</span>
-      </div>
-      <div class="story-stage" id="storyStage"></div>
-      <div class="story-hint">Tap right or left · Swipe to navigate</div>
-    </section>
-  `;
+const SAMPLE_MEDIA_1 = makeSampleArt("🚌 Bus Stand 7:45 AM", "Waiting for college express", "#FF6B2C", "#1E293B");
+const SAMPLE_MEDIA_2 = makeSampleArt("☕ Canteen Cold Coffee", "Post-lab survival fuel", "#0F766E", "#090C14");
+const SAMPLE_MEDIA_3 = makeSampleArt("📚 Library 3rd Floor", "Exam sprint mode ON", "#4338CA", "#0F172A");
 
-  const stage = document.getElementById("storyStage");
-  const progress = document.getElementById("storyProgress");
-  const counter = document.getElementById("storyCounter");
+// 4 Anonymous Starter Guides (Progressive Fade based on real friend count)
+const GUIDE_ACCOUNTS = [
+  { id: "sky_scout", handle: "@sky_scout", pose: "🚌", isGuide: true, emoji: "🚌", caption: "Waiting at bus stand — drop yours!", media: SAMPLE_MEDIA_1, x: 14, y: 12 },
+  { id: "city_drifter", handle: "@city_drifter", pose: "🌆", isGuide: true, emoji: "🌆", caption: "Evening walk near main gate", media: null, x: 64, y: 18 },
+  { id: "study_desk", handle: "@study_desk", pose: "📚", isGuide: true, emoji: "📚", caption: "45m deep focus sprint", media: null, x: 20, y: 54 },
+  { id: "chill_owl", handle: "@chill_owl", pose: "🦉", isGuide: true, emoji: "😴", caption: "Brain off till tomorrow", media: null, x: 62, y: 58 }
+];
 
-  let current = 0;
-  let pointerStart = null;
-  let suppressClick = false;
+// Campus Classmates Directory (for Friend Suggestions & Discovery)
+const CAMPUS_DIRECTORY = [
+  { id: "u_rohan", handle: "@rohan_k", pose: "🎧", tag: "#003", mutuals: 3, sharedCircle: "CSE-B Official", isNew: true, away: "In class" },
+  { id: "u_ananya", handle: "@ananya_r", pose: "☕", tag: "#005", mutuals: 2, sharedCircle: "CSE-B Official", isNew: true, away: "5% battery" },
+  { id: "u_karthik", handle: "@karthik_99", pose: "⚡", tag: "#011", mutuals: 1, sharedCircle: "Campus Tea & Gossip", isNew: false, away: "On bus" },
+  { id: "u_sneha", handle: "@sneha_m", pose: "🎨", tag: "#012", mutuals: 2, sharedCircle: "CSE-B Official", isNew: true, away: "Crash mode" },
+  { id: "u_vikram", handle: "@vikram_dev", pose: "🛹", tag: "#013", mutuals: 0, sharedCircle: "Campus Tea & Gossip", isNew: true, away: "In class" }
+];
 
-  function update(index) {
-    current = Math.max(0, Math.min(index, 7));
+const STORAGE_KEY = "meonix_v1_state";
 
-    if (current < 7) {
-      const trait = profile.traits[current];
+function getInitialState() {
+  const now = Date.now();
+  return {
+    registered: false,
+    // Founder Tag Registry: #001 = @meonix, #008 = quietly reserved, #002-#013 claimed
+    claimedTagNumbers: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13],
+    user: {
+      id: "me",
+      handle: "",
+      pose: "🧑‍🚀",
+      founderTag: null,
+      tagSealed: false,
+      signupTimestamp: now,
+      defaultPrivacy: "Friends",
+      awayStatus: "In class",
+      streakDay: 1,
+      activeBirdId: 1,
+      unlockedBirds: [1],
+      friends: [], // { id, tier: 'Friends' | 'Close Friends' | 'BFFs' }
+      restrictedIds: []
+    },
+    moods: [
+      {
+        id: "m_rohan_1",
+        userId: "u_rohan",
+        handle: "@rohan_k",
+        emoji: "☕",
+        caption: "Canteen coffee before DBMS lab",
+        media: SAMPLE_MEDIA_2,
+        privacy: "Public",
+        createdAt: now - 3600 * 1000,
+        expiresAt: now + 5 * 3600 * 1000,
+        x: 42, y: 34
+      },
+      {
+        id: "m_ananya_1",
+        userId: "u_ananya",
+        handle: "@ananya_r",
+        emoji: "🎧",
+        caption: "Lo-fi & notes",
+        media: null,
+        privacy: "Public",
+        createdAt: now - 1800 * 1000,
+        expiresAt: now + 11 * 3600 * 1000,
+        x: 72, y: 40
+      }
+    ],
+    // Private Mood Stack (expired media bubbles only)
+    moodStack: [
+      {
+        id: "stack_seed_1",
+        caption: "First late-night study session",
+        media: SAMPLE_MEDIA_3,
+        savedAt: now - 86400 * 1000
+      }
+    ],
+    posts: [
+      {
+        id: "p_1",
+        userId: "u_rohan",
+        handle: "@rohan_k",
+        pose: "🎧",
+        tag: "#003",
+        privacy: "Public",
+        text: "Finally a feed without random strangers or public like counts. Just batchmates.",
+        media: null,
+        beatsBy: ["u_ananya"],
+        createdAt: now - 4200 * 1000
+      },
+      {
+        id: "p_2",
+        userId: "u_ananya",
+        handle: "@ananya_r",
+        pose: "☕",
+        tag: "#005",
+        privacy: "Public",
+        text: "Morning coffee view before 9 AM lecture.",
+        media: SAMPLE_MEDIA_2,
+        beatsBy: ["u_rohan", "u_sneha"],
+        createdAt: now - 2100 * 1000
+      }
+    ],
+    micros: [
+      {
+        id: "mic_1",
+        userId: "u_sneha",
+        handle: "@sneha_m",
+        pose: "🎨",
+        tag: "#012",
+        caption: "3 frames from today's campus walk",
+        mediaList: [SAMPLE_MEDIA_1, SAMPLE_MEDIA_2, SAMPLE_MEDIA_3],
+        activeIdx: 0,
+        beatsBy: ["u_rohan"],
+        createdAt: now - 3000 * 1000
+      }
+    ],
+    chats: {
+      "u_rohan": {
+        peerId: "u_rohan",
+        locked: false,
+        lockQuestion: "",
+        lockAnswerHash: "",
+        unlockedThisSession: true,
+        messages: [
+          { id: "msg_1", sender: "u_rohan", text: "Yo! Did you grab a founder tag yet?", ttl: 0, expiresAt: null, ts: now - 1500 * 1000 }
+        ]
+      },
+      "u_ananya": {
+        peerId: "u_ananya",
+        locked: false,
+        lockQuestion: "",
+        lockAnswerHash: "",
+        unlockedThisSession: true,
+        messages: [
+          { id: "msg_2", sender: "u_ananya", text: "Drop your mood in the Sky so we can test the streak egg!", ttl: 0, expiresAt: null, ts: now - 900 * 1000 }
+        ]
+      }
+    },
+    circles: [
+      {
+        id: "c_cse",
+        name: "CSE-B Official",
+        category: "Study",
+        inviteCode: "CSE26",
+        joined: true,
+        pinned: "Mid-sem lab internal timetable uploaded. Check Study tag.",
+        messages: [
+          { id: "cm_1", handle: "@rohan_k", tag: "study", text: "DBMS Unit 3 notes are in the lab drive.", ts: now - 5000 * 1000 },
+          { id: "cm_2", handle: "@sneha_m", tag: "gossip", text: "Who is behind #001 @meonix? Whole block is guessing 👀", ts: now - 2400 * 1000 }
+        ]
+      },
+      {
+        id: "c_gossip",
+        name: "Campus Tea & Gossip",
+        category: "Gossip",
+        inviteCode: "TEA99",
+        joined: true,
+        pinned: "Keep it fun & zero harassment. Report button active.",
+        messages: [
+          { id: "cm_3", handle: "@karthik_99", tag: "gossip", text: "Only ~80 founder tags left for a 5,000 student campus!", ts: now - 1200 * 1000 }
+        ]
+      },
+      {
+        id: "c_lab",
+        name: "2026 Project Builders",
+        category: "General",
+        inviteCode: "LAB2026",
+        joined: false,
+        pinned: "Share hackathon teammates & project demos.",
+        messages: [
+          { id: "cm_4", handle: "@vikram_dev", tag: "general", text: "Anyone building PWAs this semester?", ts: now - 7200 * 1000 }
+        ]
+      }
+    ],
+    notifications: [
+      { id: "n_1", type: "mention", title: "Direct @mention in CSE-B Official", body: "@rohan_k mentioned you in Study", unread: true, ts: now - 600 * 1000 }
+    ],
+    digestQueue: [
+      "CSE-B Official: 2 new messages in Study & Gossip",
+      "Campus Tea & Gossip: 1 new message"
+    ]
+  };
+}
 
-      stage.innerHTML = `
-        <div class="story-copy">
-          <span class="story-number">
-            ${String(current + 1).padStart(2, "0")} / 07
-          </span>
-          <h2>${escapeHTML(trait.title)}</h2>
-          <p>${escapeHTML(trait.description)}</p>
-          <p class="story-thought">${escapeHTML(trait.thought)}</p>
-        </div>
-      `;
-      counter.textContent =
-        String(current + 1).padStart(2, "0") + " / 07";
-    } else {
-      stage.innerHTML = `
-        <div class="story-copy story-ending">
-          <h2>A little something I want you to know</h2>
-          ${String(profile.ending || "").split("\\n\\n").map(paragraph => `<p>${escapeHTML(paragraph)}</p>`).join("")}
-        </div>
-      `;
-      counter.textContent = "A NOTE";
+let state = loadState();
+let selectedPose = STARTER_POSES[0];
+let selectedMoodEmoji = MOOD_EMOJIS[0];
+let draftMoodMedia = null;
+let draftHomeMedia = null;
+let draftMicroMedia = [];
+let homeFilter = "friends";
+let activeViewingMood = null;
+let activeChatPeerId = null;
+let activeCircleId = null;
+let circleTagFilter = "all";
+
+function loadState() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (raw) return JSON.parse(raw);
+  } catch (e) {}
+  return getInitialState();
+}
+
+function saveState() {
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+  } catch (e) {
+    showToast("Storage full — older media trimmed");
+  }
+}
+
+function showToast(msg) {
+  const el = document.getElementById("toast");
+  el.textContent = msg;
+  el.classList.add("show");
+  clearTimeout(window._toastTimer);
+  window._toastTimer = setTimeout(() => el.classList.remove("show"), 2600);
+}
+
+/* ============================================================================
+   1. DOORWAY — FOUNDER TAG ALLOCATION (#002-#100, SKIPPING #001 & #008)
+   ============================================================================ */
+function getNextAvailableFounderTag() {
+  for (let n = 2; n <= 100; n++) {
+    if (n === 8) continue; // Quietly reserved
+    if (!state.claimedTagNumbers.includes(n)) {
+      return n;
     }
+  }
+  return null;
+}
 
-    [...progress.children].forEach((bar, i) => {
-      bar.firstElementChild.style.width =
-        i < current ? "100%" : i === current ? "35%" : "0%";
-    });
+function getRemainingPublicSpots() {
+  let count = 0;
+  for (let n = 2; n <= 100; n++) {
+    if (n === 8) continue;
+    if (!state.claimedTagNumbers.includes(n)) count++;
+  }
+  return count;
+}
+
+function initDoorway() {
+  const poseGrid = document.getElementById("pose-selector");
+  poseGrid.innerHTML = STARTER_POSES.map(p => `
+    <button type="button" class="pose-item ${p === selectedPose ? 'selected' : ''}" onclick="selectStarterPose('${p}')">${p}</button>
+  `).join("");
+
+  const nextNum = getNextAvailableFounderTag();
+  const rem = getRemainingPublicSpots();
+  document.getElementById("doorway-next-tag").textContent = nextNum ? `#${String(nextNum).padStart(3, "0")}` : "FULL";
+  document.getElementById("doorway-spots-left").textContent = rem;
+
+  if (state.registered) {
+    document.getElementById("doorway-screen").style.display = "none";
+  }
+}
+
+function selectStarterPose(pose) {
+  selectedPose = pose;
+  initDoorway();
+}
+
+function completeDoorwaySignup() {
+  let raw = document.getElementById("signup-handle").value.trim().toLowerCase().replace(/[^a-z0-9_]/g, "");
+  if (!raw) raw = "campus_" + Math.floor(100 + Math.random() * 899);
+  const handle = "@" + raw;
+
+  const nextNum = getNextAvailableFounderTag();
+  let tagStr = null;
+  if (nextNum !== null) {
+    state.claimedTagNumbers.push(nextNum);
+    tagStr = `#${String(nextNum).padStart(3, "0")}`;
+    // Founder tag achievement unlocks Solar Phoenix (#2)
+    if (!state.user.unlockedBirds.includes(2)) {
+      state.user.unlockedBirds.push(2);
+    }
   }
 
-  stage.addEventListener("pointerdown", event => {
-    pointerStart = event.clientX;
-  });
+  state.registered = true;
+  state.user.handle = handle;
+  state.user.pose = selectedPose;
+  state.user.founderTag = tagStr;
+  state.user.tagSealed = false; // Must post 1 mood or add 1 friend within 24h to seal!
+  state.user.signupTimestamp = Date.now();
+  state.user.defaultPrivacy = document.getElementById("signup-privacy").value;
 
-  stage.addEventListener("pointerup", event => {
-    if (pointerStart === null) return;
+  saveState();
+  document.getElementById("doorway-screen").style.display = "none";
+  renderAll();
+  showToast(`Welcome ${handle}! Tag ${tagStr || 'Member'} reserved (24h to seal)`);
+}
 
-    const distance = event.clientX - pointerStart;
-    pointerStart = null;
+function checkAndSealFounderTag(reason) {
+  if (state.user.founderTag && !state.user.tagSealed) {
+    state.user.tagSealed = true;
+    addNotification("founder", `Founder Tag ${state.user.founderTag} Sealed!`, `Unlocked via ${reason}. Solar Phoenix added to your bird roster.`);
+    showToast(`🏅 Founder Tag ${state.user.founderTag} Permanently Sealed!`);
+  }
+}
 
-    if (Math.abs(distance) > 45) {
-      suppressClick = true;
-      update(distance < 0 ? current + 1 : current - 1);
+/* ============================================================================
+   2. MOOD SKY, PROGRESSIVE FADE GUIDES & MOOD STACK
+   ============================================================================ */
+function getVisibleGuides() {
+  const realCount = state.user.friends.length;
+  if (realCount === 0) return GUIDE_ACCOUNTS.slice(0, 4);
+  if (realCount <= 2) return GUIDE_ACCOUNTS.slice(0, 2);
+  if (realCount <= 4) return GUIDE_ACCOUNTS.slice(0, 1);
+  return []; // 5+ real friends -> 100% faded out!
+}
+
+function purgeExpiredMoodsToStack() {
+  const now = Date.now();
+  const stillActive = [];
+  let archivedCount = 0;
+
+  for (const m of state.moods) {
+    if (m.expiresAt <= now) {
+      // ONLY expired media-based big bubbles save to owner's Private Mood Stack
+      if (m.userId === "me" && m.media) {
+        state.moodStack.unshift({
+          id: "stack_" + m.id,
+          caption: m.caption || "Media Mood",
+          media: m.media,
+          savedAt: now
+        });
+        archivedCount++;
+      }
+      // Ordinary emoji & caption-only moods are NOT saved
+    } else {
+      stillActive.push(m);
+    }
+  }
+  state.moods = stillActive;
+  if (archivedCount > 0) saveState();
+  return archivedCount;
+}
+
+function simulateExpireMoods() {
+  let expiredAny = false;
+  state.moods.forEach(m => {
+    if (m.userId === "me") {
+      m.expiresAt = Date.now() - 1000;
+      expiredAny = true;
     }
   });
+  if (!expiredAny) {
+    showToast("Drop a mood first to test expiration!");
+    return;
+  }
+  const saved = purgeExpiredMoodsToStack();
+  saveState();
+  renderAll();
+  showToast(saved > 0 ? `Archived ${saved} media mood(s) to Private Mood Stack!` : "Ordinary emoji mood expired (not saved to Stack).");
+}
 
-  stage.addEventListener("pointercancel", () => {
-    pointerStart = null;
+function renderMoodSky() {
+  purgeExpiredMoodsToStack();
+  const arena = document.getElementById("sky-arena");
+  const restricted = state.user.restrictedIds;
+
+  // Starfield background
+  let starsHtml = "";
+  for (let i = 0; i < 22; i++) {
+    const sx = (i * 47) % 96;
+    const sy = (i * 31) % 92;
+    starsHtml += `<div class="sky-star" style="left:${sx}%; top:${sy}%;"></div>`;
+  }
+
+  const visibleGuides = getVisibleGuides();
+  const activeMoods = state.moods.filter(m => !restricted.includes(m.userId));
+
+  document.getElementById("sky-active-count").textContent = `🌤️ ${activeMoods.length + visibleGuides.length} Floating`;
+  document.getElementById("sky-guide-status").textContent =
+    visibleGuides.length > 0 ? `${visibleGuides.length} Starter Guides` : "100% Real Campus";
+
+  let bubblesHtml = "";
+
+  // Render Progressive Fade Starter Guides
+  visibleGuides.forEach((g, idx) => {
+    const isBig = Boolean(g.media);
+    const fadeOpacity = state.user.friends.length === 0 ? 1 : 0.8;
+    bubblesHtml += `
+      <div class="mood-bubble ${isBig ? 'bubble-big' : 'bubble-small'}"
+           style="left:${g.x}%; top:${g.y}%; opacity:${fadeOpacity}; animation-delay:${idx * 0.7}s;"
+           onclick="openGuideMoodModal('${g.id}')">
+        <div class="bubble-orb">
+          ${isBig ? `<img src="${g.media}" alt="guide"/><span class="bubble-media-badge">${g.emoji}</span>` : g.emoji}
+        </div>
+        <div class="bubble-meta">
+          <div class="bubble-handle">${g.handle} <span class="pill pill-muted" style="padding:1px 5px; font-size:9px;">GUIDE</span></div>
+          <div class="bubble-caption">${escapeHtml(g.caption)}</div>
+        </div>
+      </div>
+    `;
   });
 
-  stage.addEventListener("click", event => {
-    if (suppressClick) {
-      suppressClick = false;
+  // Render Real Users' Mood Bubbles
+  activeMoods.forEach((m, idx) => {
+    const isBig = Boolean(m.media);
+    const hrsLeft = Math.max(1, Math.ceil((m.expiresAt - Date.now()) / 3600000));
+    bubblesHtml += `
+      <div class="mood-bubble ${isBig ? 'bubble-big' : 'bubble-small'}"
+           style="left:${m.x}%; top:${m.y}%; animation-delay:${(idx + 1) * 0.5}s;"
+           onclick="openMoodModal('${m.id}')">
+        <div class="bubble-orb">
+          ${isBig ? `<img src="${m.media}" alt="mood"/><span class="bubble-media-badge">${m.emoji}</span>` : m.emoji}
+        </div>
+        <div class="bubble-meta">
+          <div class="bubble-handle">${m.userId === 'me' ? state.user.handle : m.handle}</div>
+          <div class="bubble-caption">${m.caption ? escapeHtml(m.caption) : `${hrsLeft}h left • ${m.privacy}`}</div>
+        </div>
+      </div>
+    `;
+  });
+
+  arena.innerHTML = starsHtml + bubblesHtml;
+  document.getElementById("stack-count-top").textContent = state.moodStack.length;
+}
+
+function initMoodComposer() {
+  const picker = document.getElementById("mood-emoji-picker");
+  picker.innerHTML = MOOD_EMOJIS.map(e => `
+    <button type="button" class="pose-item ${e === selectedMoodEmoji ? 'selected' : ''}"
+            style="width:42px; height:42px; font-size:20px;"
+            onclick="selectMoodEmoji('${e}')">${e}</button>
+  `).join("");
+  document.getElementById("mood-privacy-select").value = state.user.defaultPrivacy;
+}
+
+function selectMoodEmoji(emoji) {
+  selectedMoodEmoji = emoji;
+  initMoodComposer();
+}
+
+function handleMoodMediaSelect(input) {
+  const file = input.files[0];
+  if (!file) return;
+  if (file.size > 5 * 1024 * 1024) {
+    showToast("Max 5 MB per media file");
+    return;
+  }
+  const reader = new FileReader();
+  reader.onload = e => {
+    draftMoodMedia = e.target.result;
+    document.getElementById("mood-media-preview-img").src = draftMoodMedia;
+    document.getElementById("mood-media-preview-box").style.display = "block";
+  };
+  reader.readAsDataURL(file);
+}
+
+function attachSampleCampusSnap() {
+  const samples = [SAMPLE_MEDIA_1, SAMPLE_MEDIA_2, SAMPLE_MEDIA_3];
+  draftMoodMedia = samples[Math.floor(Math.random() * samples.length)];
+  document.getElementById("mood-media-preview-img").src = draftMoodMedia;
+  document.getElementById("mood-media-preview-box").style.display = "block";
+}
+
+function clearMoodMedia() {
+  draftMoodMedia = null;
+  document.getElementById("mood-media-preview-box").style.display = "none";
+  document.getElementById("mood-media-file").value = "";
+}
+
+function publishMood() {
+  const caption = document.getElementById("mood-caption-input").value.trim();
+  const hours = parseInt(document.getElementById("mood-duration-select").value, 10);
+  const privacy = document.getElementById("mood-privacy-select").value;
+
+  const newMood = {
+    id: "m_" + Date.now(),
+    userId: "me",
+    handle: state.user.handle,
+    emoji: selectedMoodEmoji,
+    caption,
+    media: draftMoodMedia,
+    privacy,
+    createdAt: Date.now(),
+    expiresAt: Date.now() + hours * 3600 * 1000,
+    x: 15 + Math.floor(Math.random() * 58),
+    y: 16 + Math.floor(Math.random() * 52)
+  };
+
+  state.moods.push(newMood);
+  document.getElementById("mood-caption-input").value = "";
+  clearMoodMedia();
+
+  // Seal Founder Tag & Advance 7-day Egg Streak
+  checkAndSealFounderTag("dropping your first mood");
+  advanceStreakOnMood();
+
+  saveState();
+  closeModal("modal-new-mood");
+  renderAll();
+  showToast(newMood.media ? "Big Media Bubble launched! Will save to Mood Stack on expiry." : "Emoji Bubble floating in the Sky!");
+}
+
+function openMoodModal(moodId) {
+  const m = state.moods.find(x => x.id === moodId);
+  if (!m) return;
+  activeViewingMood = m;
+  document.getElementById("vm-handle").textContent = m.userId === "me" ? state.user.handle : m.handle;
+  document.getElementById("vm-privacy-pill").textContent = m.privacy;
+  document.getElementById("vm-caption").textContent = m.caption || `${m.emoji} Mood`;
+  const minsLeft = Math.max(1, Math.round((m.expiresAt - Date.now()) / 60000));
+  document.getElementById("vm-expiry").textContent = `Disappears in ${minsLeft >= 60 ? Math.round(minsLeft/60) + 'h' : minsLeft + 'm'}`;
+
+  const wrap = document.getElementById("vm-media-wrap");
+  if (m.media) {
+    wrap.innerHTML = `<img src="${m.media}" style="width:100%; max-height:280px; object-fit:cover; border-radius:16px; border:1px solid var(--border);" />`;
+  } else {
+    wrap.innerHTML = `<div style="font-size:64px; padding:18px 0;">${m.emoji}</div>`;
+  }
+
+  document.getElementById("vm-report-btn").onclick = () => {
+    restrictUser(m.userId, m.handle);
+    closeModal("modal-view-mood");
+  };
+  openModal("modal-view-mood");
+}
+
+function openGuideMoodModal(guideId) {
+  const g = GUIDE_ACCOUNTS.find(x => x.id === guideId);
+  if (!g) return;
+  activeViewingMood = { userId: g.id, handle: g.handle, caption: g.caption };
+  document.getElementById("vm-handle").textContent = `${g.handle} (GUIDE)`;
+  document.getElementById("vm-privacy-pill").textContent = "Starter Guide";
+  document.getElementById("vm-caption").textContent = g.caption;
+  document.getElementById("vm-expiry").textContent = "Fades automatically as you connect with real classmates";
+  document.getElementById("vm-media-wrap").innerHTML = g.media
+    ? `<img src="${g.media}" style="width:100%; max-height:260px; object-fit:cover; border-radius:16px;" />`
+    : `<div style="font-size:64px; padding:18px 0;">${g.emoji}</div>`;
+  openModal("modal-view-mood");
+}
+
+function sendQuickMoodReply() {
+  const input = document.getElementById("vm-reply-input");
+  const text = input.value.trim();
+  if (!text || !activeViewingMood) return;
+  if (activeViewingMood.userId === "me") {
+    showToast("That's your own mood bubble!");
+    return;
+  }
+  const peerId = activeViewingMood.userId;
+  if (!state.chats[peerId]) {
+    state.chats[peerId] = { peerId, locked: false, lockQuestion: "", lockAnswerHash: "", unlockedThisSession: true, messages: [] };
+  }
+  state.chats[peerId].messages.push({
+    id: "msg_" + Date.now(),
+    sender: "me",
+    text: `Replied to mood: "${text}"`,
+    ttl: 0,
+    expiresAt: null,
+    ts: Date.now()
+  });
+  input.value = "";
+  saveState();
+  closeModal("modal-view-mood");
+  showToast(`Sent private reply to ${activeViewingMood.handle}`);
+}
+
+/* ============================================================================
+   3. HOME FEED (CHRONOLOGICAL + PRIVATE BEATS)
+   ============================================================================ */
+function setHomeFilter(filter) {
+  homeFilter = filter;
+  document.getElementById("home-tab-friends").classList.toggle("active", filter === "friends");
+  document.getElementById("home-tab-public").classList.toggle("active", filter === "public");
+  renderHomeFeed();
+}
+
+function previewHomeFile(input) {
+  const file = input.files[0];
+  if (!file) return;
+  if (file.size > 5 * 1024 * 1024) {
+    showToast("Max 5 MB image size");
+    return;
+  }
+  const reader = new FileReader();
+  reader.onload = e => {
+    draftHomeMedia = e.target.result;
+    document.getElementById("home-file-name").textContent = file.name.slice(0, 16);
+  };
+  reader.readAsDataURL(file);
+}
+
+function createHomePost() {
+  const text = document.getElementById("home-post-text").value.trim();
+  const privacy = document.getElementById("home-post-vis").value;
+  if (!text && !draftHomeMedia) {
+    showToast("Write something or attach a photo");
+    return;
+  }
+  state.posts.unshift({
+    id: "p_" + Date.now(),
+    userId: "me",
+    handle: state.user.handle,
+    pose: state.user.pose,
+    tag: state.user.founderTag,
+    privacy,
+    text,
+    media: draftHomeMedia,
+    beatsBy: [],
+    createdAt: Date.now()
+  });
+  document.getElementById("home-post-text").value = "";
+  draftHomeMedia = null;
+  document.getElementById("home-file-name").textContent = "";
+  saveState();
+  renderHomeFeed();
+  showToast("Posted chronologically!");
+}
+
+function togglePostBeat(postId, btnEl) {
+  const post = state.posts.find(p => p.id === postId);
+  if (!post) return;
+  const idx = post.beatsBy.indexOf("me");
+  if (idx === -1) {
+    post.beatsBy.push("me");
+    if (btnEl) {
+      btnEl.classList.add("popping");
+      setTimeout(() => btnEl.classList.remove("popping"), 320);
+    }
+  } else {
+    post.beatsBy.splice(idx, 1);
+  }
+  saveState();
+  renderHomeFeed();
+}
+
+function renderHomeFeed() {
+  const friendIds = new Set(state.user.friends.map(f => f.id));
+  const restricted = new Set(state.user.restrictedIds);
+
+  // Strict newest-first chronological sort (no algorithmic ranking)
+  const visiblePosts = [...state.posts]
+    .filter(p => !restricted.has(p.userId))
+    .filter(p => {
+      if (homeFilter === "public") return p.privacy === "Public";
+      return p.userId === "me" || friendIds.has(p.userId) || p.privacy === "Public";
+    })
+    .sort((a, b) => b.createdAt - a.createdAt);
+
+  const container = document.getElementById("home-feed-list");
+  if (!visiblePosts.length) {
+    container.innerHTML = `<div class="card text-xs text-dim" style="text-align:center;">No posts yet. Drop the first update!</div>`;
+    return;
+  }
+
+  container.innerHTML = visiblePosts.map(p => {
+    const isMine = p.userId === "me";
+    const beated = p.beatsBy.includes("me");
+    // PRIVACY RULE: Public Beat counts are HIDDEN; ONLY creator sees their own Beat count!
+    const beatLabel = isMine
+      ? `${p.beatsBy.length} Beat${p.beatsBy.length === 1 ? '' : 's'} (Only you see count)`
+      : (beated ? "Beat Sent" : "Send Beat");
+
+    return `
+      <article class="card">
+        <div class="post-header">
+          <div class="row-gap">
+            <div class="avatar-circle">${isMine ? state.user.pose : p.pose}</div>
+            <div>
+              <div class="row-gap">
+                <span style="font-weight:800; font-size:14px;">${isMine ? state.user.handle : p.handle}</span>
+                ${p.tag ? `<span class="pill pill-gold" style="padding:2px 6px;">${p.tag}</span>` : ""}
+              </div>
+              <div class="text-xs text-dim">${timeAgo(p.createdAt)} • ${p.privacy}</div>
+            </div>
+          </div>
+          ${!isMine ? `<button class="btn-ghost" onclick="restrictUser('${p.userId}', '${p.handle}')">•••</button>` : ""}
+        </div>
+        <div class="text-sm" style="line-height:1.45;">${escapeHtml(p.text)}</div>
+        ${p.media ? `<img src="${p.media}" class="post-media" alt="post media" />` : ""}
+        <div class="row-between mt-3">
+          <button class="beat-btn ${beated ? 'beated' : ''}" onclick="togglePostBeat('${p.id}', this)">
+            <span>${beated ? "🧡" : "🤍"}</span>
+            <span>${beatLabel}</span>
+          </button>
+          <span class="text-xs text-dim">Chronological</span>
+        </div>
+      </article>
+    `;
+  }).join("");
+}
+
+/* ============================================================================
+   4. MICRO — MULTI-PHOTO / GIF CAROUSELS (MAX 5 FILES, MAX 5 MB EACH)
+   ============================================================================ */
+function handleMicroFileSelect(input) {
+  const files = Array.from(input.files || []);
+  if (!files.length) return;
+  if (files.length > 5) {
+    showToast("Maximum 5 media files per Micro post!");
+    input.value = "";
+    return;
+  }
+  for (const f of files) {
+    if (f.size > 5 * 1024 * 1024) {
+      showToast(`"${f.name}" exceeds 5 MB limit!`);
+      input.value = "";
       return;
     }
+  }
+  draftMicroMedia = [];
+  let loaded = 0;
+  files.forEach(file => {
+    const reader = new FileReader();
+    reader.onload = e => {
+      draftMicroMedia.push(e.target.result);
+      loaded++;
+      if (loaded === files.length) {
+        document.getElementById("micro-selected-info").textContent = `${loaded} photo(s)/GIF(s) ready (validated ≤5 MB each)`;
+      }
+    };
+    reader.readAsDataURL(file);
+  });
+}
 
-    const rect = stage.getBoundingClientRect();
-    update(event.clientX > rect.left + rect.width / 2
-      ? current + 1
-      : current - 1);
+function createMicroPost() {
+  const caption = document.getElementById("micro-caption").value.trim();
+  const mediaList = draftMicroMedia.length ? draftMicroMedia : [SAMPLE_MEDIA_1, SAMPLE_MEDIA_2];
+
+  state.micros.unshift({
+    id: "mic_" + Date.now(),
+    userId: "me",
+    handle: state.user.handle,
+    pose: state.user.pose,
+    tag: state.user.founderTag,
+    caption: caption || "Campus snapshot stack",
+    mediaList,
+    activeIdx: 0,
+    beatsBy: [],
+    createdAt: Date.now()
   });
 
-  update(0);
+  document.getElementById("micro-caption").value = "";
+  document.getElementById("micro-files").value = "";
+  document.getElementById("micro-selected-info").textContent = "";
+  draftMicroMedia = [];
+  saveState();
+  renderMicroFeed();
+  showToast("Micro photo stack published!");
 }
 
-function showUnavailable(name) {
-  content.innerHTML = `
-    <div class="not-ready">
-      <div class="emoji">🌷</div>
-      <h2>Something is still growing...</h2>
-      <p>The personality profile for
-      <strong>${escapeHTML(name)}</strong> isn't completed yet.</p>
-      <p>Every person has a unique story, and understanding
-      someone takes time.</p>
-      <p>Maybe this little profile will be ready another day. ♡</p>
-    </div>
-  `;
+function stepMicroSlide(microId, dir) {
+  const mic = state.micros.find(m => m.id === microId);
+  if (!mic) return;
+  const len = mic.mediaList.length;
+  mic.activeIdx = (mic.activeIdx + dir + len) % len;
+  renderMicroFeed();
 }
 
-function showUnknown(name) {
-  content.innerHTML = `
-    <div class="not-ready">
-      <div class="emoji">🦋</div>
-      <h2>Not found just yet</h2>
-      <p>We couldn't find a prepared personality profile for
-      <strong>${escapeHTML(name)}</strong>.</p>
-      <p>Every person is unique. Not every story has been
-      added to this little world.</p>
-    </div>
-  `;
+function toggleMicroBeat(microId) {
+  const mic = state.micros.find(m => m.id === microId);
+  if (!mic) return;
+  const idx = mic.beatsBy.indexOf("me");
+  if (idx === -1) mic.beatsBy.push("me");
+  else mic.beatsBy.splice(idx, 1);
+  saveState();
+  renderMicroFeed();
 }
 
-document.getElementById("nameForm").addEventListener("submit", event => {
-  event.preventDefault();
+function renderMicroFeed() {
+  const restricted = new Set(state.user.restrictedIds);
+  const list = state.micros.filter(m => !restricted.has(m.userId));
+  const container = document.getElementById("micro-feed-list");
 
-  const name = input.value.trim();
-  if (!name) return;
+  container.innerHTML = list.map(m => {
+    const isMine = m.userId === "me";
+    const beated = m.beatsBy.includes("me");
+    const total = m.mediaList.length;
+    const idx = m.activeIdx || 0;
+    const beatLabel = isMine ? `${m.beatsBy.length} Beats (Private)` : (beated ? "Beat Sent" : "Send Beat");
 
-  const key = name.toLowerCase().replace(/\s+/g, " ");
+    return `
+      <article class="card">
+        <div class="post-header">
+          <div class="row-gap">
+            <div class="avatar-circle">${isMine ? state.user.pose : m.pose}</div>
+            <div>
+              <div style="font-weight:800; font-size:14px;">${isMine ? state.user.handle : m.handle}</div>
+              <div class="text-xs text-dim">${timeAgo(m.createdAt)} • ${total} item${total > 1 ? 's' : ''}</div>
+            </div>
+          </div>
+          ${m.tag ? `<span class="pill pill-gold">${m.tag}</span>` : ""}
+        </div>
 
-  entry.classList.add("hidden");
-  result.classList.remove("hidden");
+        <div class="micro-carousel">
+          <img src="${m.mediaList[idx]}" alt="micro frame" />
+          <span class="micro-counter">${idx + 1} / ${total}</span>
+          ${total > 1 ? `
+            <button class="micro-nav" style="left:8px;" onclick="stepMicroSlide('${m.id}', -1)">‹</button>
+            <button class="micro-nav" style="right:8px;" onclick="stepMicroSlide('${m.id}', 1)">›</button>
+          ` : ""}
+        </div>
 
-  if (profiles[key]) {
-    showProfile(profiles[key]);
-  } else if (unfinishedNames.includes(key)) {
-    showUnavailable(name);
+        <div class="text-sm mt-2">${escapeHtml(m.caption)}</div>
+        <div class="row-between mt-2">
+          <button class="beat-btn ${beated ? 'beated' : ''}" onclick="toggleMicroBeat('${m.id}')">
+            <span>${beated ? "🧡" : "🤍"}</span>
+            <span>${beatLabel}</span>
+          </button>
+          <span class="text-xs text-dim">Photo/GIF Stack</span>
+        </div>
+      </article>
+    `;
+  }).join("");
+}
+
+/* ============================================================================
+   5. MOOD STREAKS (7-DAY EGG HATCH) & 19 COLLECTIBLE BIRDS
+   ============================================================================ */
+function advanceStreakOnMood() {
+  if (state.user.streakDay < 7) {
+    state.user.streakDay += 1;
   } else {
-    showUnknown(name);
+    hatchNewBird();
+    state.user.streakDay = 1;
+  }
+}
+
+function advanceStreakDemo() {
+  if (state.user.streakDay < 7) {
+    state.user.streakDay += 1;
+    showToast(`Egg cracked further! Day ${state.user.streakDay}/7`);
+  } else {
+    hatchNewBird();
+    state.user.streakDay = 1;
+  }
+  saveState();
+  renderAll();
+}
+
+function hatchNewBird() {
+  const locked = BIRDS_ROSTER.filter(b => !state.user.unlockedBirds.includes(b.id) && (!b.founderOnly || state.user.founderTag));
+  if (locked.length > 0) {
+    const picked = locked[Math.floor(Math.random() * locked.length)];
+    state.user.unlockedBirds.push(picked.id);
+    state.user.activeBirdId = picked.id;
+    addNotification("streak", `🐣 Egg Hatched: ${picked.name}!`, `7-day mood streak completed! ${picked.emoji} ${picked.name} joined your profile.`);
+    showToast(`🎉 Egg Hatched! Unlocked ${picked.emoji} ${picked.name}!`);
+  } else {
+    showToast("🎉 7-Day Streak Complete! All eligible birds unlocked!");
+  }
+}
+
+function equipBird(birdId) {
+  if (!state.user.unlockedBirds.includes(birdId)) {
+    showToast("Complete 7-day mood streaks to hatch this bird!");
+    return;
+  }
+  state.user.activeBirdId = birdId;
+  saveState();
+  renderAll();
+  const bird = BIRDS_ROSTER.find(b => b.id === birdId);
+  showToast(`Equipped ${bird.emoji} ${bird.name}`);
+}
+
+function renderBirdsAndStreak() {
+  const day = state.user.streakDay;
+  const eggIcons = ["🥚", "🥚", "🐣", "🐣", "🐥", "🐥", "✨"];
+  document.getElementById("header-egg-icon").textContent = eggIcons[day - 1] || "🥚";
+  document.getElementById("header-streak-text").textContent = `Day ${day}/7`;
+
+  document.getElementById("egg-stage-visual").textContent = eggIcons[day - 1] || "🥚";
+  document.getElementById("egg-stage-label").textContent =
+    day === 7 ? "Day 7 of 7 — Ready to Hatch!" : `Day ${day} of 7 — Keep Dropping Moods`;
+  document.getElementById("egg-progress-bar").style.width = `${Math.round((day / 7) * 100)}%`;
+
+  const renderCard = b => {
+    const unlocked = state.user.unlockedBirds.includes(b.id);
+    const equipped = state.user.activeBirdId === b.id;
+    return `
+      <button type="button" class="bird-card ${unlocked ? '' : 'locked'} ${equipped ? 'equipped' : ''}"
+              onclick="equipBird(${b.id})">
+        <div style="font-size:22px;">${b.emoji}</div>
+        <div style="font-weight:700; margin-top:2px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${b.name}</div>
+        <div class="text-xs text-dim">${equipped ? 'Active' : (unlocked ? 'Equip' : (b.founderOnly ? 'Founder' : 'Locked'))}</div>
+      </button>
+    `;
+  };
+
+  document.getElementById("full-bird-roster").innerHTML = BIRDS_ROSTER.map(renderCard).join("");
+  document.getElementById("profile-birds-preview").innerHTML = BIRDS_ROSTER.slice(0, 8).map(renderCard).join("");
+}
+
+/* ============================================================================
+   6. CHAT (NO LAST-SEEN, QUICK AWAY, LOCKED MODE, TIME-BOMB MESSAGES)
+   ============================================================================ */
+const QUICK_AWAY_CHIPS = ["In class", "5% battery", "Crash mode", "On bus"];
+
+function setCommTab(tab) {
+  document.getElementById("comm-tab-dms").classList.toggle("active", tab === "dms");
+  document.getElementById("comm-tab-circles").classList.toggle("active", tab === "circles");
+  document.getElementById("comm-dms-panel").style.display = tab === "dms" ? "block" : "none";
+  document.getElementById("comm-circles-panel").style.display = tab === "circles" ? "block" : "none";
+}
+
+function setQuickAway(status) {
+  state.user.awayStatus = status;
+  saveState();
+  renderChatList();
+  showToast(`Quick Away set: "${status}"`);
+}
+
+function renderChatList() {
+  const awayBar = document.getElementById("quick-away-bar");
+  awayBar.innerHTML = QUICK_AWAY_CHIPS.map(chip => `
+    <button class="away-chip ${state.user.awayStatus === chip ? 'active' : ''}"
+            onclick="setQuickAway('${chip}')">${chip}</button>
+  `).join("");
+
+  const restricted = new Set(state.user.restrictedIds);
+  const peers = CAMPUS_DIRECTORY.filter(u => !restricted.has(u.id));
+  const listEl = document.getElementById("dm-thread-list");
+
+  listEl.innerHTML = peers.map(peer => {
+    const thread = state.chats[peer.id];
+    const lastMsg = thread && thread.messages.length ? thread.messages[thread.messages.length - 1] : null;
+    const isLocked = thread && thread.locked;
+
+    return `
+      <div class="chat-list-item" onclick="openChatThread('${peer.id}')">
+        <div class="row-gap">
+          <div class="avatar-circle">${peer.pose}</div>
+          <div>
+            <div class="row-gap">
+              <span style="font-weight:800; font-size:14px;">${peer.handle}</span>
+              <span class="pill pill-muted">${peer.away}</span>
+              ${isLocked ? `<span class="pill pill-gold">🔒 Locked</span>` : ""}
+            </div>
+            <div class="text-xs text-dim mt-2">
+              ${isLocked ? "Encrypted locked chat — tap to unlock" : (lastMsg ? escapeHtml(lastMsg.text) : "Tap to start low-pressure chat")}
+            </div>
+          </div>
+        </div>
+        <span class="text-xs text-dim">🔐</span>
+      </div>
+    `;
+  }).join("");
+}
+
+function openChatThread(peerId) {
+  activeChatPeerId = peerId;
+  const peer = CAMPUS_DIRECTORY.find(u => u.id === peerId) || { handle: peerId, away: "Campus" };
+  if (!state.chats[peerId]) {
+    state.chats[peerId] = { peerId, locked: false, lockQuestion: "", lockAnswerHash: "", unlockedThisSession: true, messages: [] };
+  }
+  const thread = state.chats[peerId];
+  if (thread.locked) {
+    thread.unlockedThisSession = false;
   }
 
-  window.scrollTo({ top: 0, behavior: "smooth" });
-});
+  document.getElementById("ct-peer-name").textContent = peer.handle;
+  document.getElementById("ct-peer-away").textContent = `Away chip: ${peer.away} • No last-seen • No read ticks`;
+  document.getElementById("ct-lock-setup").style.display = "none";
+  renderThreadMessages();
+  openModal("modal-chat-thread");
+}
 
-document.getElementById("backButton").addEventListener("click", () => {
-  result.classList.add("hidden");
-  entry.classList.remove("hidden");
+function toggleChatLockSetup() {
+  const box = document.getElementById("ct-lock-setup");
+  box.style.display = box.style.display === "none" ? "block" : "none";
+}
+
+function simpleHash(str) {
+  let h = 2166136261;
+  for (let i = 0; i < str.length; i++) {
+    h ^= str.charCodeAt(i);
+    h = Math.imul(h, 16777619);
+  }
+  return (h >>> 0).toString(16);
+}
+
+function saveChatLock() {
+  const q = document.getElementById("ct-lock-q").value.trim();
+  const a = document.getElementById("ct-lock-a").value.trim().toLowerCase();
+  if (!q || !a) {
+    showToast("Enter both a security question and answer");
+    return;
+  }
+  const thread = state.chats[activeChatPeerId];
+  thread.locked = true;
+  thread.lockQuestion = q;
+  thread.lockAnswerHash = simpleHash(a);
+  thread.unlockedThisSession = false;
+  document.getElementById("ct-lock-setup").style.display = "none";
+  saveState();
+  renderThreadMessages();
+  renderChatList();
+  showToast("🔒 Chat locked with Security Question!");
+}
+
+function removeChatLock() {
+  const thread = state.chats[activeChatPeerId];
+  thread.locked = false;
+  thread.lockQuestion = "";
+  thread.lockAnswerHash = "";
+  thread.unlockedThisSession = true;
+  document.getElementById("ct-lock-setup").style.display = "none";
+  saveState();
+  renderThreadMessages();
+  renderChatList();
+  showToast("Thread lock removed");
+}
+
+function attemptUnlockThread() {
+  const thread = state.chats[activeChatPeerId];
+  const ans = document.getElementById("ct-unlock-input").value.trim().toLowerCase();
+  if (simpleHash(ans) === thread.lockAnswerHash) {
+    thread.unlockedThisSession = true;
+    document.getElementById("ct-unlock-input").value = "";
+    renderThreadMessages();
+    showToast("🔓 Decrypted & Unlocked");
+  } else {
+    showToast("Wrong security answer");
+  }
+}
+
+function renderThreadMessages() {
+  const thread = state.chats[activeChatPeerId];
+  if (!thread) return;
+
+  const isBlocked = thread.locked && !thread.unlockedThisSession;
+  document.getElementById("ct-locked-view").style.display = isBlocked ? "block" : "none";
+  document.getElementById("ct-messages-box").style.display = isBlocked ? "none" : "block";
+  document.getElementById("ct-composer").style.display = isBlocked ? "none" : "block";
+
+  if (isBlocked) {
+    document.getElementById("ct-unlock-question").textContent = thread.lockQuestion;
+    return;
+  }
+
+  // Filter out expired time-bomb messages
+  const now = Date.now();
+  thread.messages = thread.messages.filter(m => !m.expiresAt || m.expiresAt > now);
+
+  const box = document.getElementById("ct-messages-box");
+  box.innerHTML = thread.messages.map(m => {
+    const isMe = m.sender === "me";
+    const bombBadge = m.expiresAt
+      ? ` <span style="font-size:10px; opacity:0.85;">💣 ${Math.max(1, Math.ceil((m.expiresAt - now)/1000))}s</span>`
+      : "";
+    return `
+      <div class="msg-bubble ${isMe ? 'msg-me' : 'msg-them'}">
+        ${escapeHtml(m.text)}${bombBadge}
+      </div>
+    `;
+  }).join("");
+  box.scrollTop = box.scrollHeight;
+}
+
+function sendDirectMessage() {
+  const input = document.getElementById("ct-msg-input");
+  const text = input.value.trim();
+  if (!text || !activeChatPeerId) return;
+  const ttl = parseInt(document.getElementById("ct-ttl-select").value, 10);
+
+  state.chats[activeChatPeerId].messages.push({
+    id: "msg_" + Date.now(),
+    sender: "me",
+    text,
+    ttl,
+    expiresAt: ttl > 0 ? Date.now() + ttl * 1000 : null,
+    ts: Date.now()
+  });
+
   input.value = "";
-});
+  saveState();
+  renderThreadMessages();
+  renderChatList();
+}
+
+function restrictCurrentChatPeer() {
+  if (!activeChatPeerId) return;
+  const peer = CAMPUS_DIRECTORY.find(u => u.id === activeChatPeerId);
+  restrictUser(activeChatPeerId, peer ? peer.handle : activeChatPeerId);
+  closeModal("modal-chat-thread");
+}
+
+/* ============================================================================
+   7. CIRCLES — STUDY, GOSSIP, GENERAL, PINNED, @MENTIONS & 2H DIGEST
+   ============================================================================ */
+function renderCirclesList() {
+  const container = document.getElementById("circle-list");
+  container.innerHTML = state.circles.map(c => `
+    <div class="card" style="cursor:pointer;" onclick="${c.joined ? `openCircleRoom('${c.id}')` : `joinCircleById('${c.id}')`}">
+      <div class="row-between">
+        <div>
+          <div class="row-gap">
+            <span style="font-weight:800; font-size:15px;">${escapeHtml(c.name)}</span>
+            <span class="pill ${c.category === 'Study' ? 'pill-teal' : (c.category === 'Gossip' ? 'pill-orange' : 'pill-muted')}">${c.category}</span>
+          </div>
+          <div class="text-xs text-dim mt-2">Code: ${c.inviteCode} • ${c.messages.length} messages</div>
+        </div>
+        <button class="${c.joined ? 'btn-secondary' : 'btn-primary'}" style="padding:7px 12px; font-size:12px;">
+          ${c.joined ? "Open" : "Join"}
+        </button>
+      </div>
+    </div>
+  `).join("");
+}
+
+function createNewCircle() {
+  const name = document.getElementById("new-circle-name").value.trim();
+  const category = document.getElementById("new-circle-type").value;
+  if (!name) {
+    showToast("Enter a circle name");
+    return;
+  }
+  const code = name.replace(/[^a-zA-Z0-9]/g, "").slice(0, 4).toUpperCase() + Math.floor(10 + Math.random() * 89);
+  state.circles.unshift({
+    id: "c_" + Date.now(),
+    name,
+    category,
+    inviteCode: code,
+    joined: true,
+    pinned: `Welcome to ${name}! Use Study/Gossip tags to stay organized.`,
+    messages: []
+  });
+  document.getElementById("new-circle-name").value = "";
+  saveState();
+  closeModal("modal-new-circle");
+  renderCirclesList();
+  showToast(`Created Circle "${name}" (Code: ${code})`);
+}
+
+function joinCircleById(id) {
+  const c = state.circles.find(x => x.id === id);
+  if (c) {
+    c.joined = true;
+    saveState();
+    renderCirclesList();
+    openCircleRoom(id);
+  }
+}
+
+function joinCircleByCode() {
+  const code = document.getElementById("join-circle-code").value.trim().toUpperCase();
+  const c = state.circles.find(x => x.inviteCode === code);
+  if (!c) {
+    showToast("Invalid invite code (Try: LAB2026)");
+    return;
+  }
+  c.joined = true;
+  document.getElementById("join-circle-code").value = "";
+  saveState();
+  closeModal("modal-new-circle");
+  renderCirclesList();
+  openCircleRoom(c.id);
+}
+
+function openCircleRoom(circleId) {
+  activeCircleId = circleId;
+  circleTagFilter = "all";
+  renderCircleRoom();
+  openModal("modal-circle-room");
+}
+
+function setCircleTagFilter(tag) {
+  circleTagFilter = tag;
+  ["all", "study", "gossip", "general"].forEach(t => {
+    const el = document.getElementById("cr-filter-" + t);
+    el.className = t === tag ? "pill pill-orange" : "pill pill-muted";
+  });
+  renderCircleRoom();
+}
+
+function renderCircleRoom() {
+  const c = state.circles.find(x => x.id === activeCircleId);
+  if (!c) return;
+  document.getElementById("cr-title").textContent = c.name;
+  document.getElementById("cr-sub").textContent = `Invite: ${c.inviteCode} • @mentions notify instantly`;
+  document.getElementById("cr-pinned-text").textContent = c.pinned || "No pinned notes yet.";
+
+  const filtered = circleTagFilter === "all"
+    ? c.messages
+    : c.messages.filter(m => m.tag === circleTagFilter);
+
+  const box = document.getElementById("cr-messages-box");
+  box.innerHTML = filtered.map(m => `
+    <div style="background:var(--bg-elevated); border:1px solid var(--border); padding:10px 12px; border-radius:12px; margin-bottom:8px;">
+      <div class="row-between">
+        <span style="font-weight:800; font-size:12px; color:var(--accent);">${m.handle}</span>
+        <span class="pill pill-muted" style="font-size:10px;">${m.tag.toUpperCase()}</span>
+      </div>
+      <div class="text-sm mt-2">${escapeHtml(m.text)}</div>
+    </div>
+  `).join("");
+  box.scrollTop = box.scrollHeight;
+}
+
+function sendCircleMessage() {
+  const c = state.circles.find(x => x.id === activeCircleId);
+  const input = document.getElementById("cr-msg-input");
+  const text = input.value.trim();
+  const tag = document.getElementById("cr-msg-tag").value;
+  const shouldPin = document.getElementById("cr-pin-check").checked;
+  if (!c || !text) return;
+
+  c.messages.push({
+    id: "cm_" + Date.now(),
+    handle: state.user.handle,
+    tag,
+    text,
+    ts: Date.now()
+  });
+
+  if (shouldPin) {
+    c.pinned = text;
+    document.getElementById("cr-pin-check").checked = false;
+  }
+
+  // @mention triggers immediate notification; normal circle chat queues for 2-hour digest
+  if (text.includes("@")) {
+    addNotification("mention", `Immediate @mention sent in ${c.name}`, text);
+    showToast("⚡ Direct @mention pinged immediately!");
+  } else {
+    state.digestQueue.push(`${c.name} (${tag}): ${text.slice(0, 36)}`);
+    showToast("Posted! Queued for 2-hour Circle digest.");
+  }
+
+  input.value = "";
+  saveState();
+  renderCircleRoom();
+  renderNotifications();
+}
+
+/* ============================================================================
+   8. PROFILE, FRIEND SUGGESTIONS & 10. PRIVACY/SAFETY
+   ============================================================================ */
+function renderProfileAndFriends() {
+  document.getElementById("profile-avatar").textContent = state.user.pose;
+  document.getElementById("profile-handle").textContent = state.user.handle || "@student";
+  const badge = document.getElementById("profile-tag-badge");
+  if (state.user.founderTag) {
+    badge.style.display = "inline-flex";
+    badge.textContent = state.user.founderTag;
+    document.getElementById("header-founder-pill").textContent = state.user.founderTag;
+  } else {
+    badge.style.display = "none";
+    document.getElementById("header-founder-pill").textContent = "Campus";
+  }
+
+  document.getElementById("profile-seal-status").textContent = state.user.founderTag
+    ? (state.user.tagSealed ? `Founder Tag ${state.user.founderTag}: Permanently Sealed ✓` : `Founder Tag ${state.user.founderTag}: Unsealed (Post mood or add friend)`)
+    : "Standard Campus Member";
+
+  const activeBird = BIRDS_ROSTER.find(b => b.id === state.user.activeBirdId) || BIRDS_ROSTER[0];
+  document.getElementById("profile-bird-label").textContent = `Companion: ${activeBird.emoji} ${activeBird.name}`;
+  document.getElementById("profile-bird-count").textContent = state.user.unlockedBirds.length;
+  document.getElementById("profile-friend-count").textContent = state.user.friends.length;
+  document.getElementById("profile-default-vis").value = state.user.defaultPrivacy;
+
+  // Mood Stack Preview & Full Modal
+  document.getElementById("profile-stack-count").textContent = state.moodStack.length;
+  const renderStackItems = items => items.length
+    ? items.map(s => `
+        <div class="stack-thumb">
+          <img src="${s.media}" alt="archived mood" />
+          <div style="position:absolute; bottom:0; inset-x:0; background:rgba(0,0,0,0.68); padding:3px 6px; font-size:10px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
+            ${escapeHtml(s.caption)}
+          </div>
+        </div>
+      `).join("")
+    : `<div class="text-xs text-dim" style="grid-column:1/-1;">No expired media moods yet.</div>`;
+
+  document.getElementById("profile-stack-preview").innerHTML = renderStackItems(state.moodStack.slice(0, 3));
+  document.getElementById("full-mood-stack-grid").innerHTML = renderStackItems(state.moodStack);
+
+  // Friends & Campus Suggestions (Mutuals + Shared Circle + New Signup Score)
+  const friendMap = new Map(state.user.friends.map(f => [f.id, f.tier]));
+  const restricted = new Set(state.user.restrictedIds);
+  const candidates = CAMPUS_DIRECTORY.filter(u => !restricted.has(u.id));
+
+  document.getElementById("friends-and-suggestions-list").innerHTML = candidates.map(u => {
+    const isFriend = friendMap.has(u.id);
+    const reason = u.mutuals > 0 ? `${u.mutuals} mutual friends` : `In ${u.sharedCircle}`;
+    return `
+      <div class="row-between" style="padding:10px 0; border-bottom:1px solid var(--border);">
+        <div class="row-gap">
+          <div class="avatar-circle">${u.pose}</div>
+          <div>
+            <div class="row-gap">
+              <span style="font-weight:800; font-size:13px;">${u.handle}</span>
+              <span class="pill pill-gold" style="padding:1px 6px;">${u.tag}</span>
+            </div>
+            <div class="text-xs text-dim">${reason}</div>
+          </div>
+        </div>
+        ${isFriend ? `
+          <select style="width:auto; padding:5px 8px; font-size:11px;" onchange="setFriendTier('${u.id}', this.value)">
+            <option value="Friends" ${friendMap.get(u.id)==='Friends'?'selected':''}>Friends</option>
+            <option value="Close Friends" ${friendMap.get(u.id)==='Close Friends'?'selected':''}>Close Friends</option>
+            <option value="BFFs" ${friendMap.get(u.id)==='BFFs'?'selected':''}>BFFs</option>
+          </select>
+        ` : `
+          <button class="btn-primary" style="padding:6px 12px; font-size:12px;" onclick="addCampusFriend('${u.id}', '${u.handle}')">+ Add</button>
+        `}
+      </div>
+    `;
+  }).join("");
+
+  document.getElementById("restricted-users-list").textContent =
+    state.user.restrictedIds.length ? state.user.restrictedIds.join(", ") : "None";
+}
+
+function addCampusFriend(id, handle) {
+  if (!state.user.friends.some(f => f.id === id)) {
+    state.user.friends.push({ id, tier: "Friends" });
+    checkAndSealFounderTag(`connecting with ${handle}`);
+    saveState();
+    renderAll();
+    const remGuides = getVisibleGuides().length;
+    showToast(`Added ${handle}! Starter Guides faded to ${remGuides}.`);
+  }
+}
+
+function setFriendTier(id, tier) {
+  const f = state.user.friends.find(x => x.id === id);
+  if (f) {
+    f.tier = tier;
+    saveState();
+    showToast(`Updated privacy circle to ${tier}`);
+  }
+}
+
+function updateDefaultVisibility(val) {
+  state.user.defaultPrivacy = val;
+  saveState();
+  showToast(`Default mood privacy: ${val}`);
+}
+
+function restrictUser(userId, handle) {
+  if (userId === "me") return;
+  if (!state.user.restrictedIds.includes(userId)) {
+    state.user.restrictedIds.push(userId);
+    saveState();
+    renderAll();
+    showToast(`Reported & restricted ${handle}`);
+  }
+}
+
+/* ============================================================================
+   9. NOTIFICATIONS & 2-HOUR BATCHED DIGEST
+   ============================================================================ */
+function addNotification(type, title, body) {
+  state.notifications.unshift({
+    id: "n_" + Date.now(),
+    type,
+    title,
+    body,
+    unread: true,
+    ts: Date.now()
+  });
+  renderNotifications();
+}
+
+function flushTwoHourDigest() {
+  if (!state.digestQueue.length) {
+    showToast("No pending Circle messages in digest queue");
+    return;
+  }
+  const summary = state.digestQueue.join(" • ");
+  const count = state.digestQueue.length;
+  state.digestQueue = [];
+  addNotification("digest", `📦 2-Hour Circle Digest (${count} updates)`, summary);
+  saveState();
+  showToast("2-Hour Circle Digest delivered!");
+}
+
+function renderNotifications() {
+  const unreadCount = state.notifications.filter(n => n.unread).length;
+  const badge = document.getElementById("notif-badge");
+  badge.style.display = unreadCount > 0 ? "flex" : "none";
+  badge.textContent = unreadCount;
+
+  document.getElementById("digest-queue-summary").textContent =
+    `${state.digestQueue.length} batched Circle update(s) waiting for next 2h summary.`;
+
+  const list = document.getElementById("notifications-list");
+  list.innerHTML = state.notifications.map(n => `
+    <div class="card" style="margin:0 0 8px; padding:10px 12px; border-color:${n.type==='mention' ? 'var(--border-accent)' : 'var(--border)'};">
+      <div class="row-between">
+        <span style="font-weight:800; font-size:12.5px;">${escapeHtml(n.title)}</span>
+        <span class="text-xs text-dim">${timeAgo(n.ts)}</span>
+      </div>
+      <div class="text-xs text-dim mt-2">${escapeHtml(n.body)}</div>
+    </div>
+  `).join("");
+}
+
+/* ============================================================================
+   NAVIGATION, MODALS & UTILITIES
+   ============================================================================ */
+function switchTab(tabName) {
+  document.querySelectorAll(".tab-view").forEach(v => v.classList.remove("active"));
+  document.getElementById("view-" + tabName).classList.add("active");
+
+  document.querySelectorAll(".nav-btn").forEach(b => b.classList.toggle("active", b.dataset.tab === tabName));
+  if (tabName === "mood") renderMoodSky();
+  if (tabName === "home") renderHomeFeed();
+  if (tabName === "micro") renderMicroFeed();
+  if (tabName === "chat") { renderChatList(); renderCirclesList(); }
+  if (tabName === "profile") renderProfileAndFriends();
+}
+
+function openModal(id) {
+  if (id === "modal-new-mood") initMoodComposer();
+  if (id === "modal-notifications") {
+    state.notifications.forEach(n => n.unread = false);
+    saveState();
+    renderNotifications();
+  }
+  document.getElementById(id).classList.add("open");
+}
+
+function closeModal(id) {
+  document.getElementById(id).classList.remove("open");
+}
+
+function closeModalOnBg(e, id) {
+  if (e.target.id === id) closeModal(id);
+}
+
+function resetAllDemoData() {
+  localStorage.removeItem(STORAGE_KEY);
+  location.reload();
+}
+
+function escapeHtml(str) {
+  return String(str || "")
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;");
+}
+
+function timeAgo(ts) {
+  const mins = Math.max(1, Math.floor((Date.now() - ts) / 60000));
+  if (mins < 60) return `${mins}m ago`;
+  const hrs = Math.floor(mins / 60);
+  if (hrs < 24) return `${hrs}h ago`;
+  return `${Math.floor(hrs / 24)}d ago`;
+}
+
+// Live tick for time-bomb disappearing messages & expiring mood bubbles
+setInterval(() => {
+  if (activeChatPeerId && document.getElementById("modal-chat-thread").classList.contains("open")) {
+    renderThreadMessages();
+  }
+}, 1000);
+
+function renderAll() {
+  initDoorway();
+  renderMoodSky();
+  renderHomeFeed();
+  renderMicroFeed();
+  renderBirdsAndStreak();
+  renderChatList();
+  renderCirclesList();
+  renderProfileAndFriends();
+  renderNotifications();
+}
+
+renderAll();
 </script>
 </body>
 </html>
