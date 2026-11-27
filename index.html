@@ -3,27 +3,34 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <meta name="theme-color" content="#0B0E17" />
+  <meta name="theme-color" content="#FAF6EE" />
   <title>MEONIX — Moods, Friendships & Campus Circles</title>
   <style>
     :root {
-      --bg-deep: #090C14;
-      --bg-card: #121726;
-      --bg-elevated: #1A2136;
-      --bg-glass: rgba(18, 23, 38, 0.84);
-      --border: rgba(255, 255, 255, 0.08);
-      --border-accent: rgba(255, 107, 44, 0.45);
-      --accent: #FF6B2C;
-      --accent-glow: rgba(255, 107, 44, 0.28);
-      --accent-soft: rgba(255, 107, 44, 0.14);
-      --gold: #FBBF24;
-      --gold-soft: rgba(251, 191, 36, 0.15);
+      /* NEW IMPERIAL BURNT SAFFRON LIGHT THEME */
+      --bg-deep: #FAF6EE; /* Royal Silk Cream */
+      --bg-card: #F2E9DA; /* Warm Sandstone Ivory */
+      --bg-elevated: #F2E9DA; /* Warm Sandstone Ivory */
+      --bg-glass: rgba(250, 246, 238, 0.84); /* Royal Silk Cream Glass */
+      
+      --border: rgba(107, 91, 80, 0.2); /* Muted Umber Gray semi-transparent */
+      --border-accent: #C69736; /* Antique Burnished Gold */
+      
+      --accent: #C84B11; /* Imperial Burnt Saffron */
+      --accent-glow: rgba(200, 75, 17, 0.28);
+      --accent-soft: rgba(200, 75, 17, 0.14);
+      
+      --gold: #C69736; /* Antique Burnished Gold */
+      --gold-soft: rgba(198, 151, 54, 0.15);
+      
       --teal: #2DD4BF;
       --purple: #A78BFA;
       --danger: #F43F5E;
-      --text-main: #F8FAFC;
-      --text-dim: #94A3B8;
-      --text-muted: #64748B;
+      
+      --text-main: #241811; /* Deep Espresso Ink */
+      --text-dim: #6B5B50; /* Warm Umber Gray */
+      --text-muted: #6B5B50; 
+      
       --radius-lg: 20px;
       --radius-md: 14px;
       --radius-sm: 10px;
@@ -33,7 +40,7 @@
     * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
     html, body {
       height: 100%;
-      background: #05070C;
+      background: var(--bg-deep);
       color: var(--text-main);
       font-family: var(--font);
       overflow: hidden;
@@ -75,9 +82,10 @@
       width: 100%;
     }
     input:focus, textarea:focus, select:focus { border-color: var(--accent); }
+    input::placeholder, textarea::placeholder { color: var(--text-muted); }
 
     .btn-primary {
-      background: linear-gradient(135deg, #FF6B2C, #FF8E3C);
+      background: linear-gradient(135deg, #C84B11, #9E3709); /* Saffron to Deep Rust */
       color: #fff;
       font-weight: 700;
       padding: 12px 18px;
@@ -108,7 +116,7 @@
       padding: 6px 10px;
       border-radius: 8px;
     }
-    .btn-ghost:hover { background: rgba(255,255,255,0.06); color: var(--text-main); }
+    .btn-ghost:hover { background: rgba(36,24,17,0.06); color: var(--text-main); }
 
     .pill {
       display: inline-flex;
@@ -120,18 +128,18 @@
       font-weight: 700;
       letter-spacing: 0.2px;
     }
-    .pill-orange { background: var(--accent-soft); color: var(--accent); border: 1px solid var(--border-accent); }
-    .pill-gold { background: var(--gold-soft); color: var(--gold); border: 1px solid rgba(251,191,36,0.35); }
-    .pill-teal { background: rgba(45,212,191,0.14); color: var(--teal); border: 1px solid rgba(45,212,191,0.3); }
-    .pill-purple { background: rgba(167,139,250,0.14); color: var(--purple); border: 1px solid rgba(167,139,250,0.3); }
-    .pill-muted { background: rgba(255,255,255,0.06); color: var(--text-dim); }
+    .pill-orange { background: var(--accent-soft); color: var(--accent); border: 1px solid rgba(200, 75, 17, 0.3); }
+    .pill-gold { background: var(--gold-soft); color: var(--gold); border: 1px solid rgba(198, 151, 54, 0.35); }
+    .pill-teal { background: rgba(45,212,191,0.14); color: #0F766E; border: 1px solid rgba(45,212,191,0.3); }
+    .pill-purple { background: rgba(167,139,250,0.14); color: #6D28D9; border: 1px solid rgba(167,139,250,0.3); }
+    .pill-muted { background: rgba(36,24,17,0.06); color: var(--text-dim); }
 
     /* ================= 1. DOORWAY (AUTH & FOUNDER TAGS) ================= */
     #doorway-screen {
       position: absolute;
       inset: 0;
       z-index: 90;
-      background: radial-gradient(circle at 50% 15%, rgba(255,107,44,0.18), transparent 55%), var(--bg-deep);
+      background: radial-gradient(circle at 50% 15%, rgba(200, 75, 17, 0.08), transparent 55%), var(--bg-deep);
       padding: 24px 20px;
       overflow-y: auto;
       display: flex;
@@ -150,10 +158,10 @@
     .brand-dot {
       width: 11px; height: 11px; border-radius: 50%;
       background: var(--accent);
-      box-shadow: 0 0 14px var(--accent);
+      box-shadow: 0 0 14px var(--accent-glow);
     }
     .scarcity-banner {
-      background: linear-gradient(135deg, rgba(255,107,44,0.16), rgba(251,191,36,0.12));
+      background: linear-gradient(135deg, rgba(200, 75, 17, 0.08), rgba(198, 151, 54, 0.08));
       border: 1px solid var(--border-accent);
       border-radius: var(--radius-md);
       padding: 12px 14px;
@@ -250,9 +258,9 @@
       display: none;
       flex-direction: column;
       background:
-        radial-gradient(circle at 20% 20%, rgba(255,107,44,0.14), transparent 45%),
-        radial-gradient(circle at 80% 70%, rgba(56,189,248,0.11), transparent 50%),
-        linear-gradient(180deg, #090D1A 0%, #0F172A 100%);
+        radial-gradient(circle at 20% 20%, rgba(200, 75, 17, 0.08), transparent 45%),
+        radial-gradient(circle at 80% 70%, rgba(198, 151, 54, 0.08), transparent 50%),
+        linear-gradient(180deg, var(--bg-deep) 0%, var(--bg-card) 100%);
     }
     #view-mood.active { display: flex; }
 
@@ -273,7 +281,7 @@
     .sky-star {
       position: absolute;
       width: 2px; height: 2px;
-      background: rgba(255,255,255,0.35);
+      background: rgba(36,24,17,0.15); /* Darker stars for light theme */
       border-radius: 50%;
       pointer-events: none;
     }
@@ -300,9 +308,9 @@
     .bubble-small .bubble-orb {
       width: 64px; height: 64px;
       border-radius: 50%;
-      background: rgba(26, 33, 54, 0.88);
-      border: 1.5px solid rgba(255, 255, 255, 0.16);
-      box-shadow: 0 8px 20px rgba(0,0,0,0.35);
+      background: rgba(250, 246, 238, 0.88);
+      border: 1.5px solid rgba(36, 24, 17, 0.16);
+      box-shadow: 0 8px 20px rgba(36, 24, 17, 0.15);
       display: flex;
       align-items: center;
       justify-content: center;
@@ -315,10 +323,10 @@
       width: 116px; height: 116px;
       border-radius: 50%;
       border: 2.5px solid var(--accent);
-      box-shadow: 0 0 26px var(--accent-glow), 0 10px 25px rgba(0,0,0,0.5);
+      box-shadow: 0 0 26px var(--accent-glow), 0 10px 25px rgba(36, 24, 17, 0.15);
       overflow: hidden;
       position: relative;
-      background: #1E293B;
+      background: var(--bg-card);
       display: flex;
       align-items: center;
       justify-content: center;
@@ -329,7 +337,7 @@
     .bubble-media-badge {
       position: absolute;
       bottom: 6px; right: 6px;
-      background: rgba(9, 12, 20, 0.85);
+      background: rgba(250, 246, 238, 0.85);
       border: 1px solid var(--border-accent);
       border-radius: 999px;
       padding: 2px 7px;
@@ -350,8 +358,9 @@
     }
     .bubble-caption {
       font-size: 10px;
-      color: var(--text-dim);
-      background: rgba(9,12,20,0.75);
+      color: var(--text-main);
+      background: rgba(250, 246, 238, 0.85);
+      border: 1px solid var(--border);
       padding: 2px 7px;
       border-radius: 8px;
       margin-top: 2px;
@@ -366,7 +375,7 @@
       align-items: center;
       justify-content: space-between;
       gap: 8px;
-      background: linear-gradient(0deg, rgba(9,12,20,0.95), transparent);
+      background: linear-gradient(0deg, rgba(250, 246, 238, 0.95), transparent);
       z-index: 6;
     }
 
@@ -408,7 +417,7 @@
     .avatar-circle {
       width: 38px; height: 38px;
       border-radius: 12px;
-      background: var(--bg-elevated);
+      background: var(--bg-deep);
       border: 1px solid var(--border);
       display: flex;
       align-items: center;
@@ -456,9 +465,10 @@
       border-radius: var(--radius-md);
       overflow: hidden;
       margin-top: 10px;
-      background: #05070C;
+      background: var(--bg-card);
       aspect-ratio: 4 / 5;
       max-height: 380px;
+      border: 1px solid var(--border);
     }
     .micro-carousel img {
       width: 100%; height: 100%; object-fit: cover;
@@ -466,7 +476,8 @@
     .micro-counter {
       position: absolute;
       top: 10px; right: 10px;
-      background: rgba(9,12,20,0.8);
+      background: rgba(250, 246, 238, 0.85);
+      color: var(--text-main);
       padding: 4px 10px;
       border-radius: 999px;
       font-size: 11px;
@@ -477,10 +488,11 @@
       top: 50%; transform: translateY(-50%);
       width: 32px; height: 32px;
       border-radius: 50%;
-      background: rgba(9,12,20,0.75);
-      color: #fff;
+      background: rgba(250, 246, 238, 0.85);
+      color: var(--text-main);
       display: flex; align-items: center; justify-content: center;
       font-weight: 800;
+      border: 1px solid var(--border);
     }
 
     /* ================= 6. CHAT & 7. CIRCLES ================= */
@@ -515,11 +527,11 @@
       border-bottom: 1px solid var(--border);
       cursor: pointer;
     }
-    .chat-list-item:hover { background: rgba(255,255,255,0.02); }
+    .chat-list-item:hover { background: rgba(36,24,17,0.02); }
 
     /* Locked Thread Overlay */
     .locked-shield {
-      background: rgba(18, 23, 38, 0.94);
+      background: rgba(242, 233, 218, 0.94);
       backdrop-filter: blur(14px);
       border: 1px solid var(--border-accent);
       border-radius: var(--radius-lg);
@@ -539,7 +551,7 @@
       word-wrap: break-word;
     }
     .msg-me {
-      background: linear-gradient(135deg, #FF6B2C, #E85A1E);
+      background: linear-gradient(135deg, #C84B11, #9E3709);
       color: #fff;
       margin-left: auto;
       border-bottom-right-radius: 4px;
@@ -614,7 +626,7 @@
     .nav-btn.mood-center .nav-icon {
       width: 42px; height: 42px;
       border-radius: 50%;
-      background: linear-gradient(135deg, #FF6B2C, #FF8E3C);
+      background: linear-gradient(135deg, #C84B11, #9E3709);
       color: #fff;
       display: flex; align-items: center; justify-content: center;
       margin-top: -14px;
@@ -626,7 +638,7 @@
     .modal-backdrop {
       position: absolute;
       inset: 0;
-      background: rgba(5, 7, 12, 0.82);
+      background: rgba(36, 24, 17, 0.6); /* Darker backdrop for contrast */
       backdrop-filter: blur(8px);
       z-index: 60;
       display: none;
@@ -642,6 +654,7 @@
       border-radius: 24px 24px 0 0;
       padding: 18px 16px 26px;
       overflow-y: auto;
+      box-shadow: 0 -10px 40px rgba(36, 24, 17, 0.1);
     }
     .modal-header {
       display: flex;
@@ -655,14 +668,14 @@
       top: 66px;
       left: 50%;
       transform: translateX(-50%) translateY(-16px);
-      background: #1E293B;
+      background: #241811; /* Deep Espresso Ink */
       border: 1px solid var(--border-accent);
-      color: #fff;
+      color: #FAF6EE;
       padding: 9px 16px;
       border-radius: 999px;
       font-size: 12.5px;
       font-weight: 700;
-      box-shadow: 0 10px 25px rgba(0,0,0,0.45);
+      box-shadow: 0 10px 25px rgba(36,24,17,0.25);
       opacity: 0;
       pointer-events: none;
       transition: all 0.22s ease;
@@ -1087,8 +1100,8 @@
       <div class="card" style="margin:0 0 12px; text-align:center;">
         <div id="egg-stage-visual" style="font-size:44px;">🥚</div>
         <div style="font-weight:800; font-size:15px; margin-top:4px;" id="egg-stage-label">Day 1 of 7 — Warming Up</div>
-        <div style="height:8px; background:var(--bg-deep); border-radius:999px; overflow:hidden; margin:10px 0;">
-          <div id="egg-progress-bar" style="height:100%; width:14%; background:linear-gradient(90deg,#FF6B2C,#FBBF24);"></div>
+        <div style="height:8px; background:var(--bg-deep); border-radius:999px; overflow:hidden; margin:10px 0; border:1px solid var(--border);">
+          <div id="egg-progress-bar" style="height:100%; width:14%; background:linear-gradient(90deg,#C84B11,#C69736);"></div>
         </div>
         <button class="btn-secondary" onclick="advanceStreakDemo()">⚡ Simulate +1 Streak Day (Test Hatch)</button>
       </div>
@@ -1170,7 +1183,7 @@
       </div>
 
       <!-- Pinned Content Banner -->
-      <div id="cr-pinned-box" style="background:var(--gold-soft); border:1px solid rgba(251,191,36,0.35); padding:8px 12px; border-radius:12px; margin-bottom:8px; flex-shrink:0;">
+      <div id="cr-pinned-box" style="background:var(--gold-soft); border:1px solid rgba(198, 151, 54, 0.35); padding:8px 12px; border-radius:12px; margin-bottom:8px; flex-shrink:0;">
         <div class="text-xs" style="color:var(--gold); font-weight:800;">📌 PINNED NOTICE</div>
         <div id="cr-pinned-text" class="text-xs mt-2"></div>
       </div>
@@ -1318,6 +1331,7 @@ const BIRDS_ROSTER = [
 ];
 
 // Generate crisp SVG Data URLs for built-in sample campus photos/GIFs (zero external network dependency)
+// Updated Saffron/Dark colors for generated sample arts
 function makeSampleArt(title, subtitle, c1, c2) {
   const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="600" height="600" viewBox="0 0 600 600">
     <defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
@@ -1332,9 +1346,9 @@ function makeSampleArt(title, subtitle, c1, c2) {
   return "data:image/svg+xml;utf8," + encodeURIComponent(svg);
 }
 
-const SAMPLE_MEDIA_1 = makeSampleArt("🚌 Bus Stand 7:45 AM", "Waiting for college express", "#FF6B2C", "#1E293B");
-const SAMPLE_MEDIA_2 = makeSampleArt("☕ Canteen Cold Coffee", "Post-lab survival fuel", "#0F766E", "#090C14");
-const SAMPLE_MEDIA_3 = makeSampleArt("📚 Library 3rd Floor", "Exam sprint mode ON", "#4338CA", "#0F172A");
+const SAMPLE_MEDIA_1 = makeSampleArt("🚌 Bus Stand 7:45 AM", "Waiting for college express", "#C84B11", "#241811");
+const SAMPLE_MEDIA_2 = makeSampleArt("☕ Canteen Cold Coffee", "Post-lab survival fuel", "#0F766E", "#122A28");
+const SAMPLE_MEDIA_3 = makeSampleArt("📚 Library 3rd Floor", "Exam sprint mode ON", "#4338CA", "#241811");
 
 // 4 Anonymous Starter Guides (Progressive Fade based on real friend count)
 const GUIDE_ACCOUNTS = [
@@ -2597,7 +2611,7 @@ function renderProfileAndFriends() {
     ? items.map(s => `
         <div class="stack-thumb">
           <img src="${s.media}" alt="archived mood" />
-          <div style="position:absolute; bottom:0; inset-x:0; background:rgba(0,0,0,0.68); padding:3px 6px; font-size:10px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
+          <div style="position:absolute; bottom:0; inset-x:0; background:rgba(36,24,17,0.68); color:#FAF6EE; padding:3px 6px; font-size:10px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
             ${escapeHtml(s.caption)}
           </div>
         </div>
