@@ -3,27 +3,36 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <meta name="theme-color" content="#0B0E17" />
+  <meta name="theme-color" content="#FFFFFF" />
   <title>MEONIX — Moods, Friendships & Campus Circles</title>
   <style>
     :root {
-      --bg-deep: #090C14;
-      --bg-card: #121726;
-      --bg-elevated: #1A2136;
-      --bg-glass: rgba(18, 23, 38, 0.84);
-      --border: rgba(255, 255, 255, 0.08);
-      --border-accent: rgba(255, 107, 44, 0.45);
-      --accent: #FF6B2C;
-      --accent-glow: rgba(255, 107, 44, 0.28);
-      --accent-soft: rgba(255, 107, 44, 0.14);
-      --gold: #FBBF24;
-      --gold-soft: rgba(251, 191, 36, 0.15);
-      --teal: #2DD4BF;
-      --purple: #A78BFA;
-      --danger: #F43F5E;
-      --text-main: #F8FAFC;
-      --text-dim: #94A3B8;
-      --text-muted: #64748B;
+      /* 60% Canvas (Weightless) */
+      --bg-deep: #F8FAFC; /* Soft Alabaster */
+      --bg-card: #FFFFFF; /* Cloud White */
+      --bg-elevated: #F1F5F9; /* Subtle off-white for inputs/chat peers */
+      --bg-glass: rgba(255, 255, 255, 0.85); /* Frosted Glassmorphism */
+      
+      /* 30% Structure (Royal & Familiar) */
+      --border: #E2E8F0;
+      --border-accent: #E05D1A;
+      --text-main: #0F172A; /* Imperial Deep Slate */
+      --text-dim: #475569; /* Slate/Sage */
+      --text-muted: #64748B; /* Muted Slate */
+      
+      /* 10% Action (Vibrant & Focused) */
+      --accent: #E05D1A; /* Royal Saffron / Amber */
+      --accent-glow: rgba(224, 93, 26, 0.28);
+      --accent-soft: #FFF7ED; /* Weightless Surface Wash */
+      
+      --gold: #F97316; /* Flame tint */
+      --gold-soft: rgba(249, 115, 22, 0.12);
+      
+      /* Semantic Highlights */
+      --teal: #059669; /* E2EE Quiet Security */
+      --purple: #8B5CF6;
+      --danger: #EF4444;
+      
       --radius-lg: 20px;
       --radius-md: 14px;
       --radius-sm: 10px;
@@ -33,7 +42,7 @@
     * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
     html, body {
       height: 100%;
-      background: #05070C;
+      background: var(--bg-deep);
       color: var(--text-main);
       font-family: var(--font);
       overflow: hidden;
@@ -74,11 +83,12 @@
       outline: none;
       width: 100%;
     }
-    input:focus, textarea:focus, select:focus { border-color: var(--accent); }
+    input:focus, textarea:focus, select:focus { border-color: var(--accent); background: var(--bg-card); }
+    input::placeholder, textarea::placeholder { color: var(--text-muted); }
 
     .btn-primary {
-      background: linear-gradient(135deg, #FF6B2C, #FF8E3C);
-      color: #fff;
+      background: var(--accent); /* Solid Royal Saffron */
+      color: #FFFFFF;
       font-weight: 700;
       padding: 12px 18px;
       border-radius: var(--radius-md);
@@ -90,7 +100,7 @@
       font-size: 14px;
     }
     .btn-secondary {
-      background: var(--bg-elevated);
+      background: var(--bg-card);
       border: 1px solid var(--border);
       color: var(--text-main);
       font-weight: 600;
@@ -108,7 +118,7 @@
       padding: 6px 10px;
       border-radius: 8px;
     }
-    .btn-ghost:hover { background: rgba(255,255,255,0.06); color: var(--text-main); }
+    .btn-ghost:hover { background: rgba(15,23,42,0.04); color: var(--text-main); }
 
     .pill {
       display: inline-flex;
@@ -120,18 +130,19 @@
       font-weight: 700;
       letter-spacing: 0.2px;
     }
-    .pill-orange { background: var(--accent-soft); color: var(--accent); border: 1px solid var(--border-accent); }
-    .pill-gold { background: var(--gold-soft); color: var(--gold); border: 1px solid rgba(251,191,36,0.35); }
-    .pill-teal { background: rgba(45,212,191,0.14); color: var(--teal); border: 1px solid rgba(45,212,191,0.3); }
-    .pill-purple { background: rgba(167,139,250,0.14); color: var(--purple); border: 1px solid rgba(167,139,250,0.3); }
-    .pill-muted { background: rgba(255,255,255,0.06); color: var(--text-dim); }
+    /* Semantic Badge Pills for Circles & Statuses */
+    .pill-orange { background: #FFF7ED; color: var(--accent); border: 1px solid rgba(224,93,26,0.2); }
+    .pill-teal { background: #EFF6FF; color: #2563EB; border: 1px solid rgba(37,99,235,0.2); }
+    .pill-muted { background: #F1F5F9; color: var(--text-dim); border: 1px solid var(--border); }
+    .pill-gold { background: var(--gold-soft); color: #D97706; border: 1px solid rgba(245,158,11,0.3); }
+    .pill-purple { background: rgba(139,92,246,0.1); color: var(--purple); border: 1px solid rgba(139,92,246,0.2); }
 
     /* ================= 1. DOORWAY (AUTH & FOUNDER TAGS) ================= */
     #doorway-screen {
       position: absolute;
       inset: 0;
       z-index: 90;
-      background: radial-gradient(circle at 50% 15%, rgba(255,107,44,0.18), transparent 55%), var(--bg-deep);
+      background: radial-gradient(circle at 50% 15%, rgba(224, 93, 26, 0.06), transparent 55%), var(--bg-deep);
       padding: 24px 20px;
       overflow-y: auto;
       display: flex;
@@ -150,11 +161,11 @@
     .brand-dot {
       width: 11px; height: 11px; border-radius: 50%;
       background: var(--accent);
-      box-shadow: 0 0 14px var(--accent);
+      box-shadow: 0 0 14px var(--accent-glow);
     }
     .scarcity-banner {
-      background: linear-gradient(135deg, rgba(255,107,44,0.16), rgba(251,191,36,0.12));
-      border: 1px solid var(--border-accent);
+      background: linear-gradient(135deg, #FFF7ED, rgba(249,115,22,0.05));
+      border: 1px solid rgba(224,93,26,0.2);
       border-radius: var(--radius-md);
       padding: 12px 14px;
       display: flex;
@@ -170,8 +181,8 @@
     }
     .pose-item {
       aspect-ratio: 1;
-      background: var(--bg-elevated);
-      border: 2px solid transparent;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
       border-radius: 12px;
       display: flex;
       flex-direction: column;
@@ -201,7 +212,7 @@
       display: flex;
       align-items: center;
       gap: 6px;
-      background: var(--bg-elevated);
+      background: var(--bg-card);
       border: 1px solid var(--border);
       padding: 5px 10px;
       border-radius: 999px;
@@ -211,7 +222,7 @@
     .icon-btn {
       width: 36px; height: 36px;
       border-radius: 11px;
-      background: var(--bg-elevated);
+      background: var(--bg-card);
       border: 1px solid var(--border);
       display: inline-flex;
       align-items: center;
@@ -250,9 +261,9 @@
       display: none;
       flex-direction: column;
       background:
-        radial-gradient(circle at 20% 20%, rgba(255,107,44,0.14), transparent 45%),
-        radial-gradient(circle at 80% 70%, rgba(56,189,248,0.11), transparent 50%),
-        linear-gradient(180deg, #090D1A 0%, #0F172A 100%);
+        radial-gradient(circle at 20% 20%, rgba(224,93,26,0.06), transparent 45%),
+        radial-gradient(circle at 80% 70%, rgba(37,99,235,0.04), transparent 50%),
+        var(--bg-deep);
     }
     #view-mood.active { display: flex; }
 
@@ -272,8 +283,8 @@
     }
     .sky-star {
       position: absolute;
-      width: 2px; height: 2px;
-      background: rgba(255,255,255,0.35);
+      width: 3px; height: 3px;
+      background: rgba(15,23,42,0.06);
       border-radius: 50%;
       pointer-events: none;
     }
@@ -296,13 +307,13 @@
     }
     .mood-bubble:hover { z-index: 15; transform: scale(1.06); }
 
-    /* Small Emoji Bubble (Ordinary Mood) */
+    /* Small Emoji Bubble (Ordinary Mood) - Airy sensation */
     .bubble-small .bubble-orb {
       width: 64px; height: 64px;
       border-radius: 50%;
-      background: rgba(26, 33, 54, 0.88);
-      border: 1.5px solid rgba(255, 255, 255, 0.16);
-      box-shadow: 0 8px 20px rgba(0,0,0,0.35);
+      background: rgba(255, 255, 255, 0.9);
+      border: 1px solid rgba(15, 23, 42, 0.08);
+      box-shadow: 0 8px 20px rgba(15, 23, 42, 0.05);
       display: flex;
       align-items: center;
       justify-content: center;
@@ -314,11 +325,11 @@
     .bubble-big .bubble-orb {
       width: 116px; height: 116px;
       border-radius: 50%;
-      border: 2.5px solid var(--accent);
-      box-shadow: 0 0 26px var(--accent-glow), 0 10px 25px rgba(0,0,0,0.5);
+      border: 1px solid rgba(15, 23, 42, 0.06); /* Ultralight */
+      box-shadow: 0 10px 25px rgba(224, 93, 26, 0.12); /* Atmospheric warm blur */
       overflow: hidden;
       position: relative;
-      background: #1E293B;
+      background: var(--bg-card);
       display: flex;
       align-items: center;
       justify-content: center;
@@ -329,11 +340,12 @@
     .bubble-media-badge {
       position: absolute;
       bottom: 6px; right: 6px;
-      background: rgba(9, 12, 20, 0.85);
-      border: 1px solid var(--border-accent);
+      background: rgba(255,255,255,0.9);
+      border: 1px solid var(--border);
       border-radius: 999px;
       padding: 2px 7px;
       font-size: 12px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.05);
     }
     .bubble-meta {
       margin-top: 5px;
@@ -347,17 +359,20 @@
       align-items: center;
       justify-content: center;
       gap: 3px;
+      text-shadow: 0 1px 3px #FFF;
     }
     .bubble-caption {
       font-size: 10px;
       color: var(--text-dim);
-      background: rgba(9,12,20,0.75);
+      background: rgba(255,255,255,0.85);
+      border: 1px solid var(--border);
       padding: 2px 7px;
       border-radius: 8px;
       margin-top: 2px;
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.02);
     }
 
     .sky-bottom-bar {
@@ -366,17 +381,16 @@
       align-items: center;
       justify-content: space-between;
       gap: 8px;
-      background: linear-gradient(0deg, rgba(9,12,20,0.95), transparent);
+      background: linear-gradient(0deg, rgba(255,255,255,0.95), transparent);
       z-index: 6;
     }
 
     /* ================= 3. HOME & 4. MICRO FEEDS ================= */
     .segment-tabs {
       display: flex;
-      background: var(--bg-card);
+      background: var(--bg-elevated);
       padding: 4px;
       border-radius: var(--radius-md);
-      border: 1px solid var(--border);
       margin: 12px 14px;
     }
     .segment-btn {
@@ -385,11 +399,12 @@
       border-radius: 10px;
       font-size: 13px;
       font-weight: 700;
-      color: var(--text-dim);
+      color: var(--text-muted);
     }
     .segment-btn.active {
-      background: var(--accent);
-      color: #fff;
+      background: var(--bg-card);
+      color: var(--text-main);
+      box-shadow: 0 2px 6px rgba(15,23,42,0.04);
     }
 
     .card {
@@ -398,6 +413,7 @@
       border-radius: var(--radius-lg);
       padding: 14px;
       margin: 0 14px 12px;
+      box-shadow: 0 4px 12px rgba(15,23,42,0.02);
     }
     .post-header {
       display: flex;
@@ -438,14 +454,12 @@
       padding: 7px 12px;
       border-radius: 999px;
       background: var(--bg-elevated);
-      border: 1px solid var(--border);
       font-size: 12px;
       font-weight: 700;
       color: var(--text-dim);
     }
     .beat-btn.beated {
       background: var(--accent-soft);
-      border-color: var(--accent);
       color: var(--accent);
     }
     .beat-btn.popping span:first-child { animation: beatPop 0.3s ease; }
@@ -456,7 +470,7 @@
       border-radius: var(--radius-md);
       overflow: hidden;
       margin-top: 10px;
-      background: #05070C;
+      background: var(--bg-elevated);
       aspect-ratio: 4 / 5;
       max-height: 380px;
     }
@@ -466,21 +480,23 @@
     .micro-counter {
       position: absolute;
       top: 10px; right: 10px;
-      background: rgba(9,12,20,0.8);
+      background: rgba(255,255,255,0.85);
       padding: 4px 10px;
       border-radius: 999px;
       font-size: 11px;
       font-weight: 700;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.05);
     }
     .micro-nav {
       position: absolute;
       top: 50%; transform: translateY(-50%);
       width: 32px; height: 32px;
       border-radius: 50%;
-      background: rgba(9,12,20,0.75);
-      color: #fff;
+      background: rgba(255,255,255,0.9);
+      color: var(--text-main);
       display: flex; align-items: center; justify-content: center;
       font-weight: 800;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.08);
     }
 
     /* ================= 6. CHAT & 7. CIRCLES ================= */
@@ -496,14 +512,14 @@
       white-space: nowrap;
       padding: 6px 11px;
       border-radius: 999px;
-      background: var(--bg-elevated);
+      background: var(--bg-card);
       border: 1px solid var(--border);
       font-size: 12px;
       font-weight: 600;
     }
     .away-chip.active {
       background: var(--accent-soft);
-      border-color: var(--accent);
+      border-color: rgba(224,93,26,0.3);
       color: var(--accent);
     }
 
@@ -515,17 +531,18 @@
       border-bottom: 1px solid var(--border);
       cursor: pointer;
     }
-    .chat-list-item:hover { background: rgba(255,255,255,0.02); }
+    .chat-list-item:hover { background: rgba(15,23,42,0.02); }
 
     /* Locked Thread Overlay */
     .locked-shield {
-      background: rgba(18, 23, 38, 0.94);
+      background: rgba(255, 255, 255, 0.94);
       backdrop-filter: blur(14px);
-      border: 1px solid var(--border-accent);
+      border: 1px solid var(--border);
       border-radius: var(--radius-lg);
       padding: 22px 18px;
       text-align: center;
       margin: 20px 14px;
+      box-shadow: 0 10px 30px rgba(15,23,42,0.05);
     }
 
     .msg-bubble {
@@ -539,15 +556,14 @@
       word-wrap: break-word;
     }
     .msg-me {
-      background: linear-gradient(135deg, #FF6B2C, #E85A1E);
-      color: #fff;
+      background: var(--accent);
+      color: #FFFFFF;
       margin-left: auto;
       border-bottom-right-radius: 4px;
     }
     .msg-them {
-      background: var(--bg-elevated);
-      border: 1px solid var(--border);
-      color: var(--text-main);
+      background: #F1F5F9; /* Soft off-white surface */
+      color: var(--text-main); /* Deep slate typography */
       margin-right: auto;
       border-bottom-left-radius: 4px;
     }
@@ -559,14 +575,14 @@
       gap: 8px;
     }
     .bird-card {
-      background: var(--bg-elevated);
-      border: 1.5px solid var(--border);
+      background: var(--bg-card);
+      border: 1px solid var(--border);
       border-radius: 12px;
       padding: 8px 4px;
       text-align: center;
       font-size: 11px;
     }
-    .bird-card.locked { opacity: 0.38; filter: grayscale(1); }
+    .bird-card.locked { opacity: 0.4; filter: grayscale(1); background: transparent; }
     .bird-card.equipped { border-color: var(--accent); background: var(--accent-soft); }
 
     .stack-grid {
@@ -588,7 +604,7 @@
     .bottom-nav {
       height: 64px;
       background: var(--bg-glass);
-      backdrop-filter: blur(16px);
+      backdrop-filter: blur(12px);
       border-top: 1px solid var(--border);
       display: flex;
       align-items: center;
@@ -614,7 +630,7 @@
     .nav-btn.mood-center .nav-icon {
       width: 42px; height: 42px;
       border-radius: 50%;
-      background: linear-gradient(135deg, #FF6B2C, #FF8E3C);
+      background: var(--accent);
       color: #fff;
       display: flex; align-items: center; justify-content: center;
       margin-top: -14px;
@@ -626,8 +642,8 @@
     .modal-backdrop {
       position: absolute;
       inset: 0;
-      background: rgba(5, 7, 12, 0.82);
-      backdrop-filter: blur(8px);
+      background: rgba(15, 23, 42, 0.4);
+      backdrop-filter: blur(4px);
       z-index: 60;
       display: none;
       align-items: flex-end;
@@ -642,6 +658,7 @@
       border-radius: 24px 24px 0 0;
       padding: 18px 16px 26px;
       overflow-y: auto;
+      box-shadow: 0 -10px 40px rgba(15,23,42,0.1);
     }
     .modal-header {
       display: flex;
@@ -655,14 +672,13 @@
       top: 66px;
       left: 50%;
       transform: translateX(-50%) translateY(-16px);
-      background: #1E293B;
-      border: 1px solid var(--border-accent);
-      color: #fff;
+      background: var(--text-main);
+      color: #FFF;
       padding: 9px 16px;
       border-radius: 999px;
       font-size: 12.5px;
       font-weight: 700;
-      box-shadow: 0 10px 25px rgba(0,0,0,0.45);
+      box-shadow: 0 10px 25px rgba(15,23,42,0.15);
       opacity: 0;
       pointer-events: none;
       transition: all 0.22s ease;
@@ -700,17 +716,16 @@
       </div>
       <p class="text-sm text-dim">A low-pressure campus space built around floating moods, real friendships, and study/gossip circles.</p>
 
-      <!-- Live Scarcity Counter (#001 @meonix reserved, #008 quietly reserved, #002-#100 public) -->
       <div class="scarcity-banner mt-3">
         <div>
-          <div class="text-xs" style="color:var(--gold); font-weight:800;">EARLY FOUNDER TAGS (#002–#100)</div>
+          <div class="text-xs" style="color:var(--accent); font-weight:800;">EARLY FOUNDER TAGS (#002–#100)</div>
           <div style="font-size:15px; font-weight:800; margin-top:2px;">
-            Next Spot: <span id="doorway-next-tag" style="color:var(--accent);">#014</span>
+            Next Spot: <span id="doorway-next-tag" style="color:var(--text-main);">#014</span>
           </div>
-          <div class="text-xs text-dim mt-2">Post 1 mood or add 1 friend within 24h to seal your tag & unlock Solar Phoenix.</div>
+          <div class="text-xs text-dim mt-2">Post 1 mood or add 1 friend within 24h to seal your tag & unlock 🐦‍🔥 Solar Phoenix.</div>
         </div>
         <div style="text-align:right;">
-          <div id="doorway-spots-left" style="font-size:22px; font-weight:900; color:var(--gold);">86</div>
+          <div id="doorway-spots-left" style="font-size:22px; font-weight:900; color:var(--accent);">86</div>
           <div class="text-xs text-dim">spots left</div>
         </div>
       </div>
@@ -868,7 +883,7 @@
         <div class="px-14" style="padding:0 14px;">
           <div class="row-between">
             <span class="text-xs text-dim" style="font-weight:700;">QUICK AWAY STATUS (ZERO GUILT)</span>
-            <span class="text-xs" style="color:var(--teal);">No Last-Seen • No Read Ticks</span>
+            <span class="text-xs" style="color:var(--text-dim);">No Last-Seen • No Read Ticks</span>
           </div>
         </div>
         <div class="quick-away-row" id="quick-away-bar"></div>
@@ -1087,8 +1102,8 @@
       <div class="card" style="margin:0 0 12px; text-align:center;">
         <div id="egg-stage-visual" style="font-size:44px;">🥚</div>
         <div style="font-weight:800; font-size:15px; margin-top:4px;" id="egg-stage-label">Day 1 of 7 — Warming Up</div>
-        <div style="height:8px; background:var(--bg-deep); border-radius:999px; overflow:hidden; margin:10px 0;">
-          <div id="egg-progress-bar" style="height:100%; width:14%; background:linear-gradient(90deg,#FF6B2C,#FBBF24);"></div>
+        <div style="height:8px; background:var(--bg-elevated); border-radius:999px; overflow:hidden; margin:10px 0; border:1px solid var(--border);">
+          <div id="egg-progress-bar" style="height:100%; width:14%; background:var(--accent);"></div>
         </div>
         <button class="btn-secondary" onclick="advanceStreakDemo()">⚡ Simulate +1 Streak Day (Test Hatch)</button>
       </div>
@@ -1105,7 +1120,7 @@
         <div>
           <div class="row-gap">
             <span id="ct-peer-name" style="font-weight:800; font-size:15px;">@peer</span>
-            <span class="pill pill-teal">🔐 E2EE</span>
+            <span class="pill" style="background:#059669; color:#FFF; border:none;">🔐 E2EE</span>
           </div>
           <div class="text-xs text-dim" id="ct-peer-away">Status: Online • No read receipts</div>
         </div>
@@ -1118,7 +1133,7 @@
 
       <!-- Optional Security Question Lock Setup -->
       <div id="ct-lock-setup" style="display:none; background:var(--bg-elevated); padding:10px; border-radius:12px; margin-bottom:10px;">
-        <div class="text-xs" style="font-weight:700; color:var(--gold);">🔒 Set Security-Question Thread Lock</div>
+        <div class="text-xs" style="font-weight:700; color:var(--text-main);">🔒 Set Security-Question Thread Lock</div>
         <input id="ct-lock-q" type="text" placeholder="Question (e.g. Canteen table number?)" class="mt-2" />
         <input id="ct-lock-a" type="text" placeholder="Secret answer" class="mt-2" />
         <div class="row-between mt-2">
@@ -1170,16 +1185,16 @@
       </div>
 
       <!-- Pinned Content Banner -->
-      <div id="cr-pinned-box" style="background:var(--gold-soft); border:1px solid rgba(251,191,36,0.35); padding:8px 12px; border-radius:12px; margin-bottom:8px; flex-shrink:0;">
-        <div class="text-xs" style="color:var(--gold); font-weight:800;">📌 PINNED NOTICE</div>
-        <div id="cr-pinned-text" class="text-xs mt-2"></div>
+      <div id="cr-pinned-box" style="background:var(--gold-soft); border:1px solid rgba(249,115,22,0.3); padding:8px 12px; border-radius:12px; margin-bottom:8px; flex-shrink:0;">
+        <div class="text-xs" style="color:var(--accent); font-weight:800;">📌 PINNED NOTICE</div>
+        <div id="cr-pinned-text" class="text-xs text-main mt-2"></div>
       </div>
 
       <!-- Tag Filter Pills -->
       <div class="row-gap mb-2" style="flex-shrink:0;">
-        <button class="pill pill-orange" id="cr-filter-all" onclick="setCircleTagFilter('all')">All</button>
-        <button class="pill pill-muted" id="cr-filter-study" onclick="setCircleTagFilter('study')">📘 Study</button>
-        <button class="pill pill-muted" id="cr-filter-gossip" onclick="setCircleTagFilter('gossip')">🔥 Gossip</button>
+        <button class="pill pill-muted" id="cr-filter-all" onclick="setCircleTagFilter('all')">All</button>
+        <button class="pill pill-teal" id="cr-filter-study" onclick="setCircleTagFilter('study')">📘 Study</button>
+        <button class="pill pill-orange" id="cr-filter-gossip" onclick="setCircleTagFilter('gossip')">🔥 Gossip</button>
         <button class="pill pill-muted" id="cr-filter-general" onclick="setCircleTagFilter('general')">💬 General</button>
       </div>
 
@@ -1317,7 +1332,7 @@ const BIRDS_ROSTER = [
   { id: 19, name: "Aurora Eagle", emoji: "🦅", rare: true }
 ];
 
-// Generate crisp SVG Data URLs for built-in sample campus photos/GIFs (zero external network dependency)
+// Generate crisp SVG Data URLs for built-in sample campus photos/GIFs
 function makeSampleArt(title, subtitle, c1, c2) {
   const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="600" height="600" viewBox="0 0 600 600">
     <defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
@@ -1325,16 +1340,16 @@ function makeSampleArt(title, subtitle, c1, c2) {
     </linearGradient></defs>
     <rect width="600" height="600" fill="url(#g)"/>
     <circle cx="480" cy="130" r="95" fill="rgba(255,255,255,0.12)"/>
-    <circle cx="130" cy="470" r="130" fill="rgba(0,0,0,0.22)"/>
+    <circle cx="130" cy="470" r="130" fill="rgba(0,0,0,0.1)"/>
     <text x="50%" y="48%" dominant-baseline="middle" text-anchor="middle" fill="#FFFFFF" font-family="sans-serif" font-weight="800" font-size="38">${title}</text>
     <text x="50%" y="56%" dominant-baseline="middle" text-anchor="middle" fill="rgba(255,255,255,0.85)" font-family="sans-serif" font-weight="600" font-size="22">${subtitle}</text>
   </svg>`;
   return "data:image/svg+xml;utf8," + encodeURIComponent(svg);
 }
 
-const SAMPLE_MEDIA_1 = makeSampleArt("🚌 Bus Stand 7:45 AM", "Waiting for college express", "#FF6B2C", "#1E293B");
-const SAMPLE_MEDIA_2 = makeSampleArt("☕ Canteen Cold Coffee", "Post-lab survival fuel", "#0F766E", "#090C14");
-const SAMPLE_MEDIA_3 = makeSampleArt("📚 Library 3rd Floor", "Exam sprint mode ON", "#4338CA", "#0F172A");
+const SAMPLE_MEDIA_1 = makeSampleArt("🚌 Bus Stand 7:45 AM", "Waiting for college express", "#E05D1A", "#8B3D14");
+const SAMPLE_MEDIA_2 = makeSampleArt("☕ Canteen Cold Coffee", "Post-lab survival fuel", "#059669", "#064E3B");
+const SAMPLE_MEDIA_3 = makeSampleArt("📚 Library 3rd Floor", "Exam sprint mode ON", "#2563EB", "#1E3A8A");
 
 // 4 Anonymous Starter Guides (Progressive Fade based on real friend count)
 const GUIDE_ACCOUNTS = [
@@ -1631,7 +1646,7 @@ function completeDoorwaySignup() {
 function checkAndSealFounderTag(reason) {
   if (state.user.founderTag && !state.user.tagSealed) {
     state.user.tagSealed = true;
-    addNotification("founder", `Founder Tag ${state.user.founderTag} Sealed!`, `Unlocked via ${reason}. Solar Phoenix added to your bird roster.`);
+    addNotification("founder", `Founder Tag ${state.user.founderTag} Sealed!`, `Unlocked via ${reason}. 🐦‍🔥 Solar Phoenix added to your bird roster.`);
     showToast(`🏅 Founder Tag ${state.user.founderTag} Permanently Sealed!`);
   }
 }
@@ -1726,7 +1741,7 @@ function renderMoodSky() {
           ${isBig ? `<img src="${g.media}" alt="guide"/><span class="bubble-media-badge">${g.emoji}</span>` : g.emoji}
         </div>
         <div class="bubble-meta">
-          <div class="bubble-handle">${g.handle} <span class="pill pill-muted" style="padding:1px 5px; font-size:9px;">GUIDE</span></div>
+          <div class="bubble-handle">${g.handle} <span class="pill pill-muted" style="padding:1px 5px; font-size:9px; border:none; background:transparent;">GUIDE</span></div>
           <div class="bubble-caption">${escapeHtml(g.caption)}</div>
         </div>
       </div>
@@ -2500,7 +2515,15 @@ function setCircleTagFilter(tag) {
   circleTagFilter = tag;
   ["all", "study", "gossip", "general"].forEach(t => {
     const el = document.getElementById("cr-filter-" + t);
-    el.className = t === tag ? "pill pill-orange" : "pill pill-muted";
+    // Assign specific semantic pill style based on active state
+    if (t === tag) {
+      if (t === 'study') el.className = "pill pill-teal";
+      else if (t === 'gossip') el.className = "pill pill-orange";
+      else if (t === 'general') el.className = "pill pill-muted";
+      else el.className = "pill pill-gold"; // All
+    } else {
+      el.className = "pill pill-muted";
+    }
   });
   renderCircleRoom();
 }
@@ -2520,7 +2543,7 @@ function renderCircleRoom() {
   box.innerHTML = filtered.map(m => `
     <div style="background:var(--bg-elevated); border:1px solid var(--border); padding:10px 12px; border-radius:12px; margin-bottom:8px;">
       <div class="row-between">
-        <span style="font-weight:800; font-size:12px; color:var(--accent);">${m.handle}</span>
+        <span style="font-weight:800; font-size:12px; color:var(--text-main);">${m.handle}</span>
         <span class="pill pill-muted" style="font-size:10px;">${m.tag.toUpperCase()}</span>
       </div>
       <div class="text-sm mt-2">${escapeHtml(m.text)}</div>
@@ -2597,7 +2620,7 @@ function renderProfileAndFriends() {
     ? items.map(s => `
         <div class="stack-thumb">
           <img src="${s.media}" alt="archived mood" />
-          <div style="position:absolute; bottom:0; inset-x:0; background:rgba(0,0,0,0.68); padding:3px 6px; font-size:10px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
+          <div style="position:absolute; bottom:0; inset-x:0; background:rgba(15,23,42,0.65); color:#FFF; padding:3px 6px; font-size:10px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
             ${escapeHtml(s.caption)}
           </div>
         </div>
